@@ -2,5 +2,8 @@ import {Token} from "./entities/token";
 
 export type TokenPair = { x: Token, y: Token }
 
-export type ErgoTreeHex = string
-export type ErgoTreeTemplateHashHex = string
+export type HexString = string
+
+export type ErgoTreeHex = HexString
+export type ErgoTreeTemplateHashHex = HexString
+export type PublicKeyHex = HexString
