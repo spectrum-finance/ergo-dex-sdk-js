@@ -1,4 +1,4 @@
-export const PoolV1Script = `{
+export const ArbPoolScript = `{
     val InitiallyLockedLP = 1000000000000000000L
 
     val FeeNum   = 997

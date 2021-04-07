@@ -1,6 +1,6 @@
-import {TokenAmount} from "./tokenAmount";
-import {Price} from "./price";
-import {Token} from "./token";
+import {TokenAmount} from "../../entities/tokenAmount";
+import {Price} from "../../entities/price";
+import {Token} from "../../entities/token";
 
 export class Pair {
     readonly x: TokenAmount

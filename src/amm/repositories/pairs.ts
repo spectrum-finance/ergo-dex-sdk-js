@@ -1,4 +1,4 @@
-import {TokenPair} from "../types";
+import {TokenPair} from "../../types";
 import {TokenId} from "ergo-lib-wasm-browser";
 import {Pair} from "../entities/pair";
 
