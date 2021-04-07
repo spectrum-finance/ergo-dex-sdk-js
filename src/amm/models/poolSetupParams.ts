@@ -1,6 +1,7 @@
 import {InvalidParams} from "../errors/invalidParams";
 import {MinPoolNanoErgs, PoolFeeMaxDecimals, PoolFeeScale} from "../constants";
 import {TokenAmount} from "../../entities/tokenAmount";
+import {sqrt} from "../../utils/sqrt";
 
 export class PoolSetupParams {
     readonly x: TokenAmount
@@ -37,7 +38,7 @@ export class PoolSetupParams {
         let errors = invalidPair.concat(invalidFeeRange).concat(invalidFeeResolution).concat(invalidErgsAmount)
         if (errors.length == 0) {
             let feeNumerator = (1. - fee) * PoolFeeScale
-            let outputShare = 0n
+            let outputShare = sqrt(x.amount * y.amount)
             return new PoolSetupParams(x, y, feeNumerator, lockNanoErgs, outputShare)
         } else {
             return new InvalidParams(errors)

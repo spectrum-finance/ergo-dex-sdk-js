@@ -1,6 +1,6 @@
 import {Token} from "./entities/token";
 
-export type TokenPair = { x: Token, y: Token }
+export type TokenPair = { readonly x: Token, readonly y: Token }
 
 export type HexString = string
 

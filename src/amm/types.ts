@@ -1,6 +1,3 @@
-import {Address, TokenId} from "ergo-lib-wasm-browser";
+import {TokenId} from "ergo-lib-wasm-browser";
 
-export type PoolId = {
-    address: Address,
-    nft: TokenId
-}
+export type PoolId = TokenId

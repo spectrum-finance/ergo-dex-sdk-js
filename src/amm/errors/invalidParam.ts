@@ -1,4 +1,4 @@
 export type InvalidParam = {
-    param: string,
-    error: string
+    readonly param: string,
+    readonly error: string
 }
