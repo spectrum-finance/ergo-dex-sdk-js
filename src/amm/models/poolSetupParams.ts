@@ -10,7 +10,7 @@ export class PoolSetupParams {
     readonly lockNanoErgs: bigint
     readonly outputShare: bigint
 
-    constructor(
+    private constructor(
         x: TokenAmount,
         y: TokenAmount,
         feeNumerator: number,
@@ -35,7 +35,8 @@ export class PoolSetupParams {
             param: "lockNanoErgs",
             error: `Minimal amount of nanoERG to lock is ${MinPoolNanoErgs}`
         }] : []
-        let errors = invalidPair.concat(invalidFeeRange).concat(invalidFeeResolution).concat(invalidErgsAmount)
+        let errors = [invalidPair, invalidFeeRange, invalidFeeResolution, invalidErgsAmount].flat()
+
         if (errors.length == 0) {
             let feeNumerator = (1. - fee) * PoolFeeScale
             let outputShare = sqrt(x.amount * y.amount)

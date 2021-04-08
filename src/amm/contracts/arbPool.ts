@@ -1,7 +1,7 @@
-export const ArbPoolScript = `{
+export const ArbPoolTemplate = `{
     val InitiallyLockedLP = 1000000000000000000L
 
-    val FeeNum   = 997
+    val feeNum0  = SELF.R4[Long].get
     val FeeDenom = 1000
 
     val ergs0       = SELF.value
@@ -12,6 +12,8 @@ export const ArbPoolScript = `{
 
     val successor = OUTPUTS(0)
 
+    val feeNum1 = successor.R4[Long].get
+
     val ergs1       = successor.value
     val poolNFT1    = successor.tokens(0)
     val reservedLP1 = successor.tokens(1)
@@ -19,6 +21,7 @@ export const ArbPoolScript = `{
     val tokenY1     = successor.tokens(3)
 
     val validSuccessorScript = successor.propositionBytes == SELF.propositionBytes
+    val preservedFeeConfig   = feeNum1 == feeNum0
     val preservedErgs        = ergs1 >= ergs0
     val preservedPoolNFT     = poolNFT1 == poolNFT0
     val validLP              = reservedLP1._1 == reservedLP0._1
@@ -52,9 +55,9 @@ export const ArbPoolScript = `{
 
     val validSwap =
         if (deltaReservesX > 0)
-            reservesY0.toBigInt * deltaReservesX * FeeNum >= -deltaReservesY * (reservesX0.toBigInt * FeeDenom + deltaReservesX * FeeNum)
+            reservesY0.toBigInt * deltaReservesX * feeNum0 >= -deltaReservesY * (reservesX0.toBigInt * FeeDenom + deltaReservesX * feeNum0)
         else
-            reservesX0.toBigInt * deltaReservesY * FeeNum >= -deltaReservesX * (reservesY0.toBigInt * FeeDenom + deltaReservesY * FeeNum)
+            reservesX0.toBigInt * deltaReservesY * feeNum0 >= -deltaReservesX * (reservesY0.toBigInt * FeeDenom + deltaReservesY * feeNum0)
 
     val validAction =
         if (deltaSupplyLP == 0)
@@ -65,6 +68,7 @@ export const ArbPoolScript = `{
 
     sigmaProp(
         validSuccessorScript &&
+        preservedFeeConfig &&
         preservedErgs &&
         preservedPoolNFT &&
         validLP &&

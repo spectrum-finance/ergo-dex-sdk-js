@@ -7,7 +7,7 @@ export const ArbSwapTemplate = `{
     val MinQuoteAmount = $minQuoteAmount
     val QuoteId        = $quoteId
 
-    val FeeNum   = 997
+    val FeeNum   = $poolFeeNum
     val FeeDenom = 1000
     
     val base       = SELF.tokens(0)
