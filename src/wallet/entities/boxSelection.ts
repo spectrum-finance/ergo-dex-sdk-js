@@ -17,7 +17,7 @@ export class BoxSelection {
 
     private constructor(head: ErgoBox, tail?: ErgoBox[], change?: ChangeBox) {
         this.head = head
-        this.tail = tail ? tail : []
+        this.tail = tail || []
         this.change = change
     }
 

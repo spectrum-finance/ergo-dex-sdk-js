@@ -13,8 +13,8 @@ export class ErgoBoxCandidate {
     readonly height: number
 
     readonly tokenToMint?: TokenAmount
-    readonly tokens: TokenAmount[] = []
-    readonly registers: Register[] = []
+    readonly tokens: TokenAmount[]
+    readonly registers: Register[]
 
     constructor(
         value: bigint,
@@ -28,8 +28,8 @@ export class ErgoBoxCandidate {
         this.contract = contract
         this.height = height
         this.tokenToMint = tokenToMint
-        this.tokens = tokens ? tokens : []
-        this.registers = registers ? registers : []
+        this.tokens = tokens || []
+        this.registers = registers || []
     }
 
     toErgoLib(): LibErgoBoxCandidate {
@@ -39,9 +39,14 @@ export class ErgoBoxCandidate {
             this.height
         )
         if (this.tokenToMint) {
-            let token = this.tokenToMint.toErgoLib()
-            let description = this.tokenToMint.token.description ? this.tokenToMint.token.description : ""
-            builder.mint_token(token, this.tokenToMint.token.name, description, this.tokenToMint.token.decimals)
+            let token = this.tokenToMint.token
+            let libToken = this.tokenToMint.toErgoLib()
+            builder.mint_token(
+                libToken,
+                token.name || "",
+                token.description || "",
+                token.decimals || 0
+            )
         }
         for (let token of this.tokens) {
             let libToken = token.toErgoLib()

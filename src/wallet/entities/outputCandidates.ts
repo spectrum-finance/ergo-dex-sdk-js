@@ -7,7 +7,7 @@ export class OutputCandidates {
 
     constructor(head: ErgoBoxCandidate, tail?: ErgoBoxCandidate[]) {
         this.head = head
-        this.tail = tail ? tail : []
+        this.tail = tail || []
     }
 
     get nonEmptyArray(): ErgoBoxCandidate[] {

@@ -8,6 +8,6 @@ export class ErgoTxChainCandidate {
     constructor(first: ErgoTxCandidate, second: ErgoTxCandidate, others?: ErgoTxCandidate[]) {
         this.first = first
         this.second = second
-        this.others = others ? others : []
+        this.others = others || []
     }
 }
