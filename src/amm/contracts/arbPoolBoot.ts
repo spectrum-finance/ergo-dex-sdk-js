@@ -1,9 +1,9 @@
-export const ArbPoolBootScript = `{
-    val InitiallyLockedLP    = 1000000000000000000L
-    val LPOutFundingNanoErgs = 1000000L
+export const ArbPoolBootScriptTemplate = `{
+    val InitiallyLockedLP = $emissionLPL
 
     val poolScriptHash  = SELF.R4[Coll[Byte]].get
     val desiredSharesLP = SELF.R5[Long].get
+    val poolFeeConfig   = SELF.R6[Long].get
 
     val selfLP = SELF.tokens(0)
     val selfX  = SELF.tokens(1)
@@ -11,7 +11,8 @@ export const ArbPoolBootScript = `{
 
     val tokenIdLP = selfLP._1
 
-    val validSelfLP = selfLP._2 == InitiallyLockedLP
+    val validSelfLP            = selfLP._2 == InitiallyLockedLP
+    val validSelfPoolFeeConfig = poolFeeConfig <= 1000L && poolFeeConfig > 750L
 
     val pool           = OUTPUTS(0)
     val sharesRewardLP = OUTPUTS(1)
@@ -22,8 +23,9 @@ export const ArbPoolBootScript = `{
         else 0L
 
     val validPoolContract  = blake2b256(pool.propositionBytes) == poolScriptHash
-    val validPoolErgAmount = pool.value == SELF.value - LPOutFundingNanoErgs
+    val validPoolErgAmount = pool.value == SELF.value - sharesRewardLP.value
     val validPoolNFT       = pool.tokens(0) == (SELF.id, 1L)
+    val validPoolConfig    = pool.R4[Long].get == poolFeeConfig 
 
     val validInitialDepositing = {
         val tokenX     = pool.tokens(2)
@@ -46,5 +48,5 @@ export const ArbPoolBootScript = `{
         sharesRewardLP.propositionBytes == initialDepositorProp &&
         sharesRewardLP.tokens(0) == (tokenIdLP, desiredSharesLP)
     
-    sigmaProp(validSelfLP && validPool && validSharesRewardLP)
+    sigmaProp(validSelfLP && validSelfPoolFeeConfig && validPool && validSharesRewardLP)
 }`

@@ -2,6 +2,7 @@
   "name": "ergo-dex-sdk",
   "version": "1.0.0",
   "dependencies": {
+    "blakejs": "^1.1.0",
     "ergo-lib-wasm-browser": "0.8.0"
   }
 }

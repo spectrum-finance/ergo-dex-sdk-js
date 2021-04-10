@@ -1,4 +1,5 @@
 import {Token} from "./token";
+import {I64, Token as LibToken, TokenAmount as LibTokenAmount} from "ergo-lib-wasm-browser";
 
 export class TokenAmount {
     readonly token: Token
@@ -43,5 +44,9 @@ export class TokenAmount {
         } else {
             return this.withAmount(this.amount / n.amount)
         }
+    }
+
+    toErgoLib(): LibToken {
+        return new LibToken(this.token.id, LibTokenAmount.from_i64(I64.from_str(this.amount.toString())))
     }
 }

@@ -1,5 +1,5 @@
-export const ArbPoolTemplate = `{
-    val InitiallyLockedLP = 1000000000000000000L
+export const ArbPoolScriptTemplate = `{
+    val InitiallyLockedLP = $emissionLPL
 
     val feeNum0  = SELF.R4[Long].get
     val FeeDenom = 1000
