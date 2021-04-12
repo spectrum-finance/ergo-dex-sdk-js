@@ -2,11 +2,8 @@
   "name": "ergo-dex-sdk",
   "version": "1.0.0",
   "dependencies": {
-    "blake2": "4.0.2",
+    "blakejs": "^1.1.0",
     "ergo-lib-wasm-browser": "0.9.0",
     "fp-ts": "2.10.0-rc.8"
-  },
-  "devDependencies": {
-    "@types/blake2": "^4.0.1"
   }
 }

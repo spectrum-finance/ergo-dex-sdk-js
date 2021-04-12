@@ -1,4 +1,4 @@
-import {Asset} from "../entities/asset";
+import {Eip4Token} from "../entities/eip4Token";
 import {AssetAmount} from "../entities/assetAmount";
 import {ErgoBox, Token as Asset} from "ergo-lib-wasm-browser";
 

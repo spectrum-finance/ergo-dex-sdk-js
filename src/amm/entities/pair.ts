@@ -1,6 +1,6 @@
 import {AssetAmount} from "../../entities/assetAmount";
 import {Price} from "../../entities/price";
-import {Asset} from "../../entities/asset";
+import {Eip4Token} from "../../entities/eip4Token";
 
 export class Pair {
     readonly x: AssetAmount
@@ -11,11 +11,11 @@ export class Pair {
         this.y = y
     }
 
-    get tokenX(): Asset {
+    get tokenX(): Eip4Token {
         return this.x.asset
     }
 
-    get tokenY(): Asset {
+    get tokenY(): Eip4Token {
         return this.y.asset
     }
 
