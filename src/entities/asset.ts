@@ -1,6 +1,6 @@
-import {TokenId} from "ergo-lib-wasm-browser";
+import {TokenId} from "../wallet/types";
 
-export class Token {
+export class Asset {
     readonly id: TokenId
     readonly name?: string
     readonly decimals?: number

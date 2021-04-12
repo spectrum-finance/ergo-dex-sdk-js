@@ -4,32 +4,33 @@ import {
     ErgoBoxCandidate as LibErgoBoxCandidate,
     ErgoBoxCandidateBuilder, I64
 } from "ergo-lib-wasm-browser";
-import {TokenAmount} from "../../entities/tokenAmount";
+import {AssetAmount} from "../../entities/assetAmount";
 import {Register} from "../../types";
+import {Token} from "./token";
 
 export class ErgoBoxCandidate {
     readonly value: bigint
     readonly contract: Contract
     readonly height: number
 
-    readonly tokenToMint?: TokenAmount
-    readonly tokens: TokenAmount[]
+    readonly tokens: Token[]
     readonly registers: Register[]
+    readonly tokenToMint?: AssetAmount
 
     constructor(
         value: bigint,
         contract: Contract,
         height: number,
-        tokenToMint?: TokenAmount,
-        tokens?: TokenAmount[],
-        registers?: Register[]
+        tokens?: Token[],
+        registers?: Register[],
+        tokenToMint?: AssetAmount
     ) {
         this.value = value
         this.contract = contract
         this.height = height
-        this.tokenToMint = tokenToMint
         this.tokens = tokens || []
         this.registers = registers || []
+        this.tokenToMint = tokenToMint
     }
 
     toErgoLib(): LibErgoBoxCandidate {
@@ -39,7 +40,7 @@ export class ErgoBoxCandidate {
             this.height
         )
         if (this.tokenToMint) {
-            let token = this.tokenToMint.token
+            let token = this.tokenToMint.asset
             let libToken = this.tokenToMint.toErgoLib()
             builder.mint_token(
                 libToken,

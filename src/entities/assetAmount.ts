@@ -1,20 +1,20 @@
-import {Token} from "./token";
-import {I64, Token as LibToken, TokenAmount as LibTokenAmount} from "ergo-lib-wasm-browser";
+import {Asset} from "./asset";
+import {I64, Token as LibToken, TokenAmount as LibTokenAmount, TokenId as LibTokenId} from "ergo-lib-wasm-browser";
 
-export class TokenAmount {
-    readonly token: Token
+export class AssetAmount {
+    readonly asset: Asset
     readonly amount: bigint
 
-    constructor(token: Token, amount: bigint) {
-        this.token = token
+    constructor(asset: Asset, amount: bigint) {
+        this.asset = asset
         this.amount = amount
     }
 
-    withAmount(amount: bigint): TokenAmount {
-        return new TokenAmount(this.token, amount)
+    withAmount(amount: bigint): AssetAmount {
+        return new AssetAmount(this.asset, amount)
     }
 
-    add(n: bigint | TokenAmount): TokenAmount {
+    add(n: bigint | AssetAmount): AssetAmount {
         if (typeof n === "bigint") {
             return this.withAmount(this.amount + n)
         } else {
@@ -22,7 +22,7 @@ export class TokenAmount {
         }
     }
 
-    sub(n: bigint | TokenAmount): TokenAmount {
+    sub(n: bigint | AssetAmount): AssetAmount {
         if (typeof n === "bigint") {
             return this.withAmount(this.amount - n)
         } else {
@@ -30,7 +30,7 @@ export class TokenAmount {
         }
     }
 
-    mul(n: bigint | TokenAmount): TokenAmount {
+    mul(n: bigint | AssetAmount): AssetAmount {
         if (typeof n === "bigint") {
             return this.withAmount(this.amount * n)
         } else {
@@ -38,7 +38,7 @@ export class TokenAmount {
         }
     }
 
-    div(n: bigint | TokenAmount): TokenAmount {
+    div(n: bigint | AssetAmount): AssetAmount {
         if (typeof n === "bigint") {
             return this.withAmount(this.amount / n)
         } else {
@@ -47,6 +47,6 @@ export class TokenAmount {
     }
 
     toErgoLib(): LibToken {
-        return new LibToken(this.token.id, LibTokenAmount.from_i64(I64.from_str(this.amount.toString())))
+        return new LibToken(LibTokenId.from_str(this.asset.id), LibTokenAmount.from_i64(I64.from_str(this.amount.toString())))
     }
 }

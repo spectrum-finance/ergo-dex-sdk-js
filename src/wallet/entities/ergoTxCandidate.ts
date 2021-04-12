@@ -1,17 +1,17 @@
 import {BoxSelection} from "./boxSelection";
-import {Address, UnsignedTransaction, TxBuilder, BoxValue, I64} from "ergo-lib-wasm-browser";
-import {OutputCandidates} from "./outputCandidates";
+import {Address, UnsignedTransaction, TxBuilder, BoxValue, I64, ErgoBoxCandidates} from "ergo-lib-wasm-browser";
+import {ErgoBoxCandidate} from "./ergoBoxCandidate";
 
 export class ErgoTxCandidate {
     readonly inputs: BoxSelection
-    readonly outputs: OutputCandidates
+    readonly outputs: ErgoBoxCandidate[]
     readonly height: number
     readonly feeNErgs: bigint
     readonly changeAddress: Address
 
     constructor(
         inputs: BoxSelection,
-        outputs: OutputCandidates,
+        outputs: ErgoBoxCandidate[],
         height: number,
         feeNErgs: bigint,
         changeAddress: Address
@@ -25,9 +25,12 @@ export class ErgoTxCandidate {
 
     toErgoLib(): UnsignedTransaction {
         let fee = BoxValue.from_i64(I64.from_str(this.feeNErgs.toString()))
+        let libInputs = this.inputs.toErgoLib()
+        let libOutputs = new ErgoBoxCandidates(this.outputs[0].toErgoLib())
+        for (let c of this.outputs.slice(1)) libOutputs.add(c.toErgoLib())
         let builder = TxBuilder.new(
-            this.inputs.toErgoLib(),
-            this.outputs.toErgoLib(),
+            libInputs,
+            libOutputs,
             this.height,
             fee,
             this.changeAddress,

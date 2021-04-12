@@ -1,9 +1,9 @@
 import {TokenId} from "ergo-lib-wasm-browser";
-import {Token} from "../entities/token";
+import {Asset} from "../entities/asset";
 
 export interface Tokens {
 
     /** Get a token by id.
       */
-    get(id: TokenId): Token | undefined
+    get(id: TokenId): Asset | undefined
 }

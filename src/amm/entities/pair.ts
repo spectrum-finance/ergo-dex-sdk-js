@@ -1,22 +1,22 @@
-import {TokenAmount} from "../../entities/tokenAmount";
+import {AssetAmount} from "../../entities/assetAmount";
 import {Price} from "../../entities/price";
-import {Token} from "../../entities/token";
+import {Asset} from "../../entities/asset";
 
 export class Pair {
-    readonly x: TokenAmount
-    readonly y: TokenAmount
+    readonly x: AssetAmount
+    readonly y: AssetAmount
 
-    constructor(x: TokenAmount, y: TokenAmount) {
+    constructor(x: AssetAmount, y: AssetAmount) {
         this.x = x
         this.y = y
     }
 
-    get tokenX(): Token {
-        return this.x.token
+    get tokenX(): Asset {
+        return this.x.asset
     }
 
-    get tokenY(): Token {
-        return this.y.token
+    get tokenY(): Asset {
+        return this.y.asset
     }
 
     /** @return Price of tokenX in tokenY units.
@@ -33,15 +33,15 @@ export class Pair {
 
     /** @return Proportional amount of one token to a given input of the other
      */
-    depositAmount(input: TokenAmount): TokenAmount {
-        let price = input.token === this.tokenX ? this.priceX : this.priceY
+    depositAmount(input: AssetAmount): AssetAmount {
+        let price = input.asset === this.tokenX ? this.priceX : this.priceY
         return input.mul(price.numerator).div(price.denominator)
     }
 
     /** @return Input amount of one token for a given output amount of the other
      */
-    inputAmount(output: TokenAmount): TokenAmount {
-        if (output.token === this.tokenX) {
+    inputAmount(output: AssetAmount): AssetAmount {
+        if (output.asset === this.tokenX) {
             return this.y.mul(output).mul(1000n).div(this.x.sub(output).mul(997n)).add(1n)
         } else {
             return this.x.mul(output).mul(1000n).div(this.y.sub(output).mul(997n)).add(1n)
@@ -50,8 +50,8 @@ export class Pair {
 
     /** @return Output amount of one token for a given input amount of the other
      */
-    outputAmount(input: TokenAmount): TokenAmount {
-        if (input.token === this.tokenX) {
+    outputAmount(input: AssetAmount): AssetAmount {
+        if (input.asset === this.tokenX) {
             return this.y.mul(input.mul(997n)).div(this.x.mul(1000n).add(input.mul(997n)))
         } else {
             return this.x.mul(input.mul(997n)).div(this.y.mul(1000n).add(input.mul(997n)))

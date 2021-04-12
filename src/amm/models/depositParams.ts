@@ -1,10 +1,10 @@
-import {TokenAmount} from "../../entities/tokenAmount";
+import {AssetAmount} from "../../entities/assetAmount";
 
 export class DepositParams {
-    readonly x: TokenAmount
-    readonly y: TokenAmount
+    readonly x: AssetAmount
+    readonly y: AssetAmount
 
-    constructor(x: TokenAmount, y: TokenAmount) {
+    constructor(x: AssetAmount, y: AssetAmount) {
         this.x = x
         this.y = y
     }

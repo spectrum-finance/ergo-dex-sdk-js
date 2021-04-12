@@ -1,13 +1,13 @@
 import {PublicKeyHex} from "../../types";
 import {Address, TokenId} from "ergo-lib-wasm-browser";
-import {TokenAmount} from "../../entities/tokenAmount";
+import {AssetAmount} from "../../entities/assetAmount";
 
 export class Swap {
     readonly pk: PublicKeyHex
     readonly poolAddress: Address
     readonly quoteAsset: TokenId
     readonly minQuoteOutput: bigint
-    readonly baseInput: TokenAmount
+    readonly baseInput: AssetAmount
     readonly timestamp: number
 
     constructor(
@@ -15,7 +15,7 @@ export class Swap {
         poolAddress: Address,
         quoteAsset: TokenId,
         minQuoteOutput: bigint,
-        baseInput: TokenAmount,
+        baseInput: AssetAmount,
         timestamp: number
     ) {
         this.pk = pk

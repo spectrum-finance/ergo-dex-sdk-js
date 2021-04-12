@@ -1,10 +1,9 @@
-import {Token} from "./entities/token";
+import {Asset} from "./entities/asset";
 import {Constant} from "ergo-lib-wasm-browser";
+import {HexString} from "./wallet/types";
 
-export type TokenPair = { readonly x: Token, readonly y: Token }
+export type TokenPair = { readonly x: Asset, readonly y: Asset }
 export type Register = { readonly id: number, readonly value: Constant}
-
-export type HexString = string
 
 export type ErgoTreeHex = HexString
 export type ErgoTreeTemplateHashHex = HexString
