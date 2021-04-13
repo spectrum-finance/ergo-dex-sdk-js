@@ -2,12 +2,11 @@ import {
     BoxSelection as LibBoxSelection,
     ErgoBoxes,
     ErgoBoxAssetsData,
-    BoxValue, I64, Tokens, Token as LibToken, TokenAmount, ErgoBoxAssetsDataList, TokenId as LibTokenId
+    BoxValue, I64, Tokens, Token as LibToken, TokenAmount, ErgoBoxAssetsDataList
 } from "ergo-lib-wasm-browser";
 import {ChangeBox} from "./changeBox";
 import {EmptyInputs} from "../errors/emptyInputs";
 import {OverallAmount} from "./overallAmount";
-import {notImplemented} from "../../utils/notImplemented";
 import {ErgoBox} from "./ergoBox";
 import {Token} from "./token";
 import {TokenId} from "../types";
@@ -42,7 +41,7 @@ export class BoxSelection {
         }
         let tokens: Token[] = []
         tokensAgg.forEach((amount, id, _xs) => tokens.push(new Token(id, amount)))
-        return { nErgs: nErgs, tokens: tokens }
+        return {nErgs: nErgs, tokens: tokens}
     }
 
     toErgoLib(): LibBoxSelection {
