@@ -17,6 +17,8 @@ import {Token} from "../../wallet/entities/token";
 import {BoxSelection} from "../../wallet/entities/boxSelection";
 import {ByteaConstant, Int64Constant, Int32Constant} from "../../wallet/entities/constant";
 import {mintLP, mintPoolNFT} from "../utils/tokens"
+import {DepositParams} from "../models/depositParams";
+import {Explorer} from "../../services/explorer";
 
 export interface PoolOpsInterpreter {
 
@@ -26,7 +28,7 @@ export interface PoolOpsInterpreter {
 
     /** Interpret `deposit` operation on a pool to a transaction.
      */
-    deposit(poolId: PoolId, ctx: TransactionContext): ErgoTx | InsufficientInputs
+    deposit(poolId: PoolId, params: DepositParams, ctx: TransactionContext): ErgoTx | InsufficientInputs
 
     /** Interpret `redeem` operation on a pool to a transaction.
      */
@@ -40,9 +42,11 @@ export interface PoolOpsInterpreter {
 export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
 
     readonly wallet: ErgoWallet
+    readonly explorer: Explorer
 
-    constructor(wallet: ErgoWallet) {
+    constructor(wallet: ErgoWallet, explorer: Explorer) {
         this.wallet = wallet
+        this.explorer = explorer
     }
 
     setup(params: PoolSetupParams, ctx: TransactionContext): ErgoTx[] | InsufficientInputs {
@@ -100,7 +104,7 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
         }
     }
 
-    deposit(poolId: PoolId, ctx: TransactionContext): ErgoTx | InsufficientInputs {
+    deposit(poolId: PoolId, params: DepositParams, ctx: TransactionContext): ErgoTx | InsufficientInputs {
         return notImplemented()
     }
 
