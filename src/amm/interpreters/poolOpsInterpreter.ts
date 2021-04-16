@@ -1,6 +1,5 @@
 import {PoolSetupParams} from "../models/poolSetupParams";
 import {Contract} from "ergo-lib-wasm-browser";
-import {PoolId} from "../types";
 import {SwapParams} from "../models/swapParams";
 import {notImplemented} from "../../utils/notImplemented";
 import {ArbPoolContracts} from "../contracts/arbPoolContracts";
@@ -18,7 +17,7 @@ import {BoxSelection} from "../../wallet/entities/boxSelection";
 import {ByteaConstant, Int64Constant, Int32Constant} from "../../wallet/entities/constant";
 import {mintLP, mintPoolNFT} from "../utils/tokens"
 import {DepositParams} from "../models/depositParams";
-import {Explorer} from "../../services/explorer";
+import {ErgoBox} from "../../wallet/entities/ergoBox";
 
 export interface PoolOpsInterpreter {
 
@@ -28,40 +27,38 @@ export interface PoolOpsInterpreter {
 
     /** Interpret `deposit` operation on a pool to a transaction.
      */
-    deposit(poolId: PoolId, params: DepositParams, ctx: TransactionContext): ErgoTx | InsufficientInputs
+    deposit(poolBox: ErgoBox, params: DepositParams, ctx: TransactionContext): ErgoTx | InsufficientInputs
 
     /** Interpret `redeem` operation on a pool to a transaction.
      */
-    redeem(poolId: PoolId, ctx: TransactionContext): ErgoTx | InsufficientInputs
+    redeem(poolBox: ErgoBox, ctx: TransactionContext): ErgoTx | InsufficientInputs
 
     /** Interpret `swap` operation on a pool to a transaction.
      */
-    swap(poolId: PoolId, params: SwapParams, ctx: TransactionContext): ErgoTx | InsufficientInputs
+    swap(poolBox: ErgoBox, params: SwapParams, ctx: TransactionContext): ErgoTx | InsufficientInputs
 }
 
 export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
 
     readonly wallet: ErgoWallet
-    readonly explorer: Explorer
 
-    constructor(wallet: ErgoWallet, explorer: Explorer) {
+    constructor(wallet: ErgoWallet) {
         this.wallet = wallet
-        this.explorer = explorer
     }
 
     setup(params: PoolSetupParams, ctx: TransactionContext): ErgoTx[] | InsufficientInputs {
-        let pair = [params.x.asset, params.y.asset]
+        let [x, y] = [params.x.asset, params.y.asset]
         let height = ctx.network.height
         let inputs = ctx.inputs
         let outputGranted = inputs.totalOutputWithoutChange()
         let ergsIn = outputGranted.nErgs - ctx.feeNErgs
         let pairIn = [
-            outputGranted.tokens.filter((t, _i, _xs) => t.id === pair[0].id),
-            outputGranted.tokens.filter((t, _i, _xs) => t.id === pair[1].id)
+            outputGranted.tokens.filter((t, _i, _xs) => t.id === x.id),
+            outputGranted.tokens.filter((t, _i, _xs) => t.id === y.id)
         ].flat()
         if (pairIn.length == 2) {
             let tokenIdLP = inputs.boxes[0].id
-            let newTokenLP = mintLP(tokenIdLP, pair[0].name, pair[1].name)
+            let newTokenLP = mintLP(tokenIdLP, x.name, y.name)
             let poolBootScript = ArbPoolContracts.arbPoolBootScript(EmissionLP)
             let poolSH: Uint8Array = Blake2b256.hash(poolBootScript.ergo_tree().to_bytes())
             let registers = [
@@ -88,7 +85,7 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
             let poolValueNErgs = poolBootBox.value - lpOut.value - ctx.feeNErgs
             let poolScript = ArbPoolContracts.arbPoolScript(EmissionLP)
 
-            let newTokenNFT = mintPoolNFT(tokenIdLP, pair[0].name, pair[1].name)
+            let newTokenNFT = mintPoolNFT(tokenIdLP, x.name, y.name)
             let poolAmountLP = newTokenLP.amount - lpShares.amount
             let poolLP = new Token(tokenIdLP, poolAmountLP)
             let poolTokens = [poolLP].concat(poolBootBox.tokens.slice(1))
@@ -104,15 +101,15 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
         }
     }
 
-    deposit(poolId: PoolId, params: DepositParams, ctx: TransactionContext): ErgoTx | InsufficientInputs {
+    deposit(poolBox: ErgoBox, params: DepositParams, ctx: TransactionContext): ErgoTx | InsufficientInputs {
         return notImplemented()
     }
 
-    redeem(poolId: PoolId, ctx: TransactionContext): ErgoTx | InsufficientInputs {
+    redeem(poolBox: ErgoBox, ctx: TransactionContext): ErgoTx | InsufficientInputs {
         return notImplemented()
     }
 
-    swap(poolId: PoolId, params: SwapParams, ctx: TransactionContext): ErgoTx | InsufficientInputs {
+    swap(poolBox: ErgoBox, params: SwapParams, ctx: TransactionContext): ErgoTx | InsufficientInputs {
         return notImplemented()
     }
 }

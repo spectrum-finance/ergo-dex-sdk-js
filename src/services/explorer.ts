@@ -6,13 +6,13 @@ export interface Explorer {
 
     /** Get unspent boxes with a given ErgoTree.
      */
-    getUnspentByErgoTree(tree: ErgoTreeHex): ErgoBox[]
+    getUnspentByErgoTree(tree: ErgoTreeHex): Promise<ErgoBox[]>
 
     /** Get unspent boxes with scripts matching a given template hash.
      */
-    getUnspentByErgoTreeTemplate(templateHash: ErgoTreeTemplateHashHex): ErgoBox[]
+    getUnspentByErgoTreeTemplate(templateHash: ErgoTreeTemplateHashHex): Promise<ErgoBox[]>
 
     /** Get unspent boxes containing a token with given id.
      */
-    getUnspentByTokenId(tokenId: TokenId): ErgoBox[]
+    getUnspentByTokenId(tokenId: TokenId): Promise<ErgoBox[]>
 }
