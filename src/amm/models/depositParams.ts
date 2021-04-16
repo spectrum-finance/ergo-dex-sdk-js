@@ -1,11 +1,17 @@
-import {AssetAmount} from "../../entities/assetAmount";
+import {PublicKey} from "../../wallet/types";
+import {PoolId} from "../types";
+import {Eip4Token} from "../../entities/eip4Token";
 
 export class DepositParams {
-    readonly x: AssetAmount
-    readonly y: AssetAmount
+    readonly poolId: PoolId
+    readonly x: Eip4Token
+    readonly y: Eip4Token
+    readonly pk: PublicKey
 
-    constructor(x: AssetAmount, y: AssetAmount) {
+    constructor(poolId: PoolId, x: Eip4Token, y: Eip4Token, pk: PublicKey) {
+        this.poolId = poolId
         this.x = x
         this.y = y
+        this.pk = pk
     }
 }

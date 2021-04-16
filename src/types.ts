@@ -7,4 +7,3 @@ export type Register = { readonly id: number, readonly value: Constant}
 
 export type ErgoTreeHex = HexString
 export type ErgoTreeTemplateHashHex = HexString
-export type PublicKeyHex = HexString
