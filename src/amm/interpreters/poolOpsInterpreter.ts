@@ -17,7 +17,7 @@ import {BoxSelection} from "../../wallet/entities/boxSelection";
 import {ByteaConstant, Int64Constant, Int32Constant} from "../../wallet/entities/constant";
 import {mintLP, mintPoolNFT} from "../utils/tokens"
 import {DepositParams} from "../models/depositParams";
-import {PoolId} from "../types";
+import {RedeemParams} from "../models/redeemParams";
 
 export interface PoolOpsInterpreter {
 
@@ -31,11 +31,11 @@ export interface PoolOpsInterpreter {
 
     /** Interpret `redeem` operation on a pool to a transaction.
      */
-    redeem(poolId: PoolId, ctx: TransactionContext): ErgoTx | InsufficientInputs
+    redeem(params: RedeemParams, ctx: TransactionContext): ErgoTx | InsufficientInputs
 
     /** Interpret `swap` operation on a pool to a transaction.
      */
-    swap(poolId: PoolId, params: SwapParams, ctx: TransactionContext): ErgoTx | InsufficientInputs
+    swap(params: SwapParams, ctx: TransactionContext): ErgoTx | InsufficientInputs
 }
 
 export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
@@ -97,7 +97,7 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
 
             return [tx0, tx1]
         } else {
-            return new InsufficientInputs("Token pair not provided")
+            return new InsufficientInputs(`Token pair {${x.name}|${y.name}} not provided`)
         }
     }
 
@@ -109,16 +109,29 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
             outputGranted.tokens.filter((t, _i, _xs) => t.id === x.id),
             outputGranted.tokens.filter((t, _i, _xs) => t.id === y.id)
         ].flat()
-        let out = new ErgoBoxCandidate(outputGranted.nErgs, proxyScript, ctx.network.height, pairIn)
-        let txc = new ErgoTxCandidate(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)
-        return this.wallet.sign(txc)
+        if (pairIn.length == 2) {
+            let out = new ErgoBoxCandidate(outputGranted.nErgs, proxyScript, ctx.network.height, pairIn)
+            let txc = new ErgoTxCandidate(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)
+            return this.wallet.sign(txc)
+        } else {
+            return new InsufficientInputs(`Token pair {${x.name}|${y.name}} not provided`)
+        }
     }
 
-    redeem(poolId: PoolId, ctx: TransactionContext): ErgoTx | InsufficientInputs {
-        return notImplemented()
+    redeem(params: RedeemParams, ctx: TransactionContext): ErgoTx | InsufficientInputs {
+        let proxyScript = ArbPoolContracts.genericDepositScript(EmissionLP, params.poolId, params.pk)
+        let outputGranted = ctx.inputs.totalOutputWithoutChange()
+        let tokensIn = outputGranted.tokens.filter((t, _i, _xs) => t.id === params.lp.id)
+        if (tokensIn.length == 1) {
+            let out = new ErgoBoxCandidate(outputGranted.nErgs, proxyScript, ctx.network.height, tokensIn)
+            let txc = new ErgoTxCandidate(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)
+            return this.wallet.sign(txc)
+        } else {
+            return new InsufficientInputs(`LP tokens not provided`)
+        }
     }
 
-    swap(poolId: PoolId, params: SwapParams, ctx: TransactionContext): ErgoTx | InsufficientInputs {
+    swap(params: SwapParams, ctx: TransactionContext): ErgoTx | InsufficientInputs {
         return notImplemented()
     }
 }

@@ -3,6 +3,8 @@ import {ArbPoolBootScriptTemplate} from "./arbPoolBoot";
 import {ArbPoolScriptTemplate} from "./arbPool";
 import {PoolId} from "../types";
 import {PublicKey} from "../../wallet/types";
+import {GenericDepositTemplate} from "./genericDeposit";
+import {GenericRedeemTemplate} from "./genericRedeem";
 
 export class ArbPoolContracts {
 
@@ -17,7 +19,15 @@ export class ArbPoolContracts {
     }
 
     static genericDepositScript(emissionLP: bigint, poolId: PoolId, pk: PublicKey): Contract {
-        let script = ArbPoolScriptTemplate
+        let script = GenericDepositTemplate
+            .replace("$emissionLP", emissionLP.toString())
+            .replace("$poolNFT", poolId.toString())
+            .replace("$pk", pk)
+        return Contract.compile(script)
+    }
+
+    static genericRedeemScript(emissionLP: bigint, poolId: PoolId, pk: PublicKey): Contract {
+        let script = GenericRedeemTemplate
             .replace("$emissionLP", emissionLP.toString())
             .replace("$poolNFT", poolId.toString())
             .replace("$pk", pk)
