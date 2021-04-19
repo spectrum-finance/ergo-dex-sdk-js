@@ -2,9 +2,10 @@ import {Contract} from "ergo-lib-wasm-browser";
 import {ArbPoolBootScriptTemplate} from "./arbPoolBoot";
 import {ArbPoolScriptTemplate} from "./arbPool";
 import {PoolId} from "../types";
-import {PublicKey} from "../../wallet/types";
+import {HexString, NErg, PublicKey, TokenId} from "../../wallet/types";
 import {GenericDepositTemplate} from "./genericDeposit";
 import {GenericRedeemTemplate} from "./genericRedeem";
+import {ArbSwapTemplate} from "./arbSwap";
 
 export class ArbPoolContracts {
 
@@ -30,6 +31,24 @@ export class ArbPoolContracts {
         let script = GenericRedeemTemplate
             .replace("$emissionLP", emissionLP.toString())
             .replace("$poolNFT", poolId.toString())
+            .replace("$pk", pk)
+        return Contract.compile(script)
+    }
+
+    static swapScript(
+        poolScriptHash: HexString,
+        poolFeeNum: number,
+        quoteId: TokenId,
+        minQuoteAmount: bigint,
+        dexFeePerToken: NErg,
+        pk: PublicKey
+    ): Contract {
+        let script = ArbSwapTemplate
+            .replace("$poolScriptHash", poolScriptHash)
+            .replace("$poolFeeNum", poolFeeNum.toString())
+            .replace("$quoteId", quoteId)
+            .replace("$minQuoteAmount", minQuoteAmount.toString())
+            .replace("$dexFeePerToken", dexFeePerToken.toString())
             .replace("$pk", pk)
         return Contract.compile(script)
     }

@@ -1,7 +1,6 @@
 import {PoolSetupParams} from "../models/poolSetupParams";
 import {Contract} from "ergo-lib-wasm-browser";
 import {SwapParams} from "../models/swapParams";
-import {notImplemented} from "../../utils/notImplemented";
 import {ArbPoolContracts} from "../contracts/arbPoolContracts";
 import {EmissionLP} from "../constants";
 import {InsufficientInputs} from "../../wallet/errors/insufficientInputs";
@@ -119,7 +118,7 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
     }
 
     redeem(params: RedeemParams, ctx: TransactionContext): ErgoTx | InsufficientInputs {
-        let proxyScript = ArbPoolContracts.genericDepositScript(EmissionLP, params.poolId, params.pk)
+        let proxyScript = ArbPoolContracts.genericRedeemScript(EmissionLP, params.poolId, params.pk)
         let outputGranted = ctx.inputs.totalOutputWithoutChange()
         let tokensIn = outputGranted.tokens.filter((t, _i, _xs) => t.id === params.lp.id)
         if (tokensIn.length == 1) {
@@ -132,6 +131,23 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
     }
 
     swap(params: SwapParams, ctx: TransactionContext): ErgoTx | InsufficientInputs {
-        return notImplemented()
+        let proxyScript = ArbPoolContracts.swapScript(
+            params.poolScriptHash,
+            params.poolFeeNum,
+            params.quoteAsset,
+            params.minQuoteOutput,
+            params.dexFeePerToken,
+            params.pk
+        )
+        let outputGranted = ctx.inputs.totalOutputWithoutChange()
+        let baseAssetId = params.baseInput.asset.id
+        let tokensIn = outputGranted.tokens.filter((t, _i, _xs) => t.id === baseAssetId)
+        if (tokensIn.length == 1) {
+            let out = new ErgoBoxCandidate(outputGranted.nErgs, proxyScript, ctx.network.height, tokensIn)
+            let txc = new ErgoTxCandidate(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)
+            return this.wallet.sign(txc)
+        } else {
+            return new InsufficientInputs(`Base asset '${baseAssetId}' not provided`)
+        }
     }
 }

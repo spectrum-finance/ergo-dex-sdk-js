@@ -3,8 +3,8 @@ export const ArbSwapTemplate = `{
 
     val PoolScriptHash = $poolScriptHash
 
-    val DexFeePerToken = $dexFeePerToken
-    val MinQuoteAmount = $minQuoteAmount
+    val DexFeePerToken = $dexFeePerTokenL
+    val MinQuoteAmount = $minQuoteAmountL
     val QuoteId        = $quoteId
 
     val FeeNum   = $poolFeeNum
