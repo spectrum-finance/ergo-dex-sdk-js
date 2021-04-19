@@ -1,6 +1,7 @@
 import {ErgoTreeHex, ErgoTreeTemplateHashHex} from "../types";
-import {ErgoBox} from "ergo-lib-wasm-browser";
 import {TokenId} from "../wallet/types";
+import {ErgoBox} from "../wallet/entities/ergoBox";
+import axios, {AxiosInstance} from "axios";
 
 export interface Explorer {
 
@@ -15,4 +16,36 @@ export interface Explorer {
     /** Get unspent boxes containing a token with given id.
      */
     getUnspentByTokenId(tokenId: TokenId): Promise<ErgoBox[]>
+}
+
+export class ExplorerImpl implements Explorer {
+
+    readonly backend: AxiosInstance
+
+    constructor(uri: string) {
+        this.backend = axios.create({
+            baseURL: uri,
+            timeout: 5000,
+            headers: {'Content-Type': 'application/json'},
+        })
+    }
+
+    async getUnspentByErgoTree(tree: ErgoTreeHex): Promise<ErgoBox[]> {
+        return this.backend.request<ErgoBox[]>({
+            url: `/boxes/unspent/byErgoTree/${tree}`
+        }).then((res) => res.data)
+    }
+
+
+    async getUnspentByErgoTreeTemplate(templateHash: ErgoTreeTemplateHashHex): Promise<ErgoBox[]> {
+        return this.backend.request<ErgoBox[]>({
+            url: `/boxes/unspent/byErgoTreeTemplateHash/${templateHash}`
+        }).then((res) => res.data)
+    }
+
+    async getUnspentByTokenId(tokenId: TokenId): Promise<ErgoBox[]> {
+        return this.backend.request<ErgoBox[]>({
+            url: `/boxes/unspent/byTokenId/${tokenId}`
+        }).then((res) => res.data)
+    }
 }
