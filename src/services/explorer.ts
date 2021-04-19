@@ -1,4 +1,4 @@
-import {ErgoTreeHex, ErgoTreeTemplateHashHex} from "../types";
+import {ErgoTree, ErgoTreeTemplateHash} from "../types";
 import {TokenId} from "../wallet/types";
 import {ErgoBox} from "../wallet/entities/ergoBox";
 import axios, {AxiosInstance} from "axios";
@@ -7,11 +7,11 @@ export interface Explorer {
 
     /** Get unspent boxes with a given ErgoTree.
      */
-    getUnspentByErgoTree(tree: ErgoTreeHex): Promise<ErgoBox[]>
+    getUnspentByErgoTree(tree: ErgoTree): Promise<ErgoBox[]>
 
     /** Get unspent boxes with scripts matching a given template hash.
      */
-    getUnspentByErgoTreeTemplate(templateHash: ErgoTreeTemplateHashHex): Promise<ErgoBox[]>
+    getUnspentByErgoTreeTemplate(templateHash: ErgoTreeTemplateHash): Promise<ErgoBox[]>
 
     /** Get unspent boxes containing a token with given id.
      */
@@ -30,14 +30,14 @@ export class ExplorerImpl implements Explorer {
         })
     }
 
-    async getUnspentByErgoTree(tree: ErgoTreeHex): Promise<ErgoBox[]> {
+    async getUnspentByErgoTree(tree: ErgoTree): Promise<ErgoBox[]> {
         return this.backend.request<ErgoBox[]>({
             url: `/boxes/unspent/byErgoTree/${tree}`
         }).then((res) => res.data)
     }
 
 
-    async getUnspentByErgoTreeTemplate(templateHash: ErgoTreeTemplateHashHex): Promise<ErgoBox[]> {
+    async getUnspentByErgoTreeTemplate(templateHash: ErgoTreeTemplateHash): Promise<ErgoBox[]> {
         return this.backend.request<ErgoBox[]>({
             url: `/boxes/unspent/byErgoTreeTemplateHash/${templateHash}`
         }).then((res) => res.data)
