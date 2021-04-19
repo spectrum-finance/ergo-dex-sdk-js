@@ -1,7 +1,7 @@
-import {ErgoTree, ErgoTreeTemplateHash} from "../types";
-import {TokenId} from "../wallet/types";
+import {ErgoTreeTemplateHash, TokenId} from "../wallet/types";
 import {ErgoBox} from "../wallet/entities/ergoBox";
 import axios, {AxiosInstance} from "axios";
+import {ErgoTree} from "../wallet/entities/ergoTree";
 
 export interface Explorer {
 

@@ -1,8 +1,6 @@
 import {Token} from "./token";
-import {BoxId} from "../types";
-import {ErgoBox as LibErgoBox} from "ergo-lib-wasm-browser";
-import {notImplemented} from "../../utils/notImplemented";
-import {ErgoTree, Register} from "../../types";
+import {BoxId, Register} from "../types";
+import {ErgoTree} from "./ergoTree";
 
 export class ErgoBox {
     readonly id: BoxId
@@ -26,9 +24,5 @@ export class ErgoBox {
         this.value = value
         this.tokens = tokens
         this.registers = registers
-    }
-
-    toErgoLib(): LibErgoBox {
-        return notImplemented()
     }
 }

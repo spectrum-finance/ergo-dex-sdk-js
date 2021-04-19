@@ -1,6 +1,6 @@
 import {NetworkContext} from "./networkContext";
 import {BoxSelection} from "../entities/boxSelection";
-import {Address} from "ergo-lib-wasm-browser";
+import {Address} from "../entities/address";
 
 export class TransactionContext {
     readonly inputs: BoxSelection

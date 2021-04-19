@@ -1,5 +1,4 @@
 import {PoolSetupParams} from "../models/poolSetupParams";
-import {Contract} from "ergo-lib-wasm-browser";
 import {SwapParams} from "../models/swapParams";
 import {ArbPoolContracts} from "../contracts/arbPoolContracts";
 import {EmissionLP} from "../constants";
@@ -17,6 +16,7 @@ import {ByteaConstant, Int64Constant, Int32Constant} from "../../wallet/entities
 import {mintLP, mintPoolNFT} from "../utils/tokens"
 import {DepositParams} from "../models/depositParams";
 import {RedeemParams} from "../models/redeemParams";
+import {ergoTreeFromAddress, ergoTreeToBytea} from "../../wallet/entities/ergoTree";
 
 export interface PoolOpsInterpreter {
 
@@ -59,7 +59,7 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
             let tokenIdLP = inputs.boxes[0].id
             let newTokenLP = mintLP(tokenIdLP, x.name, y.name)
             let poolBootScript = ArbPoolContracts.arbPoolBootScript(EmissionLP)
-            let poolSH: Uint8Array = Blake2b256.hash(poolBootScript.ergo_tree().to_bytes())
+            let poolSH: Uint8Array = Blake2b256.hash(ergoTreeToBytea(poolBootScript))
             let registers = [
                 {id: 4, value: new ByteaConstant(poolSH)},
                 {id: 5, value: new Int64Constant(params.outputShare)},
@@ -76,7 +76,7 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
             let txc0 = new ErgoTxCandidate(ctx.inputs, [proxyOut], height, ctx.feeNErgs, ctx.changeAddress)
             let tx0 = this.wallet.sign(txc0)
 
-            let lpP2Pk = Contract.pay_to_address(ctx.changeAddress)
+            let lpP2Pk = ergoTreeFromAddress(ctx.changeAddress)
             let lpShares = new Token(tokenIdLP, params.outputShare)
             let lpOut = new ErgoBoxCandidate(MinBoxAmountNErgs, lpP2Pk, height, [lpShares])
 
