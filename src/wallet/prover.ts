@@ -4,18 +4,11 @@ import {Input} from "./entities/input";
 
 export interface Prover {
 
+    /** Sign the given transaction.
+     */
     sign(tx: ErgoTxCandidate): Promise<ErgoTx>
 
+    /** Sign particular input of the given transaction.
+     */
     signInput(tx: ErgoTxCandidate, input: number): Promise<Input>
-}
-
-export class ProverImpl implements Prover {
-
-    sign(tx: ErgoTxCandidate): Promise<ErgoTx> {
-        return ergo.sign_tx(tx)
-    }
-
-    signInput(tx: ErgoTxCandidate, input: number): Promise<Input> {
-        return ergo.sign_tx_input(tx, input)
-    }
 }
