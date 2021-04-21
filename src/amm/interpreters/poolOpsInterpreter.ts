@@ -6,7 +6,7 @@ import {InsufficientInputs} from "../../wallet/errors/insufficientInputs";
 import {TransactionContext} from "../../wallet/models/transactionContext";
 import {ErgoBoxCandidate} from "../../wallet/entities/ergoBoxCandidate";
 import {ErgoTxCandidate} from "../../wallet/entities/ergoTxCandidate";
-import {ErgoWallet} from "../../wallet/ergoWallet";
+import {Prover} from "../../wallet/prover";
 import {ErgoTx} from "../../wallet/entities/ergoTx";
 import {Blake2b256} from "../../utils/blake2b256";
 import {MinBoxAmountNErgs} from "../../wallet/constants";
@@ -22,30 +22,30 @@ export interface PoolOpsInterpreter {
 
     /** Interpret `setup` operation on a pool to a chain of transactions.
      */
-    setup(params: PoolSetupParams, ctx: TransactionContext): ErgoTx[] | InsufficientInputs
+    setup(params: PoolSetupParams, ctx: TransactionContext): Promise<ErgoTx[]>
 
     /** Interpret `deposit` operation on a pool to a transaction.
      */
-    deposit(params: DepositParams, ctx: TransactionContext): ErgoTx | InsufficientInputs
+    deposit(params: DepositParams, ctx: TransactionContext): Promise<ErgoTx>
 
     /** Interpret `redeem` operation on a pool to a transaction.
      */
-    redeem(params: RedeemParams, ctx: TransactionContext): ErgoTx | InsufficientInputs
+    redeem(params: RedeemParams, ctx: TransactionContext): Promise<ErgoTx>
 
     /** Interpret `swap` operation on a pool to a transaction.
      */
-    swap(params: SwapParams, ctx: TransactionContext): ErgoTx | InsufficientInputs
+    swap(params: SwapParams, ctx: TransactionContext): Promise<ErgoTx>
 }
 
 export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
 
-    readonly wallet: ErgoWallet
+    readonly prover: Prover
 
-    constructor(wallet: ErgoWallet) {
-        this.wallet = wallet
+    constructor(prover: Prover) {
+        this.prover = prover
     }
 
-    setup(params: PoolSetupParams, ctx: TransactionContext): ErgoTx[] | InsufficientInputs {
+    async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<ErgoTx[]> {
         let [x, y] = [params.x.asset, params.y.asset]
         let height = ctx.network.height
         let inputs = ctx.inputs
@@ -74,7 +74,7 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
                 newTokenLP
             )
             let txc0 = new ErgoTxCandidate(ctx.inputs, [proxyOut], height, ctx.feeNErgs, ctx.changeAddress)
-            let tx0 = this.wallet.sign(txc0)
+            let tx0 = await this.prover.sign(txc0)
 
             let lpP2Pk = ergoTreeFromAddress(ctx.changeAddress)
             let lpShares = new Token(tokenIdLP, params.outputShare)
@@ -92,15 +92,15 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
             let poolOut = new ErgoBoxCandidate(poolValueNErgs, poolScript, height, poolTokens, poolRegisters, newTokenNFT)
             let txc1Inputs = BoxSelection.safe(poolBootBox)
             let txc1 = new ErgoTxCandidate(txc1Inputs, [poolOut, lpOut], height, ctx.feeNErgs, ctx.changeAddress)
-            let tx1 = this.wallet.sign(txc1)
+            let tx1 = await this.prover.sign(txc1)
 
-            return [tx0, tx1]
+            return Promise.resolve([tx0, tx1])
         } else {
-            return new InsufficientInputs(`Token pair {${x.name}|${y.name}} not provided`)
+            return Promise.reject(new InsufficientInputs(`Token pair {${x.name}|${y.name}} not provided`))
         }
     }
 
-    deposit(params: DepositParams, ctx: TransactionContext): ErgoTx | InsufficientInputs {
+    deposit(params: DepositParams, ctx: TransactionContext): Promise<ErgoTx> {
         let [x, y] = [params.x, params.y]
         let proxyScript = ArbPoolContracts.genericDepositScript(EmissionLP, params.poolId, params.pk)
         let outputGranted = ctx.inputs.totalOutputWithoutChange()
@@ -111,26 +111,26 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
         if (pairIn.length == 2) {
             let out = new ErgoBoxCandidate(outputGranted.nErgs, proxyScript, ctx.network.height, pairIn)
             let txc = new ErgoTxCandidate(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)
-            return this.wallet.sign(txc)
+            return this.prover.sign(txc)
         } else {
-            return new InsufficientInputs(`Token pair {${x.name}|${y.name}} not provided`)
+            return Promise.reject(new InsufficientInputs(`Token pair {${x.name}|${y.name}} not provided`))
         }
     }
 
-    redeem(params: RedeemParams, ctx: TransactionContext): ErgoTx | InsufficientInputs {
+    redeem(params: RedeemParams, ctx: TransactionContext): Promise<ErgoTx> {
         let proxyScript = ArbPoolContracts.genericRedeemScript(EmissionLP, params.poolId, params.pk)
         let outputGranted = ctx.inputs.totalOutputWithoutChange()
         let tokensIn = outputGranted.tokens.filter((t, _i, _xs) => t.id === params.lp.id)
         if (tokensIn.length == 1) {
             let out = new ErgoBoxCandidate(outputGranted.nErgs, proxyScript, ctx.network.height, tokensIn)
             let txc = new ErgoTxCandidate(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)
-            return this.wallet.sign(txc)
+            return this.prover.sign(txc)
         } else {
-            return new InsufficientInputs(`LP tokens not provided`)
+            return Promise.reject(new InsufficientInputs(`LP tokens not provided`))
         }
     }
 
-    swap(params: SwapParams, ctx: TransactionContext): ErgoTx | InsufficientInputs {
+    swap(params: SwapParams, ctx: TransactionContext): Promise<ErgoTx> {
         let proxyScript = ArbPoolContracts.swapScript(
             params.poolScriptHash,
             params.poolFeeNum,
@@ -145,9 +145,9 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
         if (tokensIn.length == 1) {
             let out = new ErgoBoxCandidate(outputGranted.nErgs, proxyScript, ctx.network.height, tokensIn)
             let txc = new ErgoTxCandidate(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)
-            return this.wallet.sign(txc)
+            return this.prover.sign(txc)
         } else {
-            return new InsufficientInputs(`Base asset '${baseAssetId}' not provided`)
+            return Promise.reject(new InsufficientInputs(`Base asset '${baseAssetId}' not provided`))
         }
     }
 }
