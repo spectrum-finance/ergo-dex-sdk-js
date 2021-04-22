@@ -73,7 +73,7 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
                 registers,
                 newTokenLP
             )
-            let txc0 = new ErgoTxCandidate(ctx.inputs, [proxyOut], height, ctx.feeNErgs, ctx.changeAddress)
+            let txc0 = ErgoTxCandidate.make(ctx.inputs, [proxyOut], height, ctx.feeNErgs, ctx.changeAddress)
             let tx0 = await this.prover.sign(txc0)
 
             let lpP2Pk = ergoTreeFromAddress(ctx.changeAddress)
@@ -91,7 +91,7 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
             let poolRegisters = [{id: 4, value: new Int32Constant(params.feeNumerator)}]
             let poolOut = new ErgoBoxCandidate(poolValueNErgs, poolScript, height, poolTokens, poolRegisters, newTokenNFT)
             let txc1Inputs = BoxSelection.safe(poolBootBox)
-            let txc1 = new ErgoTxCandidate(txc1Inputs, [poolOut, lpOut], height, ctx.feeNErgs, ctx.changeAddress)
+            let txc1 = ErgoTxCandidate.make(txc1Inputs, [poolOut, lpOut], height, ctx.feeNErgs, ctx.changeAddress)
             let tx1 = await this.prover.sign(txc1)
 
             return Promise.resolve([tx0, tx1])
@@ -110,7 +110,7 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
         ].flat()
         if (pairIn.length == 2) {
             let out = new ErgoBoxCandidate(outputGranted.nErgs, proxyScript, ctx.network.height, pairIn)
-            let txc = new ErgoTxCandidate(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)
+            let txc = ErgoTxCandidate.make(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)
             return this.prover.sign(txc)
         } else {
             return Promise.reject(new InsufficientInputs(`Token pair {${x.name}|${y.name}} not provided`))
@@ -123,7 +123,7 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
         let tokensIn = outputGranted.tokens.filter((t, _i, _xs) => t.id === params.lp.id)
         if (tokensIn.length == 1) {
             let out = new ErgoBoxCandidate(outputGranted.nErgs, proxyScript, ctx.network.height, tokensIn)
-            let txc = new ErgoTxCandidate(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)
+            let txc = ErgoTxCandidate.make(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)
             return this.prover.sign(txc)
         } else {
             return Promise.reject(new InsufficientInputs(`LP tokens not provided`))
@@ -144,7 +144,7 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
         let tokensIn = outputGranted.tokens.filter((t, _i, _xs) => t.id === baseAssetId)
         if (tokensIn.length == 1) {
             let out = new ErgoBoxCandidate(outputGranted.nErgs, proxyScript, ctx.network.height, tokensIn)
-            let txc = new ErgoTxCandidate(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)
+            let txc = ErgoTxCandidate.make(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)
             return this.prover.sign(txc)
         } else {
             return Promise.reject(new InsufficientInputs(`Base asset '${baseAssetId}' not provided`))

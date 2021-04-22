@@ -1,5 +1,5 @@
 import {HexString} from "../types";
-import {Address as LibAddress, ErgoTree as LibErgoTreee} from "ergo-lib-wasm-browser";
+import {Address as LibAddress, ErgoTree as LibErgoTree} from "ergo-lib-wasm-browser";
 import {Address} from "./address";
 
 export type ErgoTree = HexString
@@ -9,5 +9,5 @@ export function ergoTreeFromAddress(addr: Address): ErgoTree {
 }
 
 export function ergoTreeToBytea(ergoTree: ErgoTree): Uint8Array {
-    return LibErgoTreee.from_base16_bytes(ergoTree).to_bytes()
+    return LibErgoTree.from_base16_bytes(ergoTree).to_bytes()
 }

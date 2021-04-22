@@ -1,4 +1,4 @@
-import {TokenId} from "ergo-lib-wasm-browser";
+import {TokenId} from "../types";
 
 export class ChangeBox {
     readonly value: bigint

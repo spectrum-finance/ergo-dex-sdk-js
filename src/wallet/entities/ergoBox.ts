@@ -1,9 +1,11 @@
 import {Token} from "./token";
-import {BoxId, Register} from "../types";
+import {BoxId, Register, TxId} from "../types";
 import {ErgoTree} from "./ergoTree";
 
 export class ErgoBox {
     readonly id: BoxId
+    readonly txId: TxId
+    readonly index: number
     readonly ergoTree: ErgoTree
     readonly creationHeight: number
     readonly value: bigint
@@ -12,6 +14,8 @@ export class ErgoBox {
 
     constructor(
         id: BoxId,
+        txId: TxId,
+        index: number,
         ergoTree: ErgoTree,
         creationHeight: number,
         value: bigint,
@@ -19,6 +23,8 @@ export class ErgoBox {
         registers: Register[]
     ) {
         this.id = id
+        this.txId = txId
+        this.index = index
         this.ergoTree = ergoTree
         this.creationHeight = creationHeight
         this.value = value
