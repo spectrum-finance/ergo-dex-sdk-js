@@ -1,6 +1,6 @@
 import {PublicKey} from "../../wallet/types";
 import {PoolId} from "../types";
-import {Eip4Token} from "../../entities/eip4Token";
+import {Eip4Token} from "../../wallet/entities/eip4Token";
 
 export class DepositParams {
     readonly poolId: PoolId

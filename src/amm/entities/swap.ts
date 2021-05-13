@@ -1,5 +1,5 @@
 import {Address, TokenId} from "ergo-lib-wasm-browser";
-import {AssetAmount} from "../../entities/assetAmount";
+import {AssetAmount} from "../../wallet/entities/assetAmount";
 import {PublicKey} from "../../wallet/types";
 
 export class Swap {

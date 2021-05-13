@@ -1,4 +1,4 @@
-import {Eip4Token} from "./entities/eip4Token";
+import {Eip4Token} from "./wallet/entities/eip4Token";
 import {HexString} from "./wallet/types";
 import {Constant} from "./wallet/entities/constant";
 

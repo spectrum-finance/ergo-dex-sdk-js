@@ -1,5 +1,5 @@
 import {MintToken, TokenId} from "../../wallet/types";
-import {Eip4Token} from "../../entities/eip4Token";
+import {Eip4Token} from "../../wallet/entities/eip4Token";
 import {EmissionLP} from "../constants";
 
 export function mintLP(id: TokenId, tickerX: string, tickerY: string): MintToken {

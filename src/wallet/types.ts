@@ -1,4 +1,4 @@
-import {Eip4Token} from "../entities/eip4Token";
+import {Eip4Token} from "./entities/eip4Token";
 import {Constant} from "./entities/constant";
 
 export type HexString = string

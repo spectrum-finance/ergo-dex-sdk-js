@@ -1,4 +1,4 @@
-import {TokenId} from "../wallet/types";
+import {TokenId} from "../types";
 
 export class Eip4Token {
     readonly id: TokenId

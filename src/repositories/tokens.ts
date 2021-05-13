@@ -1,5 +1,5 @@
 import {TokenId} from "ergo-lib-wasm-browser";
-import {Eip4Token} from "../entities/eip4Token";
+import {Eip4Token} from "../wallet/entities/eip4Token";
 
 export interface Tokens {
 

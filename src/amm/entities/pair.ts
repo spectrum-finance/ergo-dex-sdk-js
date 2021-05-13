@@ -1,6 +1,6 @@
-import {AssetAmount} from "../../entities/assetAmount";
+import {AssetAmount} from "../../wallet/entities/assetAmount";
 import {Price} from "../../entities/price";
-import {Eip4Token} from "../../entities/eip4Token";
+import {Eip4Token} from "../../wallet/entities/eip4Token";
 
 export class Pair {
     readonly x: AssetAmount

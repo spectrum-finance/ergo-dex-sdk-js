@@ -1,4 +1,4 @@
-import {AssetAmount} from "../../entities/assetAmount";
+import {AssetAmount} from "../../wallet/entities/assetAmount";
 import {HexString, NErg, PublicKey, TokenId} from "../../wallet/types";
 
 export class SwapParams {
