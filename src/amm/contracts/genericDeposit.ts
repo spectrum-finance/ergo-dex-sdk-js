@@ -1,6 +1,7 @@
 export const GenericDepositTemplate = `{
     val InitiallyLockedLP = $emissionLPL
     
+    val DexFee  = $dexFee
     val PoolNFT = $poolNFT
     val Pk      = $pk
 
@@ -18,8 +19,8 @@ export const GenericDepositTemplate = `{
     val supplyLP = InitiallyLockedLP - poolLP._2
 
     val minimalReward = min(
-        selfX.toBigInt * supplyLP / reservesX,
-        selfY.toBigInt * supplyLP / reservesY
+        selfX._2.toBigInt * supplyLP / reservesX._2,
+        selfY._2.toBigInt * supplyLP / reservesY._2
     )
 
     val rewardOut = OUTPUTS(1)
@@ -27,6 +28,7 @@ export const GenericDepositTemplate = `{
 
     val validRewardOut =
         rewardOut.propositionBytes == Pk.propBytes &&
+        rewardOut.value >= SELF.value - DexFee &&
         rewardLP._1 == poolLP._1 &&
         rewardLP._2 >= minimalReward
 

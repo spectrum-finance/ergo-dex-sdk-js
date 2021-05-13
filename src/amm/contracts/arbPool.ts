@@ -44,13 +44,12 @@ export const ArbPoolScriptTemplate = `{
             deltaReservesX.toBigInt * supplyLP0 / reservesX0,
             deltaReservesY.toBigInt * supplyLP0 / reservesY0
         )
-        -deltaSupplyLP <= sharesUnlocked
+        deltaSupplyLP <= sharesUnlocked
     }
 
     val validRedemption = {
-        val shareLP = deltaSupplyLP.toBigInt / supplyLP0
-        // note: shareLP and deltaReservesX, deltaReservesY are negative
-        deltaReservesX >= shareLP * reservesX0 && deltaReservesY >= shareLP * reservesY0
+        val _deltaSupplyLP = deltaSupplyLP.toBigInt
+        deltaReservesX.toBigInt * supplyLP0 >= _deltaSupplyLP * reservesX0 && deltaReservesY.toBigInt * supplyLP0 >= _deltaSupplyLP * reservesY0
     }
 
     val validSwap =

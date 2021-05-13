@@ -4,6 +4,7 @@ export const ArbPoolBootScriptTemplate = `{
     val poolScriptHash  = SELF.R4[Coll[Byte]].get
     val desiredSharesLP = SELF.R5[Long].get
     val poolFeeConfig   = SELF.R6[Long].get
+    val minerFeeNErgs   = SELF.R7[Long].get
 
     val selfLP = SELF.tokens(0)
     val selfX  = SELF.tokens(1)
@@ -11,8 +12,9 @@ export const ArbPoolBootScriptTemplate = `{
 
     val tokenIdLP = selfLP._1
 
-    val validSelfLP            = selfLP._2 == InitiallyLockedLP
-    val validSelfPoolFeeConfig = poolFeeConfig <= 1000L && poolFeeConfig > 750L
+    // self checks
+    val validSelfLP            = selfLP._2 == InitiallyLockedLP // Correct amount of LP tokens issued
+    val validSelfPoolFeeConfig = poolFeeConfig <= 1000L && poolFeeConfig > 750L // Correct pool fee config
 
     val pool           = OUTPUTS(0)
     val sharesRewardLP = OUTPUTS(1)
@@ -23,7 +25,7 @@ export const ArbPoolBootScriptTemplate = `{
         else 0L
 
     val validPoolContract  = blake2b256(pool.propositionBytes) == poolScriptHash
-    val validPoolErgAmount = pool.value == SELF.value - sharesRewardLP.value
+    val validPoolErgAmount = pool.value == SELF.value - sharesRewardLP.value - minerFeeNErgs
     val validPoolNFT       = pool.tokens(0) == (SELF.id, 1L)
     val validPoolConfig    = pool.R4[Long].get == poolFeeConfig 
 

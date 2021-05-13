@@ -102,7 +102,7 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
 
     deposit(params: DepositParams, ctx: TransactionContext): Promise<ErgoTx> {
         let [x, y] = [params.x, params.y]
-        let proxyScript = ArbPoolContracts.genericDepositScript(EmissionLP, params.poolId, params.pk)
+        let proxyScript = ArbPoolContracts.genericDepositScript(EmissionLP, params.poolId, params.pk, params.dexFee)
         let outputGranted = ctx.inputs.totalOutputWithoutChange()
         let pairIn = [
             outputGranted.tokens.filter((t, _i, _xs) => t.id === x.id),
@@ -118,7 +118,7 @@ export class PoolOpsInterpreterImpl implements PoolOpsInterpreter {
     }
 
     redeem(params: RedeemParams, ctx: TransactionContext): Promise<ErgoTx> {
-        let proxyScript = ArbPoolContracts.genericRedeemScript(EmissionLP, params.poolId, params.pk)
+        let proxyScript = ArbPoolContracts.genericRedeemScript(EmissionLP, params.poolId, params.pk, params.dexFee)
         let outputGranted = ctx.inputs.totalOutputWithoutChange()
         let tokensIn = outputGranted.tokens.filter((t, _i, _xs) => t.id === params.lp.id)
         if (tokensIn.length == 1) {

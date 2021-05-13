@@ -36,7 +36,6 @@ export class ExplorerImpl implements Explorer {
         }).then((res) => res.data)
     }
 
-
     async getUnspentByErgoTreeTemplate(templateHash: ErgoTreeTemplateHash): Promise<ErgoBox[]> {
         return this.backend.request<ErgoBox[]>({
             url: `/boxes/unspent/byErgoTreeTemplateHash/${templateHash}`

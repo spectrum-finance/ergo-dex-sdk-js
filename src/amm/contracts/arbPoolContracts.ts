@@ -20,19 +20,21 @@ export class ArbPoolContracts {
         return Contract.compile(script).ergo_tree().to_base16_bytes()
     }
 
-    static genericDepositScript(emissionLP: bigint, poolId: PoolId, pk: PublicKey): ErgoTree {
+    static genericDepositScript(emissionLP: bigint, poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
         let script = GenericDepositTemplate
             .replace("$emissionLP", emissionLP.toString())
             .replace("$poolNFT", poolId.toString())
             .replace("$pk", pk)
+            .replace("$dexFee", dexFee.toString())
         return Contract.compile(script).ergo_tree().to_base16_bytes()
     }
 
-    static genericRedeemScript(emissionLP: bigint, poolId: PoolId, pk: PublicKey): ErgoTree {
+    static genericRedeemScript(emissionLP: bigint, poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
         let script = GenericRedeemTemplate
             .replace("$emissionLP", emissionLP.toString())
             .replace("$poolNFT", poolId.toString())
             .replace("$pk", pk)
+            .replace("$dexFee", dexFee.toString())
         return Contract.compile(script).ergo_tree().to_base16_bytes()
     }
 

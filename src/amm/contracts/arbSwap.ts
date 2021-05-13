@@ -25,14 +25,15 @@ export const ArbSwapTemplate = `{
 
     val validTrade =
         OUTPUTS.exists { (box: Box) =>
-            val quoteAsset  = box.tokens(0)
-            val quoteAmount = quoteAsset._2
-            val fairDexFee  = box.value >= SELF.value - quoteAmount * DexFeePerToken
-            val fairPrice   =
+            val quoteAsset   = box.tokens(0)
+            val quoteAmount  = quoteAsset._2
+            val fairDexFee   = box.value >= SELF.value - quoteAmount * DexFeePerToken
+            val relaxedInput = baseAmount - 1
+            val fairPrice    =
                 if (poolAssetX._1 == QuoteId)
-                    poolAssetX._2.toBigInt * baseAmount * FeeNum <= quoteAmount * (poolAssetY._2.toBigInt * FeeDenom + baseAmount * FeeNum)
+                    poolAssetX._2.toBigInt * relaxedInput * FeeNum <= quoteAmount * (poolAssetY._2.toBigInt * FeeDenom + relaxedInput * FeeNum)
                 else
-                    poolAssetY._2.toBigInt * baseAmount * FeeNum <= quoteAmount * (poolAssetX._2.toBigInt * FeeDenom + baseAmount * FeeNum)
+                    poolAssetY._2.toBigInt * relaxedInput * FeeNum <= quoteAmount * (poolAssetX._2.toBigInt * FeeDenom + relaxedInput * FeeNum)
 
             box.propositionBytes == Pk.propBytes &&
             quoteAsset._1 == QuoteId &&

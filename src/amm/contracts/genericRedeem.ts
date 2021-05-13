@@ -1,6 +1,7 @@
 export const GenericRedeemTemplate = `{
     val InitiallyLockedLP = $emissionLPL
     
+    val DexFee  = $dexFee
     val PoolNFT = $poolNFT
     val Pk      = $pk
 
@@ -16,10 +17,10 @@ export const GenericRedeemTemplate = `{
 
     val supplyLP = InitiallyLockedLP - poolLP._2
 
-    val shareLP = selfLP._1.toBigInt / supplyLP
+    val shareLP = selfLP._2.toBigInt / supplyLP
 
-    val minReturnX = shareLP * reservesX
-    val minReturnY = shareLP * reservesY
+    val minReturnX = shareLP * reservesX._2
+    val minReturnY = shareLP * reservesY._2
 
     val returnOut = OUTPUTS(1)
 
@@ -28,7 +29,7 @@ export const GenericRedeemTemplate = `{
 
     val validReturnOut =
         returnOut.propositionBytes == Pk.propBytes &&
-        returnOut.value >= SELF.value &&
+        returnOut.value >= SELF.value - DexFee &&
         returnX._1 == reservesX._1 &&
         returnY._1 == reservesY._1 &&
         returnX._2 >= minReturnX &&
