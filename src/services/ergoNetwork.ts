@@ -2,8 +2,9 @@ import {ErgoTreeTemplateHash, TokenId} from "../wallet/types";
 import {ErgoBox} from "../wallet/entities/ergoBox";
 import axios, {AxiosInstance} from "axios";
 import {ErgoTree} from "../wallet/entities/ergoTree";
+import {Eip4Token} from "../wallet/entities/eip4Token";
 
-export interface Explorer {
+export interface ErgoNetwork {
 
     /** Get unspent boxes with a given ErgoTree.
      */
@@ -16,9 +17,11 @@ export interface Explorer {
     /** Get unspent boxes containing a token with given id.
      */
     getUnspentByTokenId(tokenId: TokenId): Promise<ErgoBox[]>
+
+    getToken(tokenId: TokenId): Promise<Eip4Token | undefined>
 }
 
-export class ExplorerImpl implements Explorer {
+export class Explorer implements ErgoNetwork {
 
     readonly backend: AxiosInstance
 
@@ -46,5 +49,11 @@ export class ExplorerImpl implements Explorer {
         return this.backend.request<ErgoBox[]>({
             url: `/boxes/unspent/byTokenId/${tokenId}`
         }).then((res) => res.data)
+    }
+
+    async getToken(tokenId: TokenId): Promise<Eip4Token | undefined> {
+        return this.backend.request<Eip4Token>({
+            url: `/api/v1/tokens/${tokenId}`
+        }).then((res) => res.status != 404 ? res.data : undefined)
     }
 }
