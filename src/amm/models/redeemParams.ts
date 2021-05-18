@@ -1,17 +1,12 @@
-import {PublicKey} from "../../wallet/types";
+import {PublicKey} from "../../wallet/entities/publicKey";
 import {PoolId} from "../types";
 import {Eip4Token} from "../../wallet/entities/eip4Token";
 
 export class RedeemParams {
-    readonly poolId: PoolId
-    readonly pk: PublicKey
-    readonly lp: Eip4Token
-    readonly dexFee: bigint
-
-    constructor(poolId: PoolId, pk: PublicKey, lp: Eip4Token, dexFee: bigint) {
-        this.poolId = poolId
-        this.pk = pk
-        this.lp = lp
-        this.dexFee = dexFee
-    }
+    constructor(
+        public readonly poolId: PoolId,
+        public readonly pk: PublicKey,
+        public readonly lp: Eip4Token,
+        public readonly dexFee: bigint
+    ) {}
 }

@@ -4,8 +4,6 @@ import {Constant} from "./entities/constant";
 export type HexString = string
 export type Base58String = string
 
-export type PublicKey = HexString
-
 export type TokenId = HexString
 export type BoxId = HexString
 export type TxId = HexString

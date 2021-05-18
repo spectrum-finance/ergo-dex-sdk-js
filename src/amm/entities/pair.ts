@@ -3,13 +3,11 @@ import {Price} from "../../entities/price";
 import {Eip4Token} from "../../wallet/entities/eip4Token";
 
 export class Pair {
-    readonly x: AssetAmount
-    readonly y: AssetAmount
 
-    constructor(x: AssetAmount, y: AssetAmount) {
-        this.x = x
-        this.y = y
-    }
+    constructor(
+        public readonly x: AssetAmount,
+        public readonly y: AssetAmount
+    ) {}
 
     get tokenX(): Eip4Token {
         return this.x.asset

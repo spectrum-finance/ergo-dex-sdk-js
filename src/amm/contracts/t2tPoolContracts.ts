@@ -2,25 +2,26 @@ import {Contract} from "ergo-lib-wasm-browser";
 import {ArbPoolBootScriptTemplate} from "./arbPoolBoot";
 import {ArbPoolScriptTemplate} from "./arbPool";
 import {PoolId} from "../types";
-import {HexString, NErg, PublicKey, TokenId} from "../../wallet/types";
+import {HexString, NErg, TokenId} from "../../wallet/types";
 import {GenericDepositTemplate} from "./genericDeposit";
 import {GenericRedeemTemplate} from "./genericRedeem";
 import {ArbSwapTemplate} from "./arbSwap";
 import {ErgoTree} from "../../wallet/entities/ergoTree";
+import {PublicKey} from "../../wallet/entities/publicKey";
 
-export class ArbPoolContracts {
+export class T2tPoolContracts {
 
-    static arbPoolBootScript(emissionLP: bigint): ErgoTree {
+    static poolBoot(emissionLP: bigint): ErgoTree {
         let script = ArbPoolBootScriptTemplate.replace("$emissionLP", emissionLP.toString())
         return Contract.compile(script).ergo_tree().to_base16_bytes()
     }
 
-    static arbPoolScript(emissionLP: bigint): ErgoTree {
+    static pool(emissionLP: bigint): ErgoTree {
         let script = ArbPoolScriptTemplate.replace("$emissionLP", emissionLP.toString())
         return Contract.compile(script).ergo_tree().to_base16_bytes()
     }
 
-    static genericDepositScript(emissionLP: bigint, poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
+    static deposit(emissionLP: bigint, poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
         let script = GenericDepositTemplate
             .replace("$emissionLP", emissionLP.toString())
             .replace("$poolNFT", poolId.toString())
@@ -29,7 +30,7 @@ export class ArbPoolContracts {
         return Contract.compile(script).ergo_tree().to_base16_bytes()
     }
 
-    static genericRedeemScript(emissionLP: bigint, poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
+    static redeem(emissionLP: bigint, poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
         let script = GenericRedeemTemplate
             .replace("$emissionLP", emissionLP.toString())
             .replace("$poolNFT", poolId.toString())
@@ -38,7 +39,7 @@ export class ArbPoolContracts {
         return Contract.compile(script).ergo_tree().to_base16_bytes()
     }
 
-    static swapScript(
+    static swap(
         poolScriptHash: HexString,
         poolFeeNum: number,
         quoteId: TokenId,
