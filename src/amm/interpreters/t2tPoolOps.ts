@@ -17,15 +17,11 @@ import {mintLP, mintPoolNFT} from "../utils/tokens"
 import {DepositParams} from "../models/depositParams";
 import {RedeemParams} from "../models/redeemParams";
 import {ergoTreeFromAddress, ergoTreeToBytea} from "../../wallet/entities/ergoTree";
-import {PoolOpsInterpreter} from "./poolOpsInterpreter";
+import {PoolOps} from "./poolOps";
 
-export class T2tPoolOpsInterpreterImpl implements PoolOpsInterpreter {
+export class T2tPoolOps implements PoolOps {
 
-    readonly prover: Prover
-
-    constructor(prover: Prover) {
-        this.prover = prover
-    }
+    constructor(public readonly prover: Prover) {}
 
     async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<ErgoTx[]> {
         let [x, y] = [params.x.asset, params.y.asset]

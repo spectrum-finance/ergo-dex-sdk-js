@@ -5,7 +5,7 @@ import {ErgoTx} from "../../wallet/entities/ergoTx";
 import {DepositParams} from "../models/depositParams";
 import {RedeemParams} from "../models/redeemParams";
 
-export interface PoolOpsInterpreter {
+export interface PoolOps {
 
     /** Interpret `setup` operation on a pool to a chain of transactions.
      */

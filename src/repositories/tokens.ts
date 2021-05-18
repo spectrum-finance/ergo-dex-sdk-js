@@ -11,11 +11,7 @@ export interface Tokens {
 
 export class NetworkTokens implements Tokens {
 
-    readonly network: ErgoNetwork
-
-    constructor(network: ErgoNetwork) {
-        this.network = network
-    }
+    constructor(public readonly network: ErgoNetwork) {}
 
     get(id: TokenId): Promise<Eip4Token | undefined> {
         return this.network.getToken(id);
