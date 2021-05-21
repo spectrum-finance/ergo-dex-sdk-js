@@ -1,19 +1,20 @@
-import {Token} from "./token";
+import {Eip4Token} from "./eip4Token";
+import {I64, Token as LibToken, TokenAmount as LibTokenAmount, TokenId as LibTokenId} from "ergo-lib-wasm-browser";
 
-export class TokenAmount {
-    readonly token: Token
+export class AssetAmount {
+    readonly asset: Eip4Token
     readonly amount: bigint
 
-    constructor(token: Token, amount: bigint) {
-        this.token = token
+    constructor(asset: Eip4Token, amount: bigint) {
+        this.asset = asset
         this.amount = amount
     }
 
-    withAmount(amount: bigint): TokenAmount {
-        return new TokenAmount(this.token, amount)
+    withAmount(amount: bigint): AssetAmount {
+        return new AssetAmount(this.asset, amount)
     }
 
-    add(n: bigint | TokenAmount): TokenAmount {
+    add(n: bigint | AssetAmount): AssetAmount {
         if (typeof n === "bigint") {
             return this.withAmount(this.amount + n)
         } else {
@@ -21,7 +22,7 @@ export class TokenAmount {
         }
     }
 
-    sub(n: bigint | TokenAmount): TokenAmount {
+    sub(n: bigint | AssetAmount): AssetAmount {
         if (typeof n === "bigint") {
             return this.withAmount(this.amount - n)
         } else {
@@ -29,7 +30,7 @@ export class TokenAmount {
         }
     }
 
-    mul(n: bigint | TokenAmount): TokenAmount {
+    mul(n: bigint | AssetAmount): AssetAmount {
         if (typeof n === "bigint") {
             return this.withAmount(this.amount * n)
         } else {
@@ -37,7 +38,7 @@ export class TokenAmount {
         }
     }
 
-    div(n: bigint | TokenAmount): TokenAmount {
+    div(n: bigint | AssetAmount): AssetAmount {
         if (typeof n === "bigint") {
             return this.withAmount(this.amount / n)
         } else {

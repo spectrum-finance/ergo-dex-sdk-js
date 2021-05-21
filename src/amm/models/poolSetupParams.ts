@@ -1,18 +1,18 @@
 import {InvalidParams} from "../errors/invalidParams";
 import {MinPoolNanoErgs, PoolFeeMaxDecimals, PoolFeeScale} from "../constants";
-import {TokenAmount} from "../../entities/tokenAmount";
+import {AssetAmount} from "../../wallet/entities/assetAmount";
 import {sqrt} from "../../utils/sqrt";
 
 export class PoolSetupParams {
-    readonly x: TokenAmount
-    readonly y: TokenAmount
+    readonly x: AssetAmount
+    readonly y: AssetAmount
     readonly feeNumerator: number
     readonly lockNanoErgs: bigint
     readonly outputShare: bigint
 
     private constructor(
-        x: TokenAmount,
-        y: TokenAmount,
+        x: AssetAmount,
+        y: AssetAmount,
         feeNumerator: number,
         lockNanoErgs: bigint,
         outputShare: bigint
@@ -24,8 +24,8 @@ export class PoolSetupParams {
         this.outputShare = outputShare
     }
 
-    static make(x: TokenAmount, y: TokenAmount, fee: number, lockNanoErgs: bigint): PoolSetupParams | InvalidParams {
-        let invalidPair = x.token === y.token ? [{param: "x|y", error: "x|y must contain different tokens"}] : []
+    static make(x: AssetAmount, y: AssetAmount, fee: number, lockNanoErgs: bigint): PoolSetupParams | InvalidParams {
+        let invalidPair = x.asset === y.asset ? [{param: "x|y", error: "x|y must contain different tokens"}] : []
         let invalidFeeRange = fee > 1 && fee < 0 ? [{param: "fee", error: "Fee must be in range [0, 1]"}] : []
         let invalidFeeResolution = fee.toString().split(".")[1].length > PoolFeeMaxDecimals ? [{
             param: "fee",

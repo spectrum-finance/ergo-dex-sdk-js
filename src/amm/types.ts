@@ -1,3 +1,3 @@
-import {TokenId} from "ergo-lib-wasm-browser";
+import {TokenId} from "../wallet/types";
 
 export type PoolId = TokenId

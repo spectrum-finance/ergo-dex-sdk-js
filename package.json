@@ -1,7 +1,17 @@
 {
   "name": "ergo-dex-sdk",
-  "version": "1.0.0",
+  "version": "0.0.3",
   "dependencies": {
-    "ergo-lib-wasm-browser": "0.8.0"
+    "axios": "0.21.1",
+    "blakejs": "1.1.0",
+    "bs58": "4.0.1",
+    "ergo-lib-wasm-browser": "0.11.0"
+  },
+  "devDependencies": {
+    "@types/bs58": "^4.0.1",
+    "@types/node": "^15.3.0"
+  },
+  "scripts": {
+    "build": "tsc"
   }
 }
