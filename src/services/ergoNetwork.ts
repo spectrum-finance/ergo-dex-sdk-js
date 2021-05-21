@@ -18,6 +18,8 @@ export interface ErgoNetwork {
      */
     getUnspentByTokenId(tokenId: TokenId): Promise<ErgoBox[]>
 
+    /** Get a token info by id.
+     */
     getToken(tokenId: TokenId): Promise<Eip4Token | undefined>
 }
 
