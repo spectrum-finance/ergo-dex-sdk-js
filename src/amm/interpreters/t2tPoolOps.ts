@@ -18,7 +18,7 @@ import {DepositParams} from "../models/depositParams";
 import {RedeemParams} from "../models/redeemParams";
 import {ergoTreeFromAddress, ergoTreeToBytea} from "../../wallet/entities/ergoTree";
 import {PoolOps} from "./poolOps";
-import {makeRegisters} from "../../wallet/entities/registers";
+import {registers} from "../../wallet/entities/registers";
 
 export class T2tPoolOps implements PoolOps {
 
@@ -41,7 +41,7 @@ export class T2tPoolOps implements PoolOps {
             let newTokenLP = mintLP(tokenIdLP, tickerX, tickerY)
             let poolBootScript = T2tPoolContracts.poolBoot(EmissionLP)
             let poolSH: Uint8Array = Blake2b256.hash(ergoTreeToBytea(poolBootScript))
-            let registers = makeRegisters([
+            let proxyRegs = registers([
                 {id: "R4", value: new ByteaConstant(poolSH)},
                 {id: "R5", value: new Int64Constant(params.outputShare)},
                 {id: "R6", value: new Int32Constant(params.feeNumerator)},
@@ -51,7 +51,7 @@ export class T2tPoolOps implements PoolOps {
                 T2tPoolContracts.poolBoot(EmissionLP),
                 ctx.network.height,
                 pairIn,
-                registers,
+                proxyRegs,
                 newTokenLP
             )
             let txc0 = ErgoTxCandidate.make(ctx.inputs, [proxyOut], height, ctx.feeNErgs, ctx.changeAddress)
@@ -69,8 +69,8 @@ export class T2tPoolOps implements PoolOps {
             let poolAmountLP = newTokenLP.amount - lpShares.amount
             let poolLP = new Token(tokenIdLP, poolAmountLP)
             let poolTokens = [poolLP].concat(poolBootBox.tokens.slice(1))
-            let poolRegisters = makeRegisters([{id: "R4", value: new Int32Constant(params.feeNumerator)}])
-            let poolOut = new ErgoBoxCandidate(poolValueNErgs, poolScript, height, poolTokens, poolRegisters, newTokenNFT)
+            let poolRegis = registers([{id: "R4", value: new Int32Constant(params.feeNumerator)}])
+            let poolOut = new ErgoBoxCandidate(poolValueNErgs, poolScript, height, poolTokens, poolRegis, newTokenNFT)
             let txc1Inputs = BoxSelection.safe(poolBootBox)
             let txc1 = ErgoTxCandidate.make(txc1Inputs, [poolOut, lpOut], height, ctx.feeNErgs, ctx.changeAddress)
             let tx1 = await this.prover.sign(txc1)

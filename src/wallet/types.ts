@@ -1,6 +1,4 @@
 import {AssetInfo} from "./entities/assetInfo";
-import {Constant} from "./entities/constant";
-import {RegisterId} from "./entities/registerId";
 
 export type HexString = string
 export type Base58String = string
