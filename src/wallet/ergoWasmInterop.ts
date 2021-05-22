@@ -6,7 +6,7 @@ import {ErgoTree, ergoTreeToBytea} from "./entities/ergoTree";
 import {Token} from "./entities/token";
 import {ErgoBoxCandidate} from "./entities/ergoBoxCandidate";
 import {Int32Constant, Int64Constant} from "./entities/constant";
-import {RegisterId} from "./entities/registerId";
+import {RegisterId} from "./entities/registers";
 
 export function boxSelectionToWasm(inputs: BoxSelection): wasm.BoxSelection {
     let boxes = new wasm.ErgoBoxes(boxToWasm(inputs.boxes[0]))

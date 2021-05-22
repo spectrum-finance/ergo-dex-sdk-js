@@ -1,4 +1,4 @@
-import {ErgoTreeTemplateHash, TokenId} from "../wallet/types";
+import {HexString, TokenId} from "../wallet/types";
 import {ErgoBox} from "../wallet/entities/ergoBox";
 import axios, {AxiosInstance} from "axios";
 import {ErgoTree} from "../wallet/entities/ergoTree";
@@ -14,7 +14,7 @@ export interface ErgoNetwork {
 
     /** Get unspent boxes with scripts matching a given template hash.
      */
-    getUnspentByErgoTreeTemplate(templateHash: ErgoTreeTemplateHash, paging: Paging): Promise<ErgoBox[]>
+    getUnspentByErgoTreeTemplate(hash: HexString, paging: Paging): Promise<ErgoBox[]>
 
     /** Get unspent boxes containing a token with given id.
      */
@@ -22,7 +22,7 @@ export interface ErgoNetwork {
 
     /** Get unspent boxes by a given hash of ErgoTree template.
      */
-    getUnspentByErgoTreeTemplateHash(hash: ErgoTreeTemplateHash, paging: Paging): Promise<ErgoBox[]>
+    getUnspentByErgoTreeTemplateHash(hash: HexString, paging: Paging): Promise<ErgoBox[]>
 
     /** Get a token info by id.
      */
@@ -48,7 +48,7 @@ export class Explorer implements ErgoNetwork {
         }).then((res) => res.data.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
     }
 
-    async getUnspentByErgoTreeTemplate(templateHash: ErgoTreeTemplateHash, paging: Paging): Promise<ErgoBox[]> {
+    async getUnspentByErgoTreeTemplate(templateHash: HexString, paging: Paging): Promise<ErgoBox[]> {
         return this.backend.request<network.ErgoBox[]>({
             url: `/boxes/unspent/byErgoTreeTemplateHash/${templateHash}`,
             params: paging
@@ -62,7 +62,7 @@ export class Explorer implements ErgoNetwork {
         }).then((res) => res.data.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
     }
 
-    async getUnspentByErgoTreeTemplateHash(hash: ErgoTreeTemplateHash, paging: Paging): Promise<ErgoBox[]> {
+    async getUnspentByErgoTreeTemplateHash(hash: HexString, paging: Paging): Promise<ErgoBox[]> {
         return this.backend.request<network.ErgoBox[]>({
             url: `/boxes/unspent/byErgoTreeTemplateHash/${hash}`,
             params: paging

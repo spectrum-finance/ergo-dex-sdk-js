@@ -5,7 +5,9 @@ import {HexString, NErg, TokenId} from "../../wallet/types";
 import {ErgoTree} from "../../wallet/entities/ergoTree";
 import {PublicKey} from "../../wallet/entities/publicKey";
 import * as wasm from "ergo-lib-wasm-browser";
-import {fromHex} from "../../utils/hex";
+import {fromHex, toHex} from "../../utils/hex";
+import {Blake2b256} from "../../utils/blake2b256";
+import {ergoTreeTemplateFromErgoTree} from "../../wallet/entities/ergoTreeTemplate";
 
 export class T2tPoolContracts {
 
@@ -21,6 +23,10 @@ export class T2tPoolContracts {
         tree.set_constant(6, wasm.Constant.from_i64(I64.from_str(emissionLP.toString())))
         tree.set_constant(14, wasm.Constant.from_i64(I64.from_str(emissionLP.toString())))
         return tree.to_base16_bytes()
+    }
+
+    static poolTemplateHash(emissionLP: bigint): HexString {
+        return toHex(Blake2b256.hash(ergoTreeTemplateFromErgoTree(this.pool(emissionLP))))
     }
 
     static deposit(emissionLP: bigint, poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {

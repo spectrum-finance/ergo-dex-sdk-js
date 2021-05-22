@@ -3,7 +3,11 @@ import {AmmPool} from "../entities/ammPool";
 import {ErgoNetwork} from "../../services/ergoNetwork";
 import {AssetAmount} from "../../wallet/entities/assetAmount";
 import {Int32Constant} from "../../wallet/entities/constant";
-import * as templates from "../contracts/templates";
+import {RegisterId} from "../../wallet/entities/registers";
+import {Blake2b256} from "../../utils/blake2b256";
+import {toHex} from "../../utils/hex";
+import {T2tPoolContracts} from "../contracts/t2tPoolContracts";
+import {EmissionLP} from "../constants";
 
 export interface Pools {
 
@@ -23,27 +27,29 @@ export class NetworkPools implements Pools {
             let poolBox = boxes[0]
             let assetX = AssetAmount.fromToken(poolBox.tokens[2])
             let assetY = AssetAmount.fromToken(poolBox.tokens[3])
-            let R4 = poolBox.additionalRegisters.get("R4")
-
-            if (R4 instanceof Int32Constant) // todo: check poolScriptHash
-                return new AmmPool(id, assetX, assetY, "", R4.value)
+            let r4 = poolBox.additionalRegisters.get(RegisterId.R4)
+            if (r4 instanceof Int32Constant && poolBox.ergoTree === T2tPoolContracts.pool(EmissionLP)) {
+                let scriptHash = toHex(Blake2b256.hash(poolBox.ergoTree))
+                return new AmmPool(id, assetX, assetY, scriptHash, r4.value)
+            }
         }
     }
 
     async getAll(offset: number, limit: number): Promise<AmmPool[]> {
-        let boxes = await this.network.getUnspentByErgoTreeTemplateHash(templates.T2tPool, {
-            offset: offset,
-            limit: limit
-        })
+        let boxes = await this.network.getUnspentByErgoTreeTemplateHash(
+            T2tPoolContracts.poolTemplateHash(EmissionLP),
+            {offset: offset, limit: limit}
+        )
         let pools = []
         for (let box of boxes) {
             let nft = box.tokens[0].tokenId
             let assetX = AssetAmount.fromToken(box.tokens[2])
             let assetY = AssetAmount.fromToken(box.tokens[3])
-            let R4 = box.additionalRegisters.get("R4")
-
-            if (R4 instanceof Int32Constant)
-                pools.push(new AmmPool(nft, assetX, assetY, "", R4.value))
+            let r4 = box.additionalRegisters.get(RegisterId.R4)
+            if (r4 instanceof Int32Constant) {
+                let scriptHash = toHex(Blake2b256.hash(box.ergoTree))
+                pools.push(new AmmPool(nft, assetX, assetY, scriptHash, r4.value))
+            }
         }
         return pools
     }

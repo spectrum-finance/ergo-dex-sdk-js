@@ -3,7 +3,7 @@ import {Token as WalletToken} from "../wallet/entities/token";
 import {ByteaConstant, Constant, Int32Constant, Int64Constant} from "../wallet/entities/constant";
 import {fromHex} from "../utils/hex";
 import {SigmaType} from "../wallet/entities/sigmaType";
-import {RegisterId} from "../wallet/entities/registerId";
+import {RegisterId} from "../wallet/entities/registers";
 
 export type ErgoBox = {
     boxId: string,

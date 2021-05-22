@@ -18,7 +18,7 @@ import {DepositParams} from "../models/depositParams";
 import {RedeemParams} from "../models/redeemParams";
 import {ergoTreeFromAddress, ergoTreeToBytea} from "../../wallet/entities/ergoTree";
 import {PoolOps} from "./poolOps";
-import {registers} from "../../wallet/entities/registers";
+import {RegisterId, registers} from "../../wallet/entities/registers";
 
 export class T2tPoolOps implements PoolOps {
 
@@ -42,10 +42,10 @@ export class T2tPoolOps implements PoolOps {
             let poolBootScript = T2tPoolContracts.poolBoot(EmissionLP)
             let poolSH: Uint8Array = Blake2b256.hash(ergoTreeToBytea(poolBootScript))
             let proxyRegs = registers([
-                {id: "R4", value: new ByteaConstant(poolSH)},
-                {id: "R5", value: new Int64Constant(params.outputShare)},
-                {id: "R6", value: new Int32Constant(params.feeNumerator)},
-                {id: "R7", value: new Int64Constant(ctx.feeNErgs)}])
+                [RegisterId.R4, new ByteaConstant(poolSH)],
+                [RegisterId.R5, new Int64Constant(params.outputShare)],
+                [RegisterId.R6, new Int32Constant(params.feeNumerator)],
+                [RegisterId.R7, new Int64Constant(ctx.feeNErgs)]])
             let proxyOut = new ErgoBoxCandidate(
                 ergsIn,
                 T2tPoolContracts.poolBoot(EmissionLP),
@@ -69,7 +69,7 @@ export class T2tPoolOps implements PoolOps {
             let poolAmountLP = newTokenLP.amount - lpShares.amount
             let poolLP = new Token(tokenIdLP, poolAmountLP)
             let poolTokens = [poolLP].concat(poolBootBox.tokens.slice(1))
-            let poolRegis = registers([{id: "R4", value: new Int32Constant(params.feeNumerator)}])
+            let poolRegis = registers([[RegisterId.R4, new Int32Constant(params.feeNumerator)]])
             let poolOut = new ErgoBoxCandidate(poolValueNErgs, poolScript, height, poolTokens, poolRegis, newTokenNFT)
             let txc1Inputs = BoxSelection.safe(poolBootBox)
             let txc1 = ErgoTxCandidate.make(txc1Inputs, [poolOut, lpOut], height, ctx.feeNErgs, ctx.changeAddress)

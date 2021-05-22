@@ -1,14 +1,20 @@
-import {RegisterId} from "./registerId";
 import {Constant} from "./constant";
+
+export enum RegisterId {
+    R4 = "R4",
+    R5 = "R5",
+    R6 = "R6",
+    R7 = "R7",
+    R8 = "R8",
+    R9 = "R9"
+}
 
 export type Registers = Map<RegisterId, Constant>
 
-type Register = { id: RegisterId, value: Constant }
-
 export const EmptyRegisters: Registers = new Map<RegisterId, Constant>()
 
-export function registers(regs: Register[]): Registers {
+export function registers(regs: [RegisterId, Constant][]): Registers {
     let acc = EmptyRegisters
-    for (let r of regs) acc.set(r.id, r.value)
+    for (let [id, value] of regs) acc.set(id, value)
     return acc
 }
