@@ -1,6 +1,7 @@
 import {Token} from "./token";
-import {MintToken, Register} from "../types";
+import {MintToken} from "../types";
 import {ErgoTree} from "./ergoTree";
+import {EmptyRegisters, Registers} from "./registers";
 
 export class ErgoBoxCandidate {
     readonly value: bigint
@@ -8,7 +9,7 @@ export class ErgoBoxCandidate {
     readonly height: number
 
     readonly tokens: Token[]
-    readonly registers: Register[]
+    readonly registers: Registers
     readonly tokenToMint?: MintToken
 
     constructor(
@@ -16,14 +17,14 @@ export class ErgoBoxCandidate {
         ergoTree: ErgoTree,
         height: number,
         tokens?: Token[],
-        registers?: Register[],
+        registers?: Registers,
         tokenToMint?: MintToken
     ) {
         this.value = value
         this.ergoTree = ergoTree
         this.height = height
         this.tokens = tokens || []
-        this.registers = registers || []
+        this.registers = registers || EmptyRegisters
         this.tokenToMint = tokenToMint
     }
 }

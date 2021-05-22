@@ -18,10 +18,12 @@ import {DepositParams} from "../models/depositParams";
 import {RedeemParams} from "../models/redeemParams";
 import {ergoTreeFromAddress, ergoTreeToBytea} from "../../wallet/entities/ergoTree";
 import {PoolOps} from "./poolOps";
+import {makeRegisters} from "../../wallet/entities/registers";
 
 export class T2tPoolOps implements PoolOps {
 
-    constructor(public readonly prover: Prover) {}
+    constructor(public readonly prover: Prover) {
+    }
 
     async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<ErgoTx[]> {
         let [x, y] = [params.x.asset, params.y.asset]
@@ -30,19 +32,20 @@ export class T2tPoolOps implements PoolOps {
         let outputGranted = inputs.totalOutputWithoutChange()
         let ergsIn = outputGranted.nErgs - ctx.feeNErgs
         let pairIn = [
-            outputGranted.tokens.filter((t, _i, _xs) => t.id === x.id),
-            outputGranted.tokens.filter((t, _i, _xs) => t.id === y.id)
+            outputGranted.tokens.filter((t, _i, _xs) => t.tokenId === x.id),
+            outputGranted.tokens.filter((t, _i, _xs) => t.tokenId === y.id)
         ].flat()
         if (pairIn.length == 2) {
             let tokenIdLP = inputs.boxes[0].id
-            let newTokenLP = mintLP(tokenIdLP, x.name, y.name)
+            let [tickerX, tickerY] = [x.name || x.id.slice(0, 8), y.name || y.id.slice(0, 8)]
+            let newTokenLP = mintLP(tokenIdLP, tickerX, tickerY)
             let poolBootScript = T2tPoolContracts.poolBoot(EmissionLP)
             let poolSH: Uint8Array = Blake2b256.hash(ergoTreeToBytea(poolBootScript))
-            let registers = [
-                {id: 4, value: new ByteaConstant(poolSH)},
-                {id: 5, value: new Int64Constant(params.outputShare)},
-                {id: 6, value: new Int32Constant(params.feeNumerator)},
-                {id: 7, value: new Int64Constant(ctx.feeNErgs)}]
+            let registers = makeRegisters([
+                {id: "R4", value: new ByteaConstant(poolSH)},
+                {id: "R5", value: new Int64Constant(params.outputShare)},
+                {id: "R6", value: new Int32Constant(params.feeNumerator)},
+                {id: "R7", value: new Int64Constant(ctx.feeNErgs)}])
             let proxyOut = new ErgoBoxCandidate(
                 ergsIn,
                 T2tPoolContracts.poolBoot(EmissionLP),
@@ -62,11 +65,11 @@ export class T2tPoolOps implements PoolOps {
             let poolValueNErgs = poolBootBox.value - lpOut.value - ctx.feeNErgs
             let poolScript = T2tPoolContracts.pool(EmissionLP)
 
-            let newTokenNFT = mintPoolNFT(tokenIdLP, x.name, y.name)
+            let newTokenNFT = mintPoolNFT(tokenIdLP, tickerX, tickerY)
             let poolAmountLP = newTokenLP.amount - lpShares.amount
             let poolLP = new Token(tokenIdLP, poolAmountLP)
             let poolTokens = [poolLP].concat(poolBootBox.tokens.slice(1))
-            let poolRegisters = [{id: 4, value: new Int32Constant(params.feeNumerator)}]
+            let poolRegisters = makeRegisters([{id: "R4", value: new Int32Constant(params.feeNumerator)}])
             let poolOut = new ErgoBoxCandidate(poolValueNErgs, poolScript, height, poolTokens, poolRegisters, newTokenNFT)
             let txc1Inputs = BoxSelection.safe(poolBootBox)
             let txc1 = ErgoTxCandidate.make(txc1Inputs, [poolOut, lpOut], height, ctx.feeNErgs, ctx.changeAddress)
@@ -83,8 +86,8 @@ export class T2tPoolOps implements PoolOps {
         let proxyScript = T2tPoolContracts.deposit(EmissionLP, params.poolId, params.pk, params.dexFee)
         let outputGranted = ctx.inputs.totalOutputWithoutChange()
         let pairIn = [
-            outputGranted.tokens.filter((t, _i, _xs) => t.id === x.id),
-            outputGranted.tokens.filter((t, _i, _xs) => t.id === y.id)
+            outputGranted.tokens.filter((t, _i, _xs) => t.tokenId === x.id),
+            outputGranted.tokens.filter((t, _i, _xs) => t.tokenId === y.id)
         ].flat()
         if (pairIn.length == 2) {
             let out = new ErgoBoxCandidate(outputGranted.nErgs, proxyScript, ctx.network.height, pairIn)
@@ -98,7 +101,7 @@ export class T2tPoolOps implements PoolOps {
     redeem(params: RedeemParams, ctx: TransactionContext): Promise<ErgoTx> {
         let proxyScript = T2tPoolContracts.redeem(EmissionLP, params.poolId, params.pk, params.dexFee)
         let outputGranted = ctx.inputs.totalOutputWithoutChange()
-        let tokensIn = outputGranted.tokens.filter((t, _i, _xs) => t.id === params.lp.id)
+        let tokensIn = outputGranted.tokens.filter((t, _i, _xs) => t.tokenId === params.lp.id)
         if (tokensIn.length == 1) {
             let out = new ErgoBoxCandidate(outputGranted.nErgs, proxyScript, ctx.network.height, tokensIn)
             let txc = ErgoTxCandidate.make(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)
@@ -119,7 +122,7 @@ export class T2tPoolOps implements PoolOps {
         )
         let outputGranted = ctx.inputs.totalOutputWithoutChange()
         let baseAssetId = params.baseInput.asset.id
-        let tokensIn = outputGranted.tokens.filter((t, _i, _xs) => t.id === baseAssetId)
+        let tokensIn = outputGranted.tokens.filter((t, _i, _xs) => t.tokenId === baseAssetId)
         if (tokensIn.length == 1) {
             let out = new ErgoBoxCandidate(outputGranted.nErgs, proxyScript, ctx.network.height, tokensIn)
             let txc = ErgoTxCandidate.make(ctx.inputs, [out], ctx.network.height, ctx.feeNErgs, ctx.changeAddress)

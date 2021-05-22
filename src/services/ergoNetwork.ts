@@ -2,7 +2,8 @@ import {ErgoTreeTemplateHash, TokenId} from "../wallet/types";
 import {ErgoBox} from "../wallet/entities/ergoBox";
 import axios, {AxiosInstance} from "axios";
 import {ErgoTree} from "../wallet/entities/ergoTree";
-import {Eip4Asset} from "../wallet/entities/eip4Asset";
+import {AssetInfo} from "../wallet/entities/assetInfo";
+import * as network from "../network/models";
 
 export interface ErgoNetwork {
 
@@ -20,7 +21,7 @@ export interface ErgoNetwork {
 
     /** Get a token info by id.
      */
-    getToken(tokenId: TokenId): Promise<Eip4Asset | undefined>
+    getToken(tokenId: TokenId): Promise<AssetInfo | undefined>
 }
 
 export class Explorer implements ErgoNetwork {
@@ -36,25 +37,25 @@ export class Explorer implements ErgoNetwork {
     }
 
     async getUnspentByErgoTree(tree: ErgoTree): Promise<ErgoBox[]> {
-        return this.backend.request<ErgoBox[]>({
+        return this.backend.request<network.ErgoBox[]>({
             url: `/boxes/unspent/byErgoTree/${tree}`
-        }).then((res) => res.data)
+        }).then((res) => res.data.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
     }
 
     async getUnspentByErgoTreeTemplate(templateHash: ErgoTreeTemplateHash): Promise<ErgoBox[]> {
-        return this.backend.request<ErgoBox[]>({
+        return this.backend.request<network.ErgoBox[]>({
             url: `/boxes/unspent/byErgoTreeTemplateHash/${templateHash}`
-        }).then((res) => res.data)
+        }).then((res) => res.data.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
     }
 
     async getUnspentByTokenId(tokenId: TokenId): Promise<ErgoBox[]> {
-        return this.backend.request<ErgoBox[]>({
+        return this.backend.request<network.ErgoBox[]>({
             url: `/boxes/unspent/byTokenId/${tokenId}`
-        }).then((res) => res.data)
+        }).then((res) => res.data.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
     }
 
-    async getToken(tokenId: TokenId): Promise<Eip4Asset | undefined> {
-        return this.backend.request<Eip4Asset>({
+    async getToken(tokenId: TokenId): Promise<AssetInfo | undefined> {
+        return this.backend.request<AssetInfo>({
             url: `/api/v1/tokens/${tokenId}`
         }).then((res) => res.status != 404 ? res.data : undefined)
     }

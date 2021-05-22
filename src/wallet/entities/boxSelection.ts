@@ -30,8 +30,8 @@ export class BoxSelection {
         let nErgs = nErgsIn - nErgsChange
         let tokensAgg = new Map<TokenId, bigint>()
         for (let t of this.boxes.flatMap((bx, _i, _xs) => bx.tokens)) {
-            let acc = tokensAgg.get(t.id) || 0n
-            tokensAgg.set(t.id, t.amount + acc)
+            let acc = tokensAgg.get(t.tokenId) || 0n
+            tokensAgg.set(t.tokenId, t.amount + acc)
         }
         let tokens: Token[] = []
         tokensAgg.forEach((amount, id, _xs) => tokens.push(new Token(id, amount)))

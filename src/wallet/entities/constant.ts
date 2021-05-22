@@ -1,25 +1,13 @@
 export class Int32Constant {
-    readonly value: number
-
-    constructor(value: number) {
-        this.value = value
-    }
+    constructor(public readonly value: number) {}
 }
 
 export class Int64Constant {
-    readonly value: bigint
-
-    constructor(value: bigint) {
-        this.value = value
-    }
+    constructor(public readonly value: bigint) {}
 }
 
 export class ByteaConstant {
-    readonly value: Uint8Array
-
-    constructor(value: Uint8Array) {
-        this.value = value
-    }
+    constructor(public readonly value: Uint8Array) {}
 }
 
 export type Constant = Int32Constant | Int64Constant | ByteaConstant

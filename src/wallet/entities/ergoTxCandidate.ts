@@ -7,28 +7,15 @@ import * as wasm from "ergo-lib-wasm-browser";
 import {I64} from "ergo-lib-wasm-browser";
 
 export class ErgoTxCandidate {
-    readonly id: TxId
-    readonly inputs: BoxSelection
-    readonly outputs: ErgoBoxCandidate[]
-    readonly height: number
-    readonly feeNErgs: bigint
-    readonly changeAddress: Address
 
     constructor(
-        id: TxId,
-        inputs: BoxSelection,
-        outputs: ErgoBoxCandidate[],
-        height: number,
-        feeNErgs: bigint,
-        changeAddress: Address
-    ) {
-        this.id = id
-        this.inputs = inputs
-        this.outputs = outputs
-        this.height = height
-        this.feeNErgs = feeNErgs
-        this.changeAddress = changeAddress
-    }
+        public readonly id: TxId,
+        public readonly inputs: BoxSelection,
+        public readonly outputs: ErgoBoxCandidate[],
+        public readonly height: number,
+        public readonly feeNErgs: bigint,
+        public readonly changeAddress: Address
+    ) {}
 
     static make(
         inputs: BoxSelection,

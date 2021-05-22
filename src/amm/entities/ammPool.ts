@@ -1,6 +1,6 @@
 import {PoolId} from "../types";
 import {HexString} from "../../wallet/types";
-import {Eip4Asset} from "../../wallet/entities/eip4Asset";
+import {AssetInfo} from "../../wallet/entities/assetInfo";
 import {Price} from "../../entities/price";
 import {AssetAmount} from "../../wallet/entities/assetAmount";
 
@@ -11,17 +11,16 @@ export class AmmPool {
         public readonly y: AssetAmount,
         public readonly poolScriptHash: HexString,
         public readonly poolFeeNum: number
-    ) {
-    }
+    ) {}
 
     private feeDenom: bigint = 1000n
     private feeNum: bigint = BigInt(this.poolFeeNum)
 
-    get assetX(): Eip4Asset {
+    get assetX(): AssetInfo {
         return this.x.asset
     }
 
-    get assetY(): Eip4Asset {
+    get assetY(): AssetInfo {
         return this.y.asset
     }
 

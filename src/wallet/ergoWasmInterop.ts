@@ -6,6 +6,7 @@ import {ErgoTree, ergoTreeToBytea} from "./entities/ergoTree";
 import {Token} from "./entities/token";
 import {ErgoBoxCandidate} from "./entities/ergoBoxCandidate";
 import {Int32Constant, Int64Constant} from "./entities/constant";
+import {RegisterId} from "./entities/registerId";
 
 export function boxSelectionToWasm(inputs: BoxSelection): wasm.BoxSelection {
     let boxes = new wasm.ErgoBoxes(boxToWasm(inputs.boxes[0]))
@@ -38,23 +39,27 @@ export function boxCandidateToWasm(box: ErgoBoxCandidate): wasm.ErgoBoxCandidate
         let id = wasm.TokenId.from_str(token.id)
         let amount = wasm.TokenAmount.from_i64(I64.from_str(box.tokenToMint.amount.toString()))
         let wasmToken = new wasm.Token(id, amount)
-        builder.mint_token(wasmToken, token.name, token.description || "", token.decimals)
+        builder.mint_token(wasmToken, token.name || "", token.description || "", token.decimals || 0)
     }
     for (let token of box.tokens) {
         let t = tokenToWasm(token)
         builder.add_token(t.id(), t.amount())
     }
-    for (let reg of box.registers) {
+    for (let [id, value] of box.registers) {
         let constant: wasm.Constant
-        if (reg.value instanceof Int32Constant)
-            constant = wasm.Constant.from_i32(reg.value.value)
-        else if (reg.value instanceof Int64Constant)
-            constant = wasm.Constant.from_i64(I64.from_str(reg.value.value.toString()))
+        if (value instanceof Int32Constant)
+            constant = wasm.Constant.from_i32(value.value)
+        else if (value instanceof Int64Constant)
+            constant = wasm.Constant.from_i64(I64.from_str(value.value.toString()))
         else
-            constant = wasm.Constant.from_byte_array(reg.value.value)
-        builder.set_register_value(reg.id, constant)
+            constant = wasm.Constant.from_byte_array(value.value)
+        builder.set_register_value(registerIdToWasm(id), constant)
     }
     return builder.build()
+}
+
+export function registerIdToWasm(id: RegisterId): number {
+    return Number(id[1])
 }
 
 export function boxToWasm(box: ErgoBox): wasm.ErgoBox {
@@ -70,7 +75,7 @@ export function ergoTreeToWasm(tree: ErgoTree): wasm.ErgoTree {
 }
 
 export function tokenToWasm(token: Token): wasm.Token {
-    let id = wasm.TokenId.from_str(token.id)
+    let id = wasm.TokenId.from_str(token.tokenId)
     let amount = wasm.TokenAmount.from_i64(I64.from_str(token.amount.toString()))
     return new wasm.Token(id, amount)
 }
