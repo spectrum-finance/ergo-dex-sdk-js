@@ -1,4 +1,4 @@
-import {Eip4Token} from "./entities/eip4Token";
+import {Eip4Asset} from "./entities/eip4Asset";
 import {Constant} from "./entities/constant";
 
 export type HexString = string
@@ -12,6 +12,6 @@ export type ErgoTreeTemplateHash = HexString
 
 export type Register = { readonly id: number, readonly value: Constant }
 
-export type MintToken = { token: Eip4Token, amount: bigint }
+export type MintToken = { token: Eip4Asset, amount: bigint }
 
 export type NErg = bigint

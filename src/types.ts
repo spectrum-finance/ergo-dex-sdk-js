@@ -1,5 +1,5 @@
-import {Eip4Token} from "./wallet/entities/eip4Token";
+import {Eip4Asset} from "./wallet/entities/eip4Asset";
 import {HexString} from "./wallet/types";
 import {Constant} from "./wallet/entities/constant";
 
-export type TokenPair = { readonly x: Eip4Token, readonly y: Eip4Token }
+export type TokenPair = { readonly x: Eip4Asset, readonly y: Eip4Asset }

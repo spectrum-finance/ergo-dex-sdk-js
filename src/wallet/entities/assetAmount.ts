@@ -1,11 +1,11 @@
-import {Eip4Token} from "./eip4Token";
+import {Eip4Asset} from "./eip4Asset";
 import {I64, Token as LibToken, TokenAmount as LibTokenAmount, TokenId as LibTokenId} from "ergo-lib-wasm-browser";
 
 export class AssetAmount {
-    readonly asset: Eip4Token
+    readonly asset: Eip4Asset
     readonly amount: bigint
 
-    constructor(asset: Eip4Token, amount: bigint) {
+    constructor(asset: Eip4Asset, amount: bigint) {
         this.asset = asset
         this.amount = amount
     }

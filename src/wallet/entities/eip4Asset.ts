@@ -1,6 +1,6 @@
 import {TokenId} from "../types";
 
-export class Eip4Token {
+export class Eip4Asset {
     readonly id: TokenId
     readonly name: string
     readonly decimals: number

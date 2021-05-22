@@ -1,6 +1,6 @@
 import {PoolId} from "../types";
 import {HexString} from "../../wallet/types";
-import {Eip4Token} from "../../wallet/entities/eip4Token";
+import {Eip4Asset} from "../../wallet/entities/eip4Asset";
 import {Price} from "../../entities/price";
 import {AssetAmount} from "../../wallet/entities/assetAmount";
 
@@ -17,11 +17,11 @@ export class AmmPool {
     private feeDenom: bigint = 1000n
     private feeNum: bigint = BigInt(this.poolFeeNum)
 
-    get tokenX(): Eip4Token {
+    get assetX(): Eip4Asset {
         return this.x.asset
     }
 
-    get tokenY(): Eip4Token {
+    get assetY(): Eip4Asset {
         return this.y.asset
     }
 
@@ -40,22 +40,25 @@ export class AmmPool {
     /** @return Proportional amount of one token to a given input of the other
      */
     depositAmount(input: AssetAmount): AssetAmount {
-        let price = input.asset === this.tokenX ? this.priceX : this.priceY
+        let price = input.asset === this.assetX ? this.priceX : this.priceY
         return input.mul(price.numerator).div(price.denominator)
     }
 
     /** @return Input amount of one token for a given output amount of the other
      */
-    inputAmount(output: AssetAmount, maxSlippage?: number): AssetAmount {
+    inputAmount(output: AssetAmount, maxSlippage?: number): AssetAmount | undefined {
         let slippage = BigInt(maxSlippage || 0)
-        if (output.asset === this.tokenX) {
+        let minimalOutput = this.outputAmount(output).amount
+        if (output.asset === this.assetX && minimalOutput > 0) {
             return this.y.mul(output).mul(this.feeDenom)
                 .div(this.x.add(this.x.mul(slippage).div(100n)).sub(output).mul(this.feeNum))
                 .add(1n)
-        } else {
+        } else if (output.asset === this.assetY && minimalOutput > 0) {
             return this.x.mul(output).mul(this.feeDenom)
                 .div(this.y.add(this.x.mul(slippage).div(100n)).sub(output).mul(this.feeNum))
                 .add(1n)
+        } else {
+            return undefined
         }
     }
 
@@ -63,7 +66,7 @@ export class AmmPool {
      */
     outputAmount(input: AssetAmount, maxSlippage?: number): AssetAmount {
         let slippage = BigInt(maxSlippage || 0)
-        if (input.asset === this.tokenX) {
+        if (input.asset === this.assetX) {
             return this.y.mul(input.mul(this.feeNum))
                 .div(this.x.add(this.x.mul(slippage).div(100n)).mul(this.feeDenom).add(input.mul(this.feeNum)))
         } else {

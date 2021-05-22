@@ -2,7 +2,7 @@ import {ErgoTreeTemplateHash, TokenId} from "../wallet/types";
 import {ErgoBox} from "../wallet/entities/ergoBox";
 import axios, {AxiosInstance} from "axios";
 import {ErgoTree} from "../wallet/entities/ergoTree";
-import {Eip4Token} from "../wallet/entities/eip4Token";
+import {Eip4Asset} from "../wallet/entities/eip4Asset";
 
 export interface ErgoNetwork {
 
@@ -20,7 +20,7 @@ export interface ErgoNetwork {
 
     /** Get a token info by id.
      */
-    getToken(tokenId: TokenId): Promise<Eip4Token | undefined>
+    getToken(tokenId: TokenId): Promise<Eip4Asset | undefined>
 }
 
 export class Explorer implements ErgoNetwork {
@@ -53,8 +53,8 @@ export class Explorer implements ErgoNetwork {
         }).then((res) => res.data)
     }
 
-    async getToken(tokenId: TokenId): Promise<Eip4Token | undefined> {
-        return this.backend.request<Eip4Token>({
+    async getToken(tokenId: TokenId): Promise<Eip4Asset | undefined> {
+        return this.backend.request<Eip4Asset>({
             url: `/api/v1/tokens/${tokenId}`
         }).then((res) => res.status != 404 ? res.data : undefined)
     }
