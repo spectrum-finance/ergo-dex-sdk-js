@@ -10,7 +10,7 @@ export class AssetAmount {
     ) {}
 
     static fromToken(token: Token): AssetAmount {
-        return new this(new AssetInfo(token.tokenId, token.name, token.decimals), token.amount)
+        return new this({id: token.id, name: token.name, decimals: token.decimals}, token.amount)
     }
 
     withAmount(amount: bigint): AssetAmount {

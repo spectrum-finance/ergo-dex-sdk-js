@@ -7,7 +7,7 @@ import {PublicKey} from "../../wallet/entities/publicKey";
 import * as wasm from "ergo-lib-wasm-browser";
 import {fromHex, toHex} from "../../utils/hex";
 import {Blake2b256} from "../../utils/blake2b256";
-import {ergoTreeTemplateFromErgoTree} from "../../wallet/entities/ergoTreeTemplate";
+import {fromErgoTree} from "../../wallet/entities/ergoTreeTemplate";
 
 export class T2tPoolContracts {
 
@@ -26,7 +26,7 @@ export class T2tPoolContracts {
     }
 
     static poolTemplateHash(emissionLP: bigint): HexString {
-        return toHex(Blake2b256.hash(ergoTreeTemplateFromErgoTree(this.pool(emissionLP))))
+        return toHex(Blake2b256.hash(fromErgoTree(this.pool(emissionLP))))
     }
 
     static deposit(emissionLP: bigint, poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {

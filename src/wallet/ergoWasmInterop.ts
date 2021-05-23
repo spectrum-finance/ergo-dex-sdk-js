@@ -75,7 +75,7 @@ export function ergoTreeToWasm(tree: ErgoTree): wasm.ErgoTree {
 }
 
 export function tokenToWasm(token: Token): wasm.Token {
-    let id = wasm.TokenId.from_str(token.tokenId)
+    let id = wasm.TokenId.from_str(token.id)
     let amount = wasm.TokenAmount.from_i64(I64.from_str(token.amount.toString()))
     return new wasm.Token(id, amount)
 }

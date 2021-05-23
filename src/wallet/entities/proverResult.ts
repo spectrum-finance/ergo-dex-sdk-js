@@ -1,8 +1,6 @@
 import {ContextExtension} from "./contextExtension";
 
-export class ProverResult {
-    constructor(
-        public readonly proof: Uint8Array,
-        public readonly extension: ContextExtension
-    ) {}
+export type ProverResult = {
+    readonly proof: Uint8Array,
+    readonly extension: ContextExtension
 }

@@ -1,8 +1,6 @@
 import {TokenId} from "../types";
 
-export class ChangeBox {
-    constructor(
-        public readonly value: bigint,
-        public readonly tokens: Map<TokenId, bigint>
-    ) {}
+export type ChangeBox = {
+    readonly value: bigint,
+    readonly tokens: Map<TokenId, bigint>
 }

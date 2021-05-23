@@ -43,7 +43,7 @@ export class NetworkPools implements Pools {
         )
         let pools = []
         for (let box of boxes) {
-            let nft = box.tokens[0].tokenId
+            let nft = box.tokens[0].id
             let assetX = AssetAmount.fromToken(box.tokens[2])
             let assetY = AssetAmount.fromToken(box.tokens[3])
             let r4 = box.additionalRegisters.get(RegisterId.R4)
