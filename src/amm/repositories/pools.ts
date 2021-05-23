@@ -8,12 +8,13 @@ import {Blake2b256} from "../../utils/blake2b256";
 import {toHex} from "../../utils/hex";
 import {T2tPoolContracts} from "../contracts/t2tPoolContracts";
 import {EmissionLP} from "../constants";
+import {Paging} from "../../network/paging";
 
 export interface Pools {
 
     get(id: PoolId): Promise<AmmPool | undefined>
 
-    getAll(offset: number, limit: number): Promise<AmmPool[]>
+    getAll(paging: Paging): Promise<AmmPool[]>
 }
 
 export class NetworkPools implements Pools {
@@ -35,10 +36,10 @@ export class NetworkPools implements Pools {
         }
     }
 
-    async getAll(offset: number, limit: number): Promise<AmmPool[]> {
+    async getAll(paging: Paging): Promise<AmmPool[]> {
         let boxes = await this.network.getUnspentByErgoTreeTemplateHash(
             T2tPoolContracts.poolTemplateHash(EmissionLP),
-            {offset: offset, limit: limit}
+            paging
         )
         let pools = []
         for (let box of boxes) {
