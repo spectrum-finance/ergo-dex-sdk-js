@@ -46,8 +46,8 @@ export function toWalletConstant(reg: BoxRegister): wallet.Constant | undefined 
     }
 }
 
-export function toWalletToken(asset: BoxAsset): wallet.Token {
-    return {id: asset.tokenId, amount: asset.amount, name: asset.name, decimals: asset.decimals}
+export function toWalletToken(asset: BoxAsset): wallet.TokenAmount {
+    return {tokenId: asset.tokenId, amount: asset.amount, name: asset.name, decimals: asset.decimals}
 }
 
 export function toWalletErgoBox(box: ErgoBox): wallet.ErgoBox {
@@ -57,13 +57,13 @@ export function toWalletErgoBox(box: ErgoBox): wallet.ErgoBox {
         if (c) registers.set(k, c)
     })
     return {
-        id: box.boxId,
-        txId: box.transactionId,
+        boxId: box.boxId,
+        transactionId: box.transactionId,
         index: box.index,
         ergoTree: box.ergoTree,
         creationHeight: box.creationHeight,
         value: box.value,
-        tokens: box.assets.map((a, _ix, _xs) => toWalletToken(a)),
+        assets: box.assets.map((a, _ix, _xs) => toWalletToken(a)),
         additionalRegisters: registers
     }
 }

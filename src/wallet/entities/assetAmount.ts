@@ -1,6 +1,6 @@
 import {AssetInfo} from "./assetInfo";
 import {I64, Token as LibToken, TokenAmount as LibTokenAmount, TokenId as LibTokenId} from "ergo-lib-wasm-browser";
-import {Token} from "./token";
+import {TokenAmount} from "./tokenAmount";
 
 export class AssetAmount {
 
@@ -9,8 +9,8 @@ export class AssetAmount {
         public readonly amount: bigint
     ) {}
 
-    static fromToken(token: Token): AssetAmount {
-        return new this({id: token.id, name: token.name, decimals: token.decimals}, token.amount)
+    static fromToken(token: TokenAmount): AssetAmount {
+        return new this({id: token.tokenId, name: token.name, decimals: token.decimals}, token.amount)
     }
 
     withAmount(amount: bigint): AssetAmount {

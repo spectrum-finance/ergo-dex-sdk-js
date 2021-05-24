@@ -1,7 +1,7 @@
 import {TokenId} from "../types";
 
-export type Token = {
-    readonly id: TokenId,
+export type TokenAmount = {
+    readonly tokenId: TokenId,
     readonly amount: bigint,
     readonly name?: string,
     readonly decimals?: number
