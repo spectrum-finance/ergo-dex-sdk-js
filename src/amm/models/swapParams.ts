@@ -1,15 +1,12 @@
-import {AssetAmount} from "../../wallet/entities/assetAmount";
+import {AssetAmount, PublicKey} from "../../wallet";
 import {HexString, NErg, TokenId} from "../../wallet/types";
-import {PublicKey} from "../../wallet/entities/publicKey";
 
-export class SwapParams {
-    constructor(
-        public readonly pk: PublicKey,
-        public readonly poolScriptHash: HexString,
-        public readonly poolFeeNum: number,
-        public readonly baseInput: AssetAmount,
-        public readonly quoteAsset: TokenId,
-        public readonly minQuoteOutput: bigint,
-        public readonly dexFeePerToken: NErg
-    ) {}
+export type SwapParams = {
+    readonly pk: PublicKey,
+    readonly poolScriptHash: HexString,
+    readonly poolFeeNum: number,
+    readonly baseInput: AssetAmount,
+    readonly quoteAsset: TokenId,
+    readonly minQuoteOutput: bigint,
+    readonly dexFeePerToken: NErg
 }

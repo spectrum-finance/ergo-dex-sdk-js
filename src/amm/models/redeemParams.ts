@@ -1,12 +1,9 @@
-import {PublicKey} from "../../wallet/entities/publicKey";
 import {PoolId} from "../types";
-import {AssetInfo} from "../../wallet/entities/assetInfo";
+import {AssetInfo, PublicKey} from "../../wallet";
 
-export class RedeemParams {
-    constructor(
-        public readonly poolId: PoolId,
-        public readonly pk: PublicKey,
-        public readonly lp: AssetInfo,
-        public readonly dexFee: bigint
-    ) {}
+export type RedeemParams = {
+    readonly poolId: PoolId,
+    readonly pk: PublicKey,
+    readonly lp: AssetInfo,
+    readonly dexFee: bigint
 }

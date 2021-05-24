@@ -25,4 +25,4 @@ export {Registers} from "./entities/registers";
 export * as registers from "./entities/registers";
 export {SigmaType} from "./entities/sigmaType";
 export {Token} from "./entities/token";
-export {Constant} from "./entities/constant";
+export {Constant, Int32Constant, Int64Constant, ByteaConstant} from "./entities/constant";

@@ -1,8 +1,7 @@
 import {PoolId} from "../types";
 import {HexString} from "../../wallet/types";
-import {AssetInfo} from "../../wallet/entities/assetInfo";
+import {AssetInfo, AssetAmount} from "../../wallet";
 import {Price} from "../../entities/price";
-import {AssetAmount} from "../../wallet/entities/assetAmount";
 
 export class AmmPool {
     constructor(
