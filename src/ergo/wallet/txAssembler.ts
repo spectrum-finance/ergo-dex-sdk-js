@@ -10,7 +10,7 @@ export interface TxAssembler {
     assemble(req: TxRequest, ctx: NetworkContext): UnsignedErgoTx
 }
 
-export class BasicTxAssembler implements TxAssembler {
+export class DefaultTxAssembler implements TxAssembler {
 
     constructor(public readonly mainnet: boolean) {
     }

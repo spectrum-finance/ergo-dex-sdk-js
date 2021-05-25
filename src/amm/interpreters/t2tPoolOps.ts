@@ -29,7 +29,7 @@ export class T2tPoolOps implements PoolOps {
 
     constructor(
         public readonly prover: Prover,
-        public readonly txAssembler: TxAssembler
+        public readonly txAsm: TxAssembler
     ) {}
 
     async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<ErgoTx[]> {
@@ -38,8 +38,8 @@ export class T2tPoolOps implements PoolOps {
         let inputs = ctx.inputs
         let outputGranted = inputs.totalOutputWithoutChange
         let pairIn = [
-            outputGranted.tokens.filter((t, _i, _xs) => t.tokenId === x.id),
-            outputGranted.tokens.filter((t, _i, _xs) => t.tokenId === y.id)
+            outputGranted.assets.filter((t, _i, _xs) => t.tokenId === x.id),
+            outputGranted.assets.filter((t, _i, _xs) => t.tokenId === y.id)
         ].flat()
         if (pairIn.length == 2) {
             let [tickerX, tickerY] = [x.name || x.id.slice(0, 8), y.name || y.id.slice(0, 8)]
@@ -66,7 +66,7 @@ export class T2tPoolOps implements PoolOps {
                 changeAddress: ctx.changeAddress,
                 feeNErgs: ctx.feeNErgs
             }
-            let tx0 = await this.prover.sign(this.txAssembler.assemble(txr0, ctx.network))
+            let tx0 = await this.prover.sign(this.txAsm.assemble(txr0, ctx.network))
 
             let lpP2Pk = ergoTreeFromAddress(ctx.changeAddress)
             let lpShares = {tokenId: newTokenLP.tokenId, amount: params.outputShare}
@@ -98,7 +98,7 @@ export class T2tPoolOps implements PoolOps {
                 changeAddress: ctx.changeAddress,
                 feeNErgs: ctx.feeNErgs
             }
-            let tx1 = await this.prover.sign(this.txAssembler.assemble(txr1, ctx.network))
+            let tx1 = await this.prover.sign(this.txAsm.assemble(txr1, ctx.network))
 
             return Promise.resolve([tx0, tx1])
         } else {
@@ -111,8 +111,8 @@ export class T2tPoolOps implements PoolOps {
         let proxyScript = scripts.deposit(EmissionLP, params.poolId, params.pk, params.dexFee)
         let outputGranted = ctx.inputs.totalOutputWithoutChange
         let pairIn = [
-            outputGranted.tokens.filter((t, _i, _xs) => t.tokenId === x.id),
-            outputGranted.tokens.filter((t, _i, _xs) => t.tokenId === y.id)
+            outputGranted.assets.filter((t, _i, _xs) => t.tokenId === x.id),
+            outputGranted.assets.filter((t, _i, _xs) => t.tokenId === y.id)
         ].flat()
         if (pairIn.length == 2) {
             let out: ErgoBoxCandidate = {
@@ -129,7 +129,7 @@ export class T2tPoolOps implements PoolOps {
                 changeAddress: ctx.changeAddress,
                 feeNErgs: ctx.feeNErgs
             }
-            return this.prover.sign(this.txAssembler.assemble(txr, ctx.network))
+            return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
         } else {
             return Promise.reject(new InsufficientInputs(`Token pair {${x.name}|${y.name}} not provided`))
         }
@@ -138,7 +138,7 @@ export class T2tPoolOps implements PoolOps {
     redeem(params: RedeemParams, ctx: TransactionContext): Promise<ErgoTx> {
         let proxyScript = scripts.redeem(EmissionLP, params.poolId, params.pk, params.dexFee)
         let outputGranted = ctx.inputs.totalOutputWithoutChange
-        let tokensIn = outputGranted.tokens.filter((t, _i, _xs) => t.tokenId === params.lp.id)
+        let tokensIn = outputGranted.assets.filter((t, _i, _xs) => t.tokenId === params.lp.id)
         if (tokensIn.length == 1) {
             let out = {
                 value: outputGranted.nErgs,
@@ -154,7 +154,7 @@ export class T2tPoolOps implements PoolOps {
                 changeAddress: ctx.changeAddress,
                 feeNErgs: ctx.feeNErgs
             }
-            return this.prover.sign(this.txAssembler.assemble(txr, ctx.network))
+            return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
         } else {
             return Promise.reject(new InsufficientInputs(`LP tokens not provided`))
         }
@@ -171,7 +171,7 @@ export class T2tPoolOps implements PoolOps {
         )
         let outputGranted = ctx.inputs.totalOutputWithoutChange
         let baseAssetId = params.baseInput.asset.id
-        let tokensIn = outputGranted.tokens.filter((t, _i, _xs) => t.tokenId === baseAssetId)
+        let tokensIn = outputGranted.assets.filter((t, _i, _xs) => t.tokenId === baseAssetId)
         if (tokensIn.length == 1) {
             let out: ErgoBoxCandidate = {
                 value: outputGranted.nErgs,
@@ -187,7 +187,7 @@ export class T2tPoolOps implements PoolOps {
                 changeAddress: ctx.changeAddress,
                 feeNErgs: ctx.feeNErgs
             }
-            return this.prover.sign(this.txAssembler.assemble(txr, ctx.network))
+            return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
         } else {
             return Promise.reject(new InsufficientInputs(`Base asset '${baseAssetId}' not provided`))
         }

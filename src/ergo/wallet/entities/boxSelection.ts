@@ -1,5 +1,4 @@
 import {ChangeBox} from "./changeBox";
-import {EmptyInputs} from "../../errors/emptyInputs";
 import {OverallAmount} from "./overallAmount";
 import {ErgoBox} from "../../entities/ergoBox";
 import {TokenAmount} from "../../entities/tokenAmount";
@@ -14,8 +13,8 @@ export class BoxSelection {
     ) {
     }
 
-    static make(inputs: ErgoBox[], change?: ChangeBox): BoxSelection | EmptyInputs {
-        return inputs.length > 0 ? new BoxSelection(inputs, change) : new EmptyInputs()
+    static make(inputs: ErgoBox[], change?: ChangeBox): BoxSelection | undefined {
+        return inputs.length > 0 ? new BoxSelection(inputs, change) : undefined
     }
 
     static safe(head: ErgoBox, others?: ErgoBox[], change?: ChangeBox): BoxSelection {
@@ -48,6 +47,6 @@ export class BoxSelection {
         }
         let tokens: TokenAmount[] = []
         tokensAgg.forEach((amount, tokenId, _xs) => tokens.push({tokenId, amount}))
-        return {nErgs, tokens}
+        return {nErgs, assets: tokens}
     }
 }
