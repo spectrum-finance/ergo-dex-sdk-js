@@ -13,8 +13,8 @@ export function boxSelectionToWasm(inputs: BoxSelection): wasm.BoxSelection {
     let tokens = new wasm.Tokens()
     let changeList = new wasm.ErgoBoxAssetsDataList()
     if (inputs.change) {
-        inputs.change.tokens.forEach((v, k, _xs) => {
-            let t = new wasm.Token(wasm.TokenId.from_str(k), wasm.TokenAmount.from_i64(I64.from_str(v.toString())))
+        inputs.change.assets.forEach((a, _ix, _xs) => {
+            let t = new wasm.Token(wasm.TokenId.from_str(a.tokenId), wasm.TokenAmount.from_i64(I64.from_str(a.amount.toString())))
             tokens.add(t)
         })
         let change = new wasm.ErgoBoxAssetsData(wasm.BoxValue.from_i64(I64.from_str(inputs.change.value.toString())), tokens)

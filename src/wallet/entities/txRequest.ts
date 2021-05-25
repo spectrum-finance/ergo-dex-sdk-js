@@ -8,5 +8,5 @@ export type TxRequest = {
     readonly dataInputs: DataInput[],
     readonly outputs: ErgoBoxCandidate[],
     readonly changeAddress: Address
-    readonly feeNErgs: bigint
+    readonly feeNErgs?: bigint
 }

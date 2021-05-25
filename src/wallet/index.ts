@@ -26,3 +26,4 @@ export * as registers from "./entities/registers";
 export {SigmaType} from "./entities/sigmaType";
 export {TokenAmount} from "./entities/tokenAmount";
 export {Constant, Int32Constant, Int64Constant, ByteaConstant} from "./entities/constant";
+export {TxAssembler, BasicTxAssembler} from "./txAssembler"

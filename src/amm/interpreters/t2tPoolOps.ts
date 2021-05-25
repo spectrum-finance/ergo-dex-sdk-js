@@ -66,7 +66,7 @@ export class T2tPoolOps implements PoolOps {
                 changeAddress: ctx.changeAddress,
                 feeNErgs: ctx.feeNErgs
             }
-            let tx0 = await this.prover.sign(this.txAssembler.assemble(txr0))
+            let tx0 = await this.prover.sign(this.txAssembler.assemble(txr0, ctx.network))
 
             let lpP2Pk = ergoTreeFromAddress(ctx.changeAddress)
             let lpShares = {tokenId: newTokenLP.tokenId, amount: params.outputShare}
@@ -98,7 +98,7 @@ export class T2tPoolOps implements PoolOps {
                 changeAddress: ctx.changeAddress,
                 feeNErgs: ctx.feeNErgs
             }
-            let tx1 = await this.prover.sign(this.txAssembler.assemble(txr1))
+            let tx1 = await this.prover.sign(this.txAssembler.assemble(txr1, ctx.network))
 
             return Promise.resolve([tx0, tx1])
         } else {
@@ -129,7 +129,7 @@ export class T2tPoolOps implements PoolOps {
                 changeAddress: ctx.changeAddress,
                 feeNErgs: ctx.feeNErgs
             }
-            return this.prover.sign(this.txAssembler.assemble(txr))
+            return this.prover.sign(this.txAssembler.assemble(txr, ctx.network))
         } else {
             return Promise.reject(new InsufficientInputs(`Token pair {${x.name}|${y.name}} not provided`))
         }
@@ -154,7 +154,7 @@ export class T2tPoolOps implements PoolOps {
                 changeAddress: ctx.changeAddress,
                 feeNErgs: ctx.feeNErgs
             }
-            return this.prover.sign(this.txAssembler.assemble(txr))
+            return this.prover.sign(this.txAssembler.assemble(txr, ctx.network))
         } else {
             return Promise.reject(new InsufficientInputs(`LP tokens not provided`))
         }
@@ -187,7 +187,7 @@ export class T2tPoolOps implements PoolOps {
                 changeAddress: ctx.changeAddress,
                 feeNErgs: ctx.feeNErgs
             }
-            return this.prover.sign(this.txAssembler.assemble(txr))
+            return this.prover.sign(this.txAssembler.assemble(txr, ctx.network))
         } else {
             return Promise.reject(new InsufficientInputs(`Base asset '${baseAssetId}' not provided`))
         }

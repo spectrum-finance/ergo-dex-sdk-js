@@ -1,6 +1,6 @@
-import {TokenId} from "../types";
+import {TokenAmount} from "./tokenAmount";
 
 export type ChangeBox = {
     readonly value: bigint,
-    readonly tokens: Map<TokenId, bigint>
+    readonly assets: TokenAmount[]
 }
