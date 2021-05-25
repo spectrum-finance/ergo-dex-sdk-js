@@ -1,8 +1,8 @@
-import {HexString, TokenId} from "../wallet/types";
-import {ErgoBox} from "../wallet/entities/ergoBox";
+import {HexString, TokenId} from "../ergo/types";
+import {ErgoBox} from "../ergo/entities/ergoBox";
 import axios, {AxiosInstance} from "axios";
-import {ErgoTree} from "../wallet/entities/ergoTree";
-import {AssetInfo} from "../wallet/entities/assetInfo";
+import {ErgoTree} from "../ergo/entities/ergoTree";
+import {AssetInfo} from "../ergo/entities/assetInfo";
 import * as network from "../network/models";
 import {Paging} from "../network/paging";
 

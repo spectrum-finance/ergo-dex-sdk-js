@@ -1,8 +1,8 @@
 import {PoolId} from "../types";
 import {AmmPool} from "../entities/ammPool";
 import {ErgoNetwork} from "../../services/ergoNetwork";
-import {AssetAmount, Int32Constant} from "../../wallet";
-import {RegisterId} from "../../wallet/entities/registers";
+import {AssetAmount, Int32Constant} from "../../ergo";
+import {RegisterId} from "../../ergo/entities/registers";
 import {Blake2b256} from "../../utils/blake2b256";
 import {toHex} from "../../utils/hex";
 import {T2tPoolContracts} from "../contracts/t2tPoolContracts";

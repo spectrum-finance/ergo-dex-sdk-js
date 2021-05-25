@@ -1,5 +1,5 @@
-import {AssetAmount, PublicKey} from "../../wallet";
-import {HexString, NErg, TokenId} from "../../wallet/types";
+import {AssetAmount, PublicKey} from "../../ergo";
+import {HexString, NErg, TokenId} from "../../ergo/types";
 
 export type SwapParams = {
     readonly pk: PublicKey,

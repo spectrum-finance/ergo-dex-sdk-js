@@ -1,7 +1,7 @@
 import {PoolSetupParams} from "../models/poolSetupParams";
 import {SwapParams} from "../models/swapParams";
-import {TransactionContext} from "../../wallet/models/transactionContext";
-import {ErgoTx} from "../../wallet/entities/ergoTx";
+import {TransactionContext} from "../../ergo/wallet/entities/transactionContext";
+import {ErgoTx} from "../../ergo/entities/ergoTx";
 import {DepositParams} from "../models/depositParams";
 import {RedeemParams} from "../models/redeemParams";
 

@@ -1,13 +1,13 @@
 import {I64} from "ergo-lib-wasm-browser";
 import {PoolId} from "../types";
 import * as templates from "./templates";
-import {HexString, NErg, TokenId} from "../../wallet/types";
-import {ErgoTree} from "../../wallet/entities/ergoTree";
-import {PublicKey} from "../../wallet/entities/publicKey";
+import {HexString, NErg, TokenId} from "../../ergo/types";
+import {ErgoTree} from "../../ergo/entities/ergoTree";
+import {PublicKey} from "../../ergo/entities/publicKey";
 import * as wasm from "ergo-lib-wasm-browser";
 import {fromHex, toHex} from "../../utils/hex";
 import {Blake2b256} from "../../utils/blake2b256";
-import {fromErgoTree} from "../../wallet/entities/ergoTreeTemplate";
+import {fromErgoTree} from "../../ergo/entities/ergoTreeTemplate";
 
 export class T2tPoolContracts {
 

@@ -1,4 +1,4 @@
-import {TokenAmount} from "./tokenAmount";
+import {TokenAmount} from "../../entities/tokenAmount";
 
 export type OverallAmount = {
     nErgs: bigint,

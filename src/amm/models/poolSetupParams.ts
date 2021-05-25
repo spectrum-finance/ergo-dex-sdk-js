@@ -1,6 +1,6 @@
 import {InvalidParams} from "../errors/invalidParams";
 import {MinPoolNanoErgs, PoolFeeMaxDecimals, PoolFeeScale} from "../constants";
-import {AssetAmount, PublicKey} from "../../wallet";
+import {AssetAmount, PublicKey} from "../../ergo";
 import {sqrt} from "../../utils/sqrt";
 
 export type PoolSetupParams = {

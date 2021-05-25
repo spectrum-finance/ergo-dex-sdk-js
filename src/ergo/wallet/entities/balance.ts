@@ -1,5 +1,5 @@
-import {TokenId} from "../types";
-import {AssetAmount} from "../entities/assetAmount";
+import {TokenId} from "../../types";
+import {AssetAmount} from "../../entities/assetAmount";
 
 export class Balance {
     readonly nErgs: bigint

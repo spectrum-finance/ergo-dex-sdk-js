@@ -1,6 +1,6 @@
 import * as wasm from "ergo-lib-wasm-browser";
 import {I64} from "ergo-lib-wasm-browser";
-import {BoxSelection} from "./entities/boxSelection";
+import {BoxSelection} from "./wallet/entities/boxSelection";
 import {ErgoBox} from "./entities/ergoBox";
 import {ErgoTree, ergoTreeToBytea} from "./entities/ergoTree";
 import {TokenAmount} from "./entities/tokenAmount";

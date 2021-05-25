@@ -2,10 +2,10 @@ import {PoolSetupParams} from "../models/poolSetupParams";
 import {SwapParams} from "../models/swapParams";
 import {T2tPoolContracts as scripts} from "../contracts/t2tPoolContracts";
 import {EmissionLP} from "../constants";
-import {InsufficientInputs} from "../../wallet/errors/insufficientInputs";
-import {TransactionContext} from "../../wallet/models/transactionContext";
+import {InsufficientInputs} from "../../ergo/errors/insufficientInputs";
+import {TransactionContext} from "../../ergo/wallet/entities/transactionContext";
 import {Blake2b256} from "../../utils/blake2b256";
-import {MinBoxAmountNErgs} from "../../wallet/constants";
+import {MinBoxAmountNErgs} from "../../ergo/constants";
 import {
     ByteaConstant,
     Int64Constant,
@@ -14,16 +14,16 @@ import {
     ErgoTx,
     Prover,
     ErgoBoxCandidate
-} from "../../wallet";
+} from "../../ergo";
 import {DepositParams} from "../models/depositParams";
 import {RedeemParams} from "../models/redeemParams";
-import {ergoTreeFromAddress, ergoTreeToBytea} from "../../wallet/entities/ergoTree";
+import {ergoTreeFromAddress, ergoTreeToBytea} from "../../ergo/entities/ergoTree";
 import {PoolOps} from "./poolOps";
-import {EmptyRegisters, RegisterId, registers} from "../../wallet/entities/registers";
+import {EmptyRegisters, RegisterId, registers} from "../../ergo/entities/registers";
 import {fromHex} from "../../utils/hex";
 import {stringToBytea} from "../../utils/utf8";
-import {TxRequest} from "../../wallet/entities/txRequest";
-import {TxAssembler} from "../../wallet/txAssembler";
+import {TxRequest} from "../../ergo/wallet/entities/txRequest";
+import {TxAssembler} from "../../ergo";
 
 export class T2tPoolOps implements PoolOps {
 

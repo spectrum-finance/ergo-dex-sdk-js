@@ -1,5 +1,5 @@
 import {PoolId} from "../types";
-import {AssetInfo, PublicKey} from "../../wallet";
+import {AssetInfo, PublicKey} from "../../ergo";
 
 export type DepositParams = {
     readonly poolId: PoolId,

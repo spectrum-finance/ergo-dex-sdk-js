@@ -1,6 +1,6 @@
 // @ts-ignore
 import blake from 'blakejs';
-import {HexString} from "../wallet/types";
+import {HexString} from "../ergo/types";
 
 export class Blake2b256 {
 

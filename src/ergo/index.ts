@@ -1,12 +1,12 @@
-export {Wallet} from "./wallet";
-export {Prover} from "./prover";
+export {Wallet} from "./wallet/wallet";
+export {Prover} from "./wallet/prover";
 export * as wasmInterop from "./ergoWasmInterop";
 export {Address} from "./entities/address";
 export * as address from "./entities/address";
 export {AssetAmount} from "./entities/assetAmount";
 export {AssetInfo} from "./entities/assetInfo";
-export {BoxSelection} from "./entities/boxSelection";
-export {ChangeBox} from "./entities/changeBox";
+export {BoxSelection} from "./wallet/entities/boxSelection";
+export {ChangeBox} from "./wallet/entities/changeBox";
 export {ContextExtension} from "./entities/contextExtension";
 export {ErgoBox} from "./entities/ergoBox";
 export {ErgoBoxCandidate} from "./entities/ergoBoxCandidate";
@@ -17,7 +17,7 @@ export * as ergoTreeTemplate from "./entities/ergoTreeTemplate";
 export {ErgoTx} from "./entities/ergoTx";
 export {UnsignedErgoTx} from "./entities/unsignedErgoTx";
 export {Input} from "./entities/input";
-export {OverallAmount} from "./entities/overallAmount";
+export {OverallAmount} from "./wallet/entities/overallAmount";
 export {ProverResult} from "./entities/proverResult";
 export {PublicKey} from "./entities/publicKey";
 export * as publicKey from "./entities/publicKey";
@@ -26,4 +26,4 @@ export * as registers from "./entities/registers";
 export {SigmaType} from "./entities/sigmaType";
 export {TokenAmount} from "./entities/tokenAmount";
 export {Constant, Int32Constant, Int64Constant, ByteaConstant} from "./entities/constant";
-export {TxAssembler, BasicTxAssembler} from "./txAssembler"
+export {TxAssembler, BasicTxAssembler} from "./wallet/txAssembler"

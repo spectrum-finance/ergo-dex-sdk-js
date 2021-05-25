@@ -1,10 +1,10 @@
 import {ChangeBox} from "./changeBox";
-import {EmptyInputs} from "../errors/emptyInputs";
+import {EmptyInputs} from "../../errors/emptyInputs";
 import {OverallAmount} from "./overallAmount";
-import {ErgoBox} from "./ergoBox";
-import {TokenAmount} from "./tokenAmount";
-import {TokenId} from "../types";
-import {UnsignedInput} from "./unsignedInput";
+import {ErgoBox} from "../../entities/ergoBox";
+import {TokenAmount} from "../../entities/tokenAmount";
+import {TokenId} from "../../types";
+import {UnsignedInput} from "../../entities/unsignedInput";
 
 export class BoxSelection {
 

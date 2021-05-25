@@ -1,8 +1,8 @@
-import {ByteaConstant, Constant, Int32Constant, Int64Constant} from "../wallet/entities/constant";
+import {ByteaConstant, Constant, Int32Constant, Int64Constant} from "../ergo/entities/constant";
 import {fromHex} from "../utils/hex";
-import {RegisterId} from "../wallet/entities/registers";
-import * as wallet from "../wallet";
-import {SigmaType} from "../wallet";
+import {RegisterId} from "../ergo/entities/registers";
+import * as wallet from "../ergo";
+import {SigmaType} from "../ergo";
 
 export type ErgoBox = {
     boxId: string,

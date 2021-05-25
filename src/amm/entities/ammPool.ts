@@ -1,6 +1,6 @@
 import {PoolId} from "../types";
-import {HexString} from "../../wallet/types";
-import {AssetInfo, AssetAmount} from "../../wallet";
+import {HexString} from "../../ergo/types";
+import {AssetInfo, AssetAmount} from "../../ergo";
 import {Price} from "../../entities/price";
 
 export class AmmPool {

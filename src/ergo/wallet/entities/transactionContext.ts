@@ -1,6 +1,6 @@
 import {NetworkContext} from "./networkContext";
-import {BoxSelection} from "../entities/boxSelection";
-import {Address} from "../entities/address";
+import {BoxSelection} from "./boxSelection";
+import {Address} from "../../entities/address";
 
 export class TransactionContext {
     readonly inputs: BoxSelection

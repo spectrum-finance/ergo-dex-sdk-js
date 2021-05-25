@@ -1,6 +1,6 @@
-import {AssetInfo} from "../wallet/entities/assetInfo";
+import {AssetInfo} from "../ergo/entities/assetInfo";
 import {ErgoNetwork} from "../services/ergoNetwork";
-import {TokenId} from "../wallet/types";
+import {TokenId} from "../ergo/types";
 
 export interface Tokens {
 
