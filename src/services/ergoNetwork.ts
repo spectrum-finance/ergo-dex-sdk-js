@@ -1,10 +1,8 @@
-import {HexString, TokenId} from "../ergo/types";
-import {ErgoBox} from "../ergo/entities/ergoBox";
 import axios, {AxiosInstance} from "axios";
-import {ErgoTree} from "../ergo/entities/ergoTree";
-import {AssetInfo} from "../ergo/entities/assetInfo";
+import {ErgoTree, AssetInfo, ErgoBox, HexString, TokenId} from "../ergo";
 import * as network from "../network/models";
 import {Paging} from "../network/paging";
+import {NetworkContext} from "../ergo/entities/networkContext";
 
 export interface ErgoNetwork {
 
@@ -27,6 +25,10 @@ export interface ErgoNetwork {
     /** Get a token info by id.
      */
     getToken(tokenId: TokenId): Promise<AssetInfo | undefined>
+
+    /** Get current network context.
+     */
+    getNetworkContext(): Promise<NetworkContext>
 }
 
 export class Explorer implements ErgoNetwork {
@@ -45,33 +47,39 @@ export class Explorer implements ErgoNetwork {
         return this.backend.request<network.ErgoBox[]>({
             url: `/boxes/unspent/byErgoTree/${tree}`,
             params: paging
-        }).then((res) => res.data.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
+        }).then(res => res.data.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
     }
 
     async getUnspentByErgoTreeTemplate(templateHash: HexString, paging: Paging): Promise<ErgoBox[]> {
         return this.backend.request<network.ErgoBox[]>({
             url: `/boxes/unspent/byErgoTreeTemplateHash/${templateHash}`,
             params: paging
-        }).then((res) => res.data.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
+        }).then(res => res.data.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
     }
 
     async getUnspentByTokenId(tokenId: TokenId, paging: Paging): Promise<ErgoBox[]> {
         return this.backend.request<network.ErgoBox[]>({
             url: `/boxes/unspent/byTokenId/${tokenId}`,
             params: paging
-        }).then((res) => res.data.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
+        }).then(res => res.data.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
     }
 
     async getUnspentByErgoTreeTemplateHash(hash: HexString, paging: Paging): Promise<ErgoBox[]> {
         return this.backend.request<network.ErgoBox[]>({
             url: `/boxes/unspent/byErgoTreeTemplateHash/${hash}`,
             params: paging
-        }).then((res) => res.data.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
+        }).then(res => res.data.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
     }
 
     async getToken(tokenId: TokenId): Promise<AssetInfo | undefined> {
         return this.backend.request<AssetInfo>({
             url: `/api/v1/tokens/${tokenId}`
-        }).then((res) => res.status != 404 ? res.data : undefined)
+        }).then(res => res.status != 404 ? res.data : undefined)
+    }
+
+    async getNetworkContext(): Promise<NetworkContext> {
+        return this.backend.request<NetworkContext>({
+            url: `/api/v1/epochs/params`
+        }).then(res => res.data)
     }
 }

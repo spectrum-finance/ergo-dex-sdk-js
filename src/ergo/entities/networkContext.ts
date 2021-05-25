@@ -1,4 +1,4 @@
 export type NetworkContext = {
     readonly height: number,
-    readonly nErgsPerByte: bigint
+    readonly minValuePerByte: bigint
 }

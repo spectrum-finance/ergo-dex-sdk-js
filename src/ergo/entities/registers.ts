@@ -9,6 +9,23 @@ export enum RegisterId {
     R9 = "R9"
 }
 
+export function parseRegisterId(s: string): RegisterId | undefined {
+    switch (s) {
+        case "R4":
+            return RegisterId.R4
+        case "R5":
+            return RegisterId.R5
+        case "R6":
+            return RegisterId.R6
+        case "R7":
+            return RegisterId.R7
+        case "R8":
+            return RegisterId.R8
+        case "R9":
+            return RegisterId.R9
+    }
+}
+
 export type Registers = Map<RegisterId, Constant>
 
 export const EmptyRegisters: Registers = new Map<RegisterId, Constant>()

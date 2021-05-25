@@ -1,8 +1,7 @@
-import {ByteaConstant, Constant, Int32Constant, Int64Constant} from "../ergo/entities/constant";
+import {ByteaConstant, Constant, Int32Constant, Int64Constant, Registers, SigmaType} from "../ergo";
 import {fromHex} from "../utils/hex";
-import {RegisterId} from "../ergo/entities/registers";
+import {parseRegisterId, RegisterId} from "../ergo/entities/registers";
 import * as wallet from "../ergo";
-import {SigmaType} from "../ergo";
 
 export type ErgoBox = {
     boxId: string,
@@ -15,7 +14,7 @@ export type ErgoBox = {
     ergoTree: string,
     address: string,
     assets: BoxAsset[],
-    additionalRegisters: Map<RegisterId, BoxRegister>,
+    additionalRegisters: { [key: string]: BoxRegister },
     spentTransactionId?: string
 }
 
@@ -52,9 +51,10 @@ export function toWalletToken(asset: BoxAsset): wallet.TokenAmount {
 
 export function toWalletErgoBox(box: ErgoBox): wallet.ErgoBox {
     let registers = new Map<RegisterId, Constant>()
-    box.additionalRegisters.forEach((v, k, _xs) => {
-        let c = toWalletConstant(v)
-        if (c) registers.set(k, c)
+    Object.keys(box.additionalRegisters).forEach((k, _ix, _xs) => {
+        let c = toWalletConstant(box.additionalRegisters[k])
+        let regId = parseRegisterId(k)
+        if (c && regId) registers.set(regId, c)
     })
     return {
         boxId: box.boxId,
