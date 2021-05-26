@@ -1,4 +1,3 @@
 export class PoolSetupFailed {
-    constructor() {
-    }
+  constructor() {}
 }

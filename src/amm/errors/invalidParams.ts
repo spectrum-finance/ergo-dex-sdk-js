@@ -1,3 +1,3 @@
-import {InvalidParam} from "./invalidParam";
+import { InvalidParam } from './invalidParam';
 
-export type InvalidParams = InvalidParam[]
+export type InvalidParams = InvalidParam[];

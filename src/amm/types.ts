@@ -1,3 +1,3 @@
-import {TokenId} from "../ergo/types";
+import { TokenId } from '../wallet/types';
 
-export type PoolId = TokenId
+export type PoolId = TokenId;
