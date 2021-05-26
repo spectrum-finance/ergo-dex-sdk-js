@@ -71,7 +71,7 @@ export class T2tPoolOps implements PoolOps {
             let lpP2Pk = ergoTreeFromAddress(ctx.changeAddress)
             let lpShares = {tokenId: newTokenLP.tokenId, amount: params.outputShare}
             let lpOut: ErgoBoxCandidate = {
-                value: MinBoxAmountNErgs, // todo: calc upon actual feeBerByte.
+                value: MinBoxAmountNErgs, // todo: calc against actual feeBerByte.
                 ergoTree: lpP2Pk,
                 creationHeight: height,
                 assets: [lpShares],
