@@ -7,7 +7,7 @@ export {ChangeBox} from "./wallet/entities/changeBox";
 export {OverallAmount} from "./wallet/entities/overallAmount";
 
 export * as wasmInterop from "./ergoWasmInterop";
-export {Address} from "./entities/address";
+export {Address, Network} from "./entities/address";
 export * as address from "./entities/address";
 export {AssetAmount} from "./entities/assetAmount";
 export {AssetInfo} from "./entities/assetInfo";

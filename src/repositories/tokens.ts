@@ -1,6 +1,5 @@
-import {AssetInfo} from "../ergo/entities/assetInfo";
 import {ErgoNetwork} from "../services/ergoNetwork";
-import {TokenId} from "../ergo/types";
+import {TokenId, AssetInfo} from "../ergo";
 
 export interface Tokens {
 
@@ -11,7 +10,8 @@ export interface Tokens {
 
 export class NetworkTokens implements Tokens {
 
-    constructor(public readonly network: ErgoNetwork) {}
+    constructor(public readonly network: ErgoNetwork) {
+    }
 
     get(id: TokenId): Promise<AssetInfo | undefined> {
         return this.network.getToken(id);

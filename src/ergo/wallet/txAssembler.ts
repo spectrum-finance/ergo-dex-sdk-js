@@ -36,7 +36,11 @@ export class DefaultTxAssembler implements TxAssembler {
             id: "",
             inputs: req.inputs.unsignedInputs,
             dataInputs: req.dataInputs,
-            outputs: outputs.map((out, ix, _xs) => ({boxId: "", transactionId: "", index: ix, ...out}))
+            outputs: outputs.map((out, ix, _xs) => ({
+                boxId: "",
+                transactionId: "",
+                index: ix, ...out
+            }))
         }
     }
 }

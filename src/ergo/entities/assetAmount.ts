@@ -6,10 +6,15 @@ export class AssetAmount {
     constructor(
         public readonly asset: AssetInfo,
         public readonly amount: bigint
-    ) {}
+    ) {
+    }
 
     static fromToken(token: TokenAmount): AssetAmount {
-        return new this({id: token.tokenId, name: token.name, decimals: token.decimals}, token.amount)
+        return new this({
+            id: token.tokenId,
+            name: token.name,
+            decimals: token.decimals
+        }, token.amount)
     }
 
     withAmount(amount: bigint): AssetAmount {

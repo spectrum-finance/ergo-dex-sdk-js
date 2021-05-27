@@ -30,7 +30,8 @@ export class T2tPoolOps implements PoolOps {
     constructor(
         public readonly prover: Prover,
         public readonly txAsm: TxAssembler
-    ) {}
+    ) {
+    }
 
     async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<ErgoTx[]> {
         let [x, y] = [params.x.asset, params.y.asset]

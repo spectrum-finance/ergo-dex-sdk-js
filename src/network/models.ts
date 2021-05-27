@@ -46,7 +46,12 @@ export function toWalletConstant(reg: BoxRegister): wallet.Constant | undefined 
 }
 
 export function toWalletToken(asset: BoxAsset): wallet.TokenAmount {
-    return {tokenId: asset.tokenId, amount: asset.amount, name: asset.name, decimals: asset.decimals}
+    return {
+        tokenId: asset.tokenId,
+        amount: asset.amount,
+        name: asset.name,
+        decimals: asset.decimals
+    }
 }
 
 export function toWalletErgoBox(box: ErgoBox): wallet.ErgoBox {
