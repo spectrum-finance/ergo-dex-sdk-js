@@ -33,6 +33,7 @@ export class NetworkPools implements Pools {
                 return new AmmPool(id, assetX, assetY, scriptHash, r4.value)
             }
         }
+        return undefined;
     }
 
     async getAll(paging: Paging): Promise<AmmPool[]> {

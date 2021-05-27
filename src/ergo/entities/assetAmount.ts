@@ -1,5 +1,4 @@
 import {AssetInfo} from "./assetInfo";
-import {I64, Token as LibToken, TokenAmount as LibTokenAmount, TokenId as LibTokenId} from "ergo-lib-wasm-browser";
 import {TokenAmount} from "./tokenAmount";
 
 export class AssetAmount {

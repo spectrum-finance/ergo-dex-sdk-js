@@ -24,6 +24,7 @@ export function parseRegisterId(s: string): RegisterId | undefined {
         case "R9":
             return RegisterId.R9
     }
+    return undefined;
 }
 
 export type Registers = Map<RegisterId, Constant>

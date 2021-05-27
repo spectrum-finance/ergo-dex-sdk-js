@@ -1,4 +1,4 @@
-import {ByteaConstant, Constant, Int32Constant, Int64Constant, Registers, SigmaType} from "../ergo";
+import {ByteaConstant, Constant, Int32Constant, Int64Constant, SigmaType} from "../ergo";
 import {fromHex} from "../utils/hex";
 import {parseRegisterId, RegisterId} from "../ergo/entities/registers";
 import * as wallet from "../ergo";

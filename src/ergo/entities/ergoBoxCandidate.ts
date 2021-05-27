@@ -1,6 +1,6 @@
 import {TokenAmount} from "./tokenAmount";
 import {ErgoTree} from "./ergoTree";
-import {EmptyRegisters, Registers} from "./registers";
+import {Registers} from "./registers";
 
 export type ErgoBoxCandidate = {
     readonly value: bigint,
