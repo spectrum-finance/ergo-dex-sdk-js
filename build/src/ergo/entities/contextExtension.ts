@@ -1,1 +1,0 @@
-export type ContextExtension = {} | { [key: string]: string }
