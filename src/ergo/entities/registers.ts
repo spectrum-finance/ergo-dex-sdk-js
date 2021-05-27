@@ -22,9 +22,9 @@ export function parseRegisterId(s: string): RegisterId | undefined {
         case "R8":
             return RegisterId.R8
         case "R9":
-        default:
             return RegisterId.R9
     }
+    return undefined;
 }
 
 export type Registers = Map<RegisterId, Constant>

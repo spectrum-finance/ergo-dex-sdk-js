@@ -8,7 +8,7 @@ import type {
   Token as wasmToken,
   Tokens as wasmTokens,
 } from "ergo-lib-wasm-browser";
-import { RustModule } from '../utils/rustLoader';
+import {RustModule} from "../utils/rustLoader";
 import {BoxSelection} from "./wallet/entities/boxSelection";
 import {ErgoBox} from "./entities/ergoBox";
 import {ErgoTree, ergoTreeToBytea} from "./entities/ergoTree";

@@ -1,4 +1,4 @@
-import { RustModule } from '../../utils/rustLoader';
+import {RustModule} from "../../utils/rustLoader";
 import {HexString} from "../types";
 import {Address} from "./address";
 
