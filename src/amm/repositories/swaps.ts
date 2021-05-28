@@ -1,4 +1,4 @@
-import {Address} from "ergo-lib-wasm-browser";
+import type {Address} from "ergo-lib-wasm-browser";
 import {Swap} from "../entities/swap";
 
 export interface Swaps {
