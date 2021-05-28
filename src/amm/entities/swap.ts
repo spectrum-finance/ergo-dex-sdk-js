@@ -1,4 +1,4 @@
-import {Address, TokenId} from "ergo-lib-wasm-browser";
+import type {Address, TokenId} from "ergo-lib-wasm-browser";
 import {AssetAmount, PublicKey} from "../../ergo";
 
 export type Swap = {
