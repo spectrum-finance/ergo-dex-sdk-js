@@ -26,7 +26,7 @@ export class BoxSelection {
     }
 
     get unsignedInputs(): UnsignedInput[] {
-        return this.inputs.map((bx, _ix, _xs) => ({boxId: bx.boxId, extension: {}}))
+        return this.inputs.map((bx, _ix, _xs) => ({...bx, extension: {}}))
     }
 
     /** Amounts of all kinds of tokens with change excluded.

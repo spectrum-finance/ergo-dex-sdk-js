@@ -1,6 +1,5 @@
-import {ByteaConstant, Constant, Int32Constant, Int64Constant, SigmaType} from "../ergo";
-import {fromHex} from "../utils/hex";
-import {parseRegisterId, RegisterId} from "../ergo/entities/registers";
+import {Registers, SigmaType} from "../ergo";
+import {parseRegisterId} from "../ergo/entities/registers";
 import * as wallet from "../ergo";
 
 export type ErgoBox = {
@@ -32,19 +31,6 @@ export type BoxRegister = {
     renderedValue: string
 }
 
-export function toWalletConstant(reg: BoxRegister): wallet.Constant | undefined {
-    switch (reg.sigmaType) {
-        case "Coll[Byte]":
-            return new ByteaConstant(fromHex(reg.renderedValue))
-        case "SInt":
-            return new Int32Constant(Number(reg.renderedValue))
-        case "SLong":
-            return new Int64Constant(BigInt(reg.renderedValue))
-        default:
-            return undefined
-    }
-}
-
 export function toWalletToken(asset: BoxAsset): wallet.TokenAmount {
     return {
         tokenId: asset.tokenId,
@@ -55,11 +41,10 @@ export function toWalletToken(asset: BoxAsset): wallet.TokenAmount {
 }
 
 export function toWalletErgoBox(box: ErgoBox): wallet.ErgoBox {
-    let registers = new Map<RegisterId, Constant>()
-    Object.keys(box.additionalRegisters).forEach((k, _ix, _xs) => {
-        let c = toWalletConstant(box.additionalRegisters[k])
+    let registers: Registers = {}
+    Object.entries(box.additionalRegisters).forEach(([k, v], _ix, _xs) => {
         let regId = parseRegisterId(k)
-        if (c && regId) registers.set(regId, c)
+        if (regId) registers[regId] = v.serializedValue
     })
     return {
         boxId: box.boxId,

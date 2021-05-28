@@ -2,7 +2,6 @@ import type {
   BoxSelection as wasmBoxSelection,
   ErgoBoxCandidates as wasmErgoBoxCandidates,
   ErgoBoxCandidate as wasmErgoBoxCandidate,
-  Constant as wasmConstant,
   ErgoBox as wasmErgoBox,
   ErgoTree as wasmErgoTree,
   Token as wasmToken,
@@ -14,8 +13,6 @@ import {ErgoBox} from "./entities/ergoBox";
 import {ErgoTree, ergoTreeToBytea} from "./entities/ergoTree";
 import {TokenAmount} from "./entities/tokenAmount";
 import {ErgoBoxCandidate} from "./entities/ergoBoxCandidate";
-import {Int32Constant, Int64Constant} from "./entities/constant";
-import {RegisterId} from "./entities/registers";
 
 export function boxSelectionToWasm(inputs: BoxSelection): wasmBoxSelection {
     let boxes = new RustModule.SigmaRust.ErgoBoxes(boxToWasm(inputs.inputs[0]))
@@ -47,20 +44,14 @@ export function boxCandidateToWasm(box: ErgoBoxCandidate): wasmErgoBoxCandidate 
         let t = tokenToWasm(token)
         builder.add_token(t.id(), t.amount())
     }
-    for (let [id, value] of box.additionalRegisters) {
-        let constant: wasmConstant
-        if (value instanceof Int32Constant)
-            constant = RustModule.SigmaRust.Constant.from_i32(value.value)
-        else if (value instanceof Int64Constant)
-            constant = RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(value.value.toString()))
-        else
-            constant = RustModule.SigmaRust.Constant.from_byte_array(value.value)
+    for (let [id, value] of Object.entries(box.additionalRegisters)) {
+        let constant = RustModule.SigmaRust.Constant.decode_from_base16(value)
         builder.set_register_value(registerIdToWasm(id), constant)
     }
     return builder.build()
 }
 
-export function registerIdToWasm(id: RegisterId): number {
+export function registerIdToWasm(id: string): number {
     return Number(id[1])
 }
 

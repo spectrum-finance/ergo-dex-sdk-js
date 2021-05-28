@@ -1,4 +1,5 @@
-import {Constant} from "./constant";
+import {Constant, serializeConstant} from "./constant";
+import {HexString} from "../types";
 
 export enum RegisterId {
     R4 = "R4",
@@ -27,12 +28,12 @@ export function parseRegisterId(s: string): RegisterId | undefined {
     return undefined;
 }
 
-export type Registers = Map<RegisterId, Constant>
+export type Registers = { [key: string]: HexString }
 
-export const EmptyRegisters: Registers = new Map<RegisterId, Constant>()
+export const EmptyRegisters: Registers = {}
 
 export function registers(regs: [RegisterId, Constant][]): Registers {
     let acc = EmptyRegisters
-    for (let [id, value] of regs) acc.set(id, value)
+    for (let [id, value] of regs) acc[id] = serializeConstant(value)
     return acc
 }

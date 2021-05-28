@@ -1,4 +1,4 @@
-type SigmaRust = typeof import('ergo-lib-wasm-browser');
+export type SigmaRust = typeof import('ergo-lib-wasm-browser');
 
 class Module {
   _ergo?: SigmaRust;

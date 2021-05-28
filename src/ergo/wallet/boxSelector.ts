@@ -7,6 +7,8 @@ import {TokenAmount} from "../entities/tokenAmount";
 
 export interface BoxSelector {
 
+    /** Selects inputs to satisfy target balance and tokens.
+     */
     select(inputs: ErgoBox[], target: OverallAmount): BoxSelection | InsufficientInputs
 }
 

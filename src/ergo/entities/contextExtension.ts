@@ -1,1 +1,3 @@
-export type ContextExtension = {} | { [key: string]: string }
+import {HexString} from "../types";
+
+export type ContextExtension = { [key: string]: HexString }
