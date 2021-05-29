@@ -40,9 +40,9 @@
     "node": ">=10"
   },
   "dependencies": {
-    "axios": "0.21.1",
-    "bs58": "4.0.1",
-    "ergo-lib-wasm-browser": "0.13.1"
+    "axios": "^0.21.1",
+    "bs58": "^4.0.1",
+    "ergo-lib-wasm-browser": "^0.13.1"
   },
   "devDependencies": {
     "@ava/typescript": "^1.1.1",
