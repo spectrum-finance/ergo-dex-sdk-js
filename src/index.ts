@@ -13,3 +13,5 @@ export {Price} from "./entities/price";
 export {ErgoNetwork, Explorer} from "./services/ergoNetwork";
 export {Paging} from "./network/paging";
 export {PoolId} from "./amm/types";
+
+export * as ergo from "./ergo";
