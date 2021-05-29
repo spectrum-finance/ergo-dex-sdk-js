@@ -13,5 +13,7 @@ export {Price} from "./entities/price";
 export {ErgoNetwork, Explorer} from "./services/ergoNetwork";
 export {Paging} from "./network/paging";
 export {PoolId} from "./amm/types";
+export type {SigmaRust} from "./utils/rustLoader";
+export {RustModule} from "./utils/rustLoader";
 
 export * as ergo from "./ergo";
