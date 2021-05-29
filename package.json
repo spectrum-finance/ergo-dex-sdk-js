@@ -4,7 +4,6 @@
     "description": "ErgoDEX SDK",
     "main": "build/main/index.js",
     "typings": "build/main/index.d.ts",
-    "module": "build/module/index.js",
     "keywords": [],
     "scripts": {
         "build": "run-p build:*",
