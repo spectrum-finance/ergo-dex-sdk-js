@@ -8,6 +8,7 @@
     "scripts": {
         "build": "run-p build:*",
         "build:main": "tsc -p tsconfig.json",
+        "build+test:unit": "run-p build:* && nyc --silent ava",
         "fix": "run-s fix:*",
         "fix:prettier": "prettier \"src/**/*.ts\" --write",
         "fix:lint": "eslint src --ext .ts --fix",

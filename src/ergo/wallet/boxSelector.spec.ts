@@ -20,5 +20,5 @@ test("BoxSelector: Select ERGs", async (t) =>
     t.deepEqual(DefaultBoxSelector.select(boxes, {
         nErgs: 39999500000n,
         assets: []
-    }), BoxSelection.make(boxes, {value: 39999500000n, assets: []}))
+    }), BoxSelection.make(boxes, {value: 59999200000n, assets: []}))
 )
