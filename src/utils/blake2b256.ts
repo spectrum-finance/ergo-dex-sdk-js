@@ -1,6 +1,6 @@
 // @ts-ignore
 import blake from 'blakejs';
-import {HexString} from "../ergo/types";
+import {HexString} from "../ergo";
 
 export class Blake2b256 {
 
