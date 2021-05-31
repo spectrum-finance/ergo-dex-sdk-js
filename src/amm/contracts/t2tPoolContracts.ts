@@ -8,13 +8,6 @@ import {RustModule} from "../../utils/rustLoader";
 
 export class T2tPoolContracts {
 
-    static poolBoot(emissionLP: bigint): ErgoTree {
-        let tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tPoolBoot)
-        tree.set_constant(6, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(emissionLP.toString())))
-        tree.set_constant(14, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(emissionLP.toString())))
-        return tree.to_base16_bytes()
-    }
-
     static pool(emissionLP: bigint): ErgoTree {
         let tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tPool)
         tree.set_constant(7, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(emissionLP.toString())))

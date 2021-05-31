@@ -4,11 +4,9 @@ import {T2tPoolContracts as scripts} from "../contracts/t2tPoolContracts";
 import {EmissionLP} from "../constants";
 import {InsufficientInputs} from "../../ergo/errors/insufficientInputs";
 import {TransactionContext} from "../../ergo/wallet/entities/transactionContext";
-import {Blake2b256} from "../../utils/blake2b256";
 import {MinBoxAmountNErgs} from "../../ergo/constants";
 import {
     ByteaConstant,
-    Int64Constant,
     Int32Constant,
     BoxSelection,
     ErgoTx,
@@ -17,10 +15,9 @@ import {
 } from "../../ergo";
 import {DepositParams} from "../models/depositParams";
 import {RedeemParams} from "../models/redeemParams";
-import {ergoTreeFromAddress, ergoTreeToBytea} from "../../ergo/entities/ergoTree";
+import {ergoTreeFromAddress} from "../../ergo/entities/ergoTree";
 import {PoolOps} from "./poolOps";
 import {EmptyRegisters, RegisterId, registers} from "../../ergo/entities/registers";
-import {fromHex} from "../../utils/hex";
 import {stringToBytea} from "../../utils/utf8";
 import {TxRequest} from "../../ergo/wallet/entities/txRequest";
 import {TxAssembler} from "../../ergo";
@@ -42,28 +39,22 @@ export class T2tPoolOps implements PoolOps {
             outputGranted.assets.filter((t, _i, _xs) => t.tokenId === x.id),
             outputGranted.assets.filter((t, _i, _xs) => t.tokenId === y.id)
         ].flat()
-        if (pairIn.length == 2) {
+        if (pairIn.length === 2) {
             let [tickerX, tickerY] = [x.name || x.id.slice(0, 8), y.name || y.id.slice(0, 8)]
-            let poolBootScript = scripts.poolBoot(EmissionLP)
-            let poolSH: Uint8Array = Blake2b256.hash(ergoTreeToBytea(poolBootScript))
             let newTokenLP = {tokenId: inputs.newTokenId, amount: EmissionLP}
-            let proxyOut: ErgoBoxCandidate = {
+            let bootOut: ErgoBoxCandidate = {
                 value: outputGranted.nErgs - ctx.feeNErgs,
-                ergoTree: scripts.poolBoot(EmissionLP),
+                ergoTree: ergoTreeFromAddress(ctx.selfAddress),
                 creationHeight: height,
                 assets: [newTokenLP, ...pairIn],
                 additionalRegisters: registers([
                     [RegisterId.R4, new ByteaConstant(stringToBytea(`${tickerX}_${tickerY}_LP`))],
-                    [RegisterId.R5, new ByteaConstant(poolSH)],
-                    [RegisterId.R6, new Int64Constant(params.outputShare)],
-                    [RegisterId.R7, new Int32Constant(params.feeNumerator)],
-                    [RegisterId.R8, new Int64Constant(ctx.feeNErgs)],
-                    [RegisterId.R9, new ByteaConstant(fromHex(params.initiatorPk))]])
+                ])
             }
             let txr0: TxRequest = {
                 inputs: inputs,
                 dataInputs: [],
-                outputs: [proxyOut],
+                outputs: [bootOut],
                 changeAddress: ctx.changeAddress,
                 feeNErgs: ctx.feeNErgs
             }
