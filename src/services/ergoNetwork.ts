@@ -45,28 +45,28 @@ export class Explorer implements ErgoNetwork {
 
     async getUnspentByErgoTree(tree: ErgoTree, paging: Paging): Promise<ErgoBox[]> {
         return this.backend.request<network.Items<network.ErgoBox>>({
-            url: `/boxes/unspent/byErgoTree/${tree}`,
+            url: `/api/v1/boxes/unspent/byErgoTree/${tree}`,
             params: paging
         }).then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
     }
 
     async getUnspentByErgoTreeTemplate(templateHash: HexString, paging: Paging): Promise<ErgoBox[]> {
         return this.backend.request<network.Items<network.ErgoBox>>({
-            url: `/boxes/unspent/byErgoTreeTemplateHash/${templateHash}`,
+            url: `/api/v1/boxes/unspent/byErgoTreeTemplateHash/${templateHash}`,
             params: paging
         }).then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
     }
 
     async getUnspentByTokenId(tokenId: TokenId, paging: Paging): Promise<ErgoBox[]> {
         return this.backend.request<network.Items<network.ErgoBox>>({
-            url: `/boxes/unspent/byTokenId/${tokenId}`,
+            url: `/api/v1/boxes/unspent/byTokenId/${tokenId}`,
             params: paging
         }).then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
     }
 
     async getUnspentByErgoTreeTemplateHash(hash: HexString, paging: Paging): Promise<ErgoBox[]> {
         return this.backend.request<network.Items<network.ErgoBox>>({
-            url: `/boxes/unspent/byErgoTreeTemplateHash/${hash}`,
+            url: `/api/v1/boxes/unspent/byErgoTreeTemplateHash/${hash}`,
             params: paging
         }).then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
     }
