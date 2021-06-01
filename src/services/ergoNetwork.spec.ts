@@ -5,7 +5,7 @@ import { RustModule } from '../utils/rustLoader';
 import { Explorer } from './ergoNetwork';
 
 test.before(async () => {
-  await RustModule.load('ergo-lib-wasm-nodejs');
+  await RustModule.load(true);
 });
 
 test('ergoNetwork', (t) => {

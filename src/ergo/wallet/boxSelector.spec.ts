@@ -6,7 +6,7 @@ import {boxes} from "../samples";
 import {BoxSelection} from "./entities/boxSelection";
 
 test.before(async () => {
-    await RustModule.load("ergo-lib-wasm-nodejs")
+    await RustModule.load(true)
 })
 
 test("BoxSelector: Insufficient inputs", async (t) =>

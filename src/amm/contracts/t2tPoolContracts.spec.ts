@@ -3,7 +3,7 @@ import {RustModule} from "../../utils/rustLoader";
 import {T2tPoolContracts} from "./t2tPoolContracts";
 
 test.before(async () => {
-    await RustModule.load("ergo-lib-wasm-nodejs")
+    await RustModule.load(true)
 })
 
 test("Contract instantiation: Pool", async (t) => {

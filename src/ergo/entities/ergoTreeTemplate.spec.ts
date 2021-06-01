@@ -3,7 +3,7 @@ import {RustModule} from "../../utils/rustLoader";
 import {fromErgoTree} from "./ergoTreeTemplate";
 
 test.before(async () => {
-    await RustModule.load("ergo-lib-wasm-nodejs")
+    await RustModule.load(true)
 })
 
 test("ErgoTreeTemplate from ErgoTree (MinerProp tree V0)", async (t) =>
