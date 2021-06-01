@@ -12,10 +12,10 @@ export interface BoxSelector {
     select(inputs: ErgoBox[], target: OverallAmount): BoxSelection | InsufficientInputs
 }
 
-export class DefaultBoxSelector implements BoxSelector {
+class DefaultBoxSelectorImpl implements BoxSelector {
 
     select(inputs: ErgoBox[], target: OverallAmount): BoxSelection | InsufficientInputs {
-        let totalNErgs = inputs.map((bx, _ix, _xs) => bx.value).reduce((acc, value, _ix, _xs) => acc + value)
+        let totalNErgs = inputs.map((bx, _ix, _xs) => bx.value).reduce((acc, value, _ix, _xs) => acc + value, 0n)
         let totalAssets = new Map<TokenId, bigint>()
         for (let t of inputs.flatMap((bx, _ix, _xs) => bx.assets)) {
             let acc = totalAssets.get(t.tokenId) || 0n
@@ -45,3 +45,5 @@ export class DefaultBoxSelector implements BoxSelector {
         }
     }
 }
+
+export const DefaultBoxSelector = new DefaultBoxSelectorImpl()

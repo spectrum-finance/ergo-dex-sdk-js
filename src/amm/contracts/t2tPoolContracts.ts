@@ -1,8 +1,6 @@
 import {PoolId} from "../types";
 import * as templates from "./templates";
-import {HexString, NErg, TokenId} from "../../ergo/types";
-import {ErgoTree} from "../../ergo/entities/ergoTree";
-import {PublicKey} from "../../ergo/entities/publicKey";
+import {HexString, NErg, TokenId, ErgoTree, PublicKey} from "../../ergo";
 import {fromHex, toHex} from "../../utils/hex";
 import {Blake2b256} from "../../utils/blake2b256";
 import {fromErgoTree} from "../../ergo/entities/ergoTreeTemplate";
@@ -10,17 +8,10 @@ import {RustModule} from "../../utils/rustLoader";
 
 export class T2tPoolContracts {
 
-    static poolBoot(emissionLP: bigint): ErgoTree {
+    static pool(emissionLP: bigint): ErgoTree {
         let tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tPool)
         tree.set_constant(7, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(emissionLP.toString())))
         tree.set_constant(8, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(emissionLP.toString())))
-        return tree.to_base16_bytes()
-    }
-
-    static pool(emissionLP: bigint): ErgoTree {
-        let tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tPoolBoot)
-        tree.set_constant(6, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(emissionLP.toString())))
-        tree.set_constant(14, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(emissionLP.toString())))
         return tree.to_base16_bytes()
     }
 
