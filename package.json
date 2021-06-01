@@ -98,7 +98,7 @@
         }
     },
     "prettier": {
-        "singleQuote": true
+        "singleQuote": false
     },
     "nyc": {
         "extends": "@istanbuljs/nyc-config-typescript",
