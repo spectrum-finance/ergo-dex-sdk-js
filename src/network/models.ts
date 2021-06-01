@@ -2,6 +2,11 @@ import {Registers, SigmaType} from "../ergo";
 import {parseRegisterId} from "../ergo/entities/registers";
 import * as wallet from "../ergo";
 
+export type Items<T> = {
+    items: T[],
+    total: number
+}
+
 export type ErgoBox = {
     boxId: string,
     transactionId: string,
