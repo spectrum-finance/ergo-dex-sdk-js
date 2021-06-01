@@ -4,10 +4,12 @@
     "description": "ErgoDEX SDK",
     "main": "build/main/index.js",
     "typings": "build/main/index.d.ts",
+    "module": "build/module/index.js",
     "keywords": [],
     "scripts": {
         "build": "run-p build:*",
         "build:main": "tsc -p tsconfig.json",
+        "build:module": "tsc -p tsconfig.module.json",
         "build+test:unit": "run-p build:* && nyc --silent ava",
         "fix": "run-s fix:*",
         "fix:prettier": "prettier \"src/**/*.ts\" --write",
