@@ -1,3 +1,3 @@
 export function notImplemented(): never {
-    throw "An implementation is missing"
+  throw "An implementation is missing"
 }

@@ -1,6 +1,6 @@
-import {TokenAmount} from "../../entities/tokenAmount";
+import {TokenAmount} from "../../entities/tokenAmount"
 
 export type OverallAmount = {
-    nErgs: bigint,
-    assets: TokenAmount[]
+  nErgs: bigint
+  assets: TokenAmount[]
 }

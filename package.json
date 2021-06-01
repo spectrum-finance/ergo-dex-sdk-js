@@ -100,7 +100,12 @@
         }
     },
     "prettier": {
-        "singleQuote": false
+        "singleQuote": false,
+        "semi": false,
+        "tabWidth": 2,
+        "bracketSpacing": false,
+        "arrowParens": "avoid",
+        "endOfLine": "lf"
     },
     "nyc": {
         "extends": "@istanbuljs/nyc-config-typescript",

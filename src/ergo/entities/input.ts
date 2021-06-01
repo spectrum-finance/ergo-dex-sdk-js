@@ -1,7 +1,7 @@
-import {ProverResult} from "./proverResult";
-import {BoxId} from "../types";
+import {ProverResult} from "./proverResult"
+import {BoxId} from "../types"
 
 export type Input = {
-    readonly boxId: BoxId,
-    readonly spendingProof: ProverResult
+  readonly boxId: BoxId
+  readonly spendingProof: ProverResult
 }

@@ -1,7 +1,7 @@
 export class InsufficientInputs {
-    readonly message: string
+  readonly message: string
 
-    constructor(details: string) {
-        this.message = `Insufficient inputs: ${details}`
-    }
+  constructor(details: string) {
+    this.message = `Insufficient inputs: ${details}`
+  }
 }
