@@ -1,8 +1,8 @@
-import axios, {AxiosInstance} from "axios"
-import {ErgoTree, AssetInfo, ErgoBox, HexString, TokenId} from "../ergo"
+import axios, { AxiosInstance } from "axios"
+import { ErgoTree, AssetInfo, ErgoBox, HexString, TokenId } from "../ergo"
 import * as network from "../network/models"
-import {Paging} from "../network/paging"
-import {NetworkContext} from "../ergo/entities/networkContext"
+import { Paging } from "../network/paging"
+import { NetworkContext } from "../ergo/entities/networkContext"
 
 export interface ErgoNetwork {
   /** Get unspent boxes with a given ErgoTree.
@@ -25,6 +25,10 @@ export interface ErgoNetwork {
    */
   getToken(tokenId: TokenId): Promise<AssetInfo | undefined>
 
+  /** Get all available tokens.
+   */
+  getTokens(paging: Paging): Promise<[AssetInfo[], number]>
+
   /** Get current network context.
    */
   getNetworkContext(): Promise<NetworkContext>
@@ -37,7 +41,7 @@ export class Explorer implements ErgoNetwork {
     this.backend = axios.create({
       baseURL: uri,
       timeout: 5000,
-      headers: {"Content-Type": "application/json"},
+      headers: { "Content-Type": "application/json" }
     })
   }
 
@@ -45,7 +49,7 @@ export class Explorer implements ErgoNetwork {
     return this.backend
       .request<network.Items<network.ErgoBox>>({
         url: `/api/v1/boxes/unspent/byErgoTree/${tree}`,
-        params: paging,
+        params: paging
       })
       .then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
   }
@@ -54,7 +58,7 @@ export class Explorer implements ErgoNetwork {
     return this.backend
       .request<network.Items<network.ErgoBox>>({
         url: `/api/v1/boxes/unspent/byErgoTreeTemplateHash/${templateHash}`,
-        params: paging,
+        params: paging
       })
       .then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
   }
@@ -63,7 +67,7 @@ export class Explorer implements ErgoNetwork {
     return this.backend
       .request<network.Items<network.ErgoBox>>({
         url: `/api/v1/boxes/unspent/byTokenId/${tokenId}`,
-        params: paging,
+        params: paging
       })
       .then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
   }
@@ -72,7 +76,7 @@ export class Explorer implements ErgoNetwork {
     return this.backend
       .request<network.Items<network.ErgoBox>>({
         url: `/api/v1/boxes/unspent/byErgoTreeTemplateHash/${hash}`,
-        params: paging,
+        params: paging
       })
       .then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
   }
@@ -80,15 +84,24 @@ export class Explorer implements ErgoNetwork {
   async getToken(tokenId: TokenId): Promise<AssetInfo | undefined> {
     return this.backend
       .request<AssetInfo>({
-        url: `/api/v1/tokens/${tokenId}`,
+        url: `/api/v1/tokens/${tokenId}`
       })
       .then(res => (res.status != 404 ? res.data : undefined))
+  }
+
+  async getTokens(paging: Paging): Promise<[AssetInfo[], number]> {
+    return this.backend
+      .request<network.Items<AssetInfo>>({
+        url: `/api/v1/tokens`,
+        params: paging
+      })
+      .then(res => [res.data.items, res.data.total])
   }
 
   async getNetworkContext(): Promise<NetworkContext> {
     return this.backend
       .request<NetworkContext>({
-        url: `/api/v1/epochs/params`,
+        url: `/api/v1/epochs/params`
       })
       .then(res => res.data)
   }
