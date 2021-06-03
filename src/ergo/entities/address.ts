@@ -3,13 +3,13 @@ import * as bs58 from "bs58"
 
 export enum Network {
   Mainnet = 0 << 4,
-  Testnet = 1 << 4,
+  Testnet = 1 << 4
 }
 
 export enum AddressKind {
   P2PK = 1,
   P2SH = 2,
-  P2S = 3,
+  P2S = 3
 }
 
 export type Address = Base58String

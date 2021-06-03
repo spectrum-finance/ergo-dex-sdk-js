@@ -1,9 +1,9 @@
-import { PoolSetupParams } from "../models/poolSetupParams"
-import { SwapParams } from "../models/swapParams"
-import { T2tPoolContracts as scripts } from "../contracts/t2tPoolContracts"
-import { EmissionLP } from "../constants"
-import { InsufficientInputs } from "../../ergo/errors/insufficientInputs"
-import { MinBoxAmountNErgs } from "../../ergo/constants"
+import {PoolSetupParams} from "../models/poolSetupParams"
+import {SwapParams} from "../models/swapParams"
+import {T2tPoolContracts as scripts} from "../contracts/t2tPoolContracts"
+import {EmissionLP} from "../constants"
+import {InsufficientInputs} from "../../ergo/errors/insufficientInputs"
+import {MinBoxAmountNErgs} from "../../ergo/constants"
 import {
   ByteaConstant,
   Int32Constant,
@@ -13,18 +13,17 @@ import {
   ErgoBoxCandidate,
   TransactionContext
 } from "../../ergo"
-import { DepositParams } from "../models/depositParams"
-import { RedeemParams } from "../models/redeemParams"
-import { ergoTreeFromAddress } from "../../ergo/entities/ergoTree"
-import { PoolOps } from "./poolOps"
-import { EmptyRegisters, RegisterId, registers } from "../../ergo/entities/registers"
-import { stringToBytea } from "../../utils/utf8"
-import { TxRequest } from "../../ergo/wallet/entities/txRequest"
-import { TxAssembler } from "../../ergo"
+import {DepositParams} from "../models/depositParams"
+import {RedeemParams} from "../models/redeemParams"
+import {ergoTreeFromAddress} from "../../ergo/entities/ergoTree"
+import {PoolOps} from "./poolOps"
+import {EmptyRegisters, RegisterId, registers} from "../../ergo/entities/registers"
+import {stringToBytea} from "../../utils/utf8"
+import {TxRequest} from "../../ergo/wallet/entities/txRequest"
+import {TxAssembler} from "../../ergo"
 
 export class T2tPoolOps implements PoolOps {
-  constructor(public readonly prover: Prover, public readonly txAsm: TxAssembler) {
-  }
+  constructor(public readonly prover: Prover, public readonly txAsm: TxAssembler) {}
 
   async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<ErgoTx[]> {
     let [x, y] = [params.x.asset, params.y.asset]
@@ -37,7 +36,7 @@ export class T2tPoolOps implements PoolOps {
     ].flat()
     if (pairIn.length === 2) {
       let [tickerX, tickerY] = [x.name || x.id.slice(0, 8), y.name || y.id.slice(0, 8)]
-      let newTokenLP = { tokenId: inputs.newTokenId, amount: Number(EmissionLP) }
+      let newTokenLP = {tokenId: inputs.newTokenId, amount: Number(EmissionLP)}
       let bootOut: ErgoBoxCandidate = {
         value: outputGranted.nErgs - Number(ctx.feeNErgs),
         ergoTree: ergoTreeFromAddress(ctx.selfAddress),
@@ -57,7 +56,7 @@ export class T2tPoolOps implements PoolOps {
       let tx0 = await this.prover.sign(this.txAsm.assemble(txr0, ctx.network))
 
       let lpP2Pk = ergoTreeFromAddress(ctx.changeAddress)
-      let lpShares = { tokenId: newTokenLP.tokenId, amount: Number(params.outputShare) }
+      let lpShares = {tokenId: newTokenLP.tokenId, amount: Number(params.outputShare)}
       let lpOut: ErgoBoxCandidate = {
         value: Number(MinBoxAmountNErgs), // todo: calc against actual feeBerByte.
         ergoTree: lpP2Pk,
@@ -69,9 +68,9 @@ export class T2tPoolOps implements PoolOps {
       let poolBootBox = tx0.outputs[0]
       let tx1Inputs = BoxSelection.safe(poolBootBox)
 
-      let newTokenNFT = { tokenId: tx1Inputs.newTokenId, amount: 1 }
+      let newTokenNFT = {tokenId: tx1Inputs.newTokenId, amount: 1}
       let poolAmountLP = newTokenLP.amount - lpShares.amount
-      let poolLP = { tokenId: newTokenLP.tokenId, amount: poolAmountLP }
+      let poolLP = {tokenId: newTokenLP.tokenId, amount: poolAmountLP}
       let poolOut: ErgoBoxCandidate = {
         value: poolBootBox.value - lpOut.value - Number(ctx.feeNErgs),
         ergoTree: scripts.pool(EmissionLP),

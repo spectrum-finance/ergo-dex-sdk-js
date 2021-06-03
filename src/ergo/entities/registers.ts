@@ -7,7 +7,7 @@ export enum RegisterId {
   R6 = "R6",
   R7 = "R7",
   R8 = "R8",
-  R9 = "R9",
+  R9 = "R9"
 }
 
 export function parseRegisterId(s: string): RegisterId | undefined {

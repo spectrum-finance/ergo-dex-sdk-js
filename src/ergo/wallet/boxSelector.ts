@@ -38,7 +38,7 @@ class DefaultBoxSelectorImpl implements BoxSelector {
       let change = changeRequired
         ? {
             value: deltaNErgs,
-            assets: deltaAssets.filter((a, _ix, _xs) => a.amount > 0),
+            assets: deltaAssets.filter((a, _ix, _xs) => a.amount > 0)
           }
         : undefined
       return BoxSelection.make(inputs, change) || new InsufficientInputs("Inputs are empty")

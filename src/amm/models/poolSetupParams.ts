@@ -24,8 +24,8 @@ export function make(
       ? [
           {
             param: "fee",
-            error: `Fee must have <= ${PoolFeeMaxDecimals} decimals`,
-          },
+            error: `Fee must have <= ${PoolFeeMaxDecimals} decimals`
+          }
         ]
       : []
   let invalidErgsAmount =
@@ -33,8 +33,8 @@ export function make(
       ? [
           {
             param: "lockNanoErgs",
-            error: `Minimal amount of nanoERG to lock is ${MinPoolNanoErgs}`,
-          },
+            error: `Minimal amount of nanoERG to lock is ${MinPoolNanoErgs}`
+          }
         ]
       : []
   let errors = [invalidPair, invalidFeeRange, invalidFeeResolution, invalidErgsAmount].flat()

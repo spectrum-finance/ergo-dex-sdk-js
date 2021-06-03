@@ -41,7 +41,7 @@ export function toWalletToken(asset: BoxAsset): wallet.TokenAmount {
     tokenId: asset.tokenId,
     amount: Number(asset.amount),
     name: asset.name,
-    decimals: asset.decimals,
+    decimals: asset.decimals
   }
 }
 
@@ -59,6 +59,6 @@ export function toWalletErgoBox(box: ErgoBox): wallet.ErgoBox {
     creationHeight: box.creationHeight,
     value: Number(box.value),
     assets: box.assets.map((a, _ix, _xs) => toWalletToken(a)),
-    additionalRegisters: registers,
+    additionalRegisters: registers
   }
 }

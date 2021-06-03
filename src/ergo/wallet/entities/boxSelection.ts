@@ -30,7 +30,7 @@ export class BoxSelection {
     let nErgsIn = this.inputs.map((bx, _i, _xs) => bx.value).reduce((x, y, _i, _xs) => x + y)
     let nErgsChange = this.change?.value || 0n
     let assetsChange = this.change?.assets || []
-    let nErgs =nErgsIn - Number(nErgsChange)
+    let nErgs = nErgsIn - Number(nErgsChange)
     let tokensAgg = new Map<TokenId, number>()
     for (let t of this.inputs.flatMap((bx, _i, _xs) => bx.assets)) {
       let acc = tokensAgg.get(t.tokenId) || 0

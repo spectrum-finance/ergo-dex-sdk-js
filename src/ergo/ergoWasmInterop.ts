@@ -5,7 +5,7 @@ import type {
   ErgoBox as wasmErgoBox,
   ErgoTree as wasmErgoTree,
   Token as wasmToken,
-  Tokens as wasmTokens,
+  Tokens as wasmTokens
 } from "ergo-lib-wasm-browser"
 import {RustModule} from "../utils/rustLoader"
 import {BoxSelection} from "./wallet/entities/boxSelection"

@@ -7,7 +7,7 @@ export const boxes = [
     creationHeight: 499608,
     value: 59999220000,
     assets: [],
-    additionalRegisters: {},
+    additionalRegisters: {}
   },
   {
     boxId: "d136ccdfbd0b5da4cc131dda1e5037b2acec90f73b815dd568dbcbf9441404fb",
@@ -17,6 +17,6 @@ export const boxes = [
     creationHeight: 499608,
     value: 39999480000,
     assets: [],
-    additionalRegisters: {},
-  },
+    additionalRegisters: {}
+  }
 ]

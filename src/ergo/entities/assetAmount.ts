@@ -9,7 +9,7 @@ export class AssetAmount {
       {
         id: token.tokenId,
         name: token.name,
-        decimals: token.decimals,
+        decimals: token.decimals
       },
       BigInt(token.amount)
     )

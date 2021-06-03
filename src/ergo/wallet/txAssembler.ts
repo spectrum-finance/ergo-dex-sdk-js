@@ -21,8 +21,8 @@ export class DefaultTxAssembler implements TxAssembler {
             ergoTree: ergoTreeFromAddress(req.changeAddress),
             creationHeight: ctx.height,
             assets: change.assets,
-            additionalRegisters: EmptyRegisters,
-          },
+            additionalRegisters: EmptyRegisters
+          }
         ]
       : []
     let feeBox = req.feeNErgs
@@ -32,8 +32,8 @@ export class DefaultTxAssembler implements TxAssembler {
             ergoTree: ergoTreeFromAddress(this.mainnet ? MinerAddressMainnet : MinerAddressTestnet),
             creationHeight: ctx.height,
             assets: [],
-            additionalRegisters: EmptyRegisters,
-          },
+            additionalRegisters: EmptyRegisters
+          }
         ]
       : []
     let outputs = [...req.outputs, ...changeBox, ...feeBox]
@@ -45,8 +45,8 @@ export class DefaultTxAssembler implements TxAssembler {
         boxId: "",
         transactionId: "",
         index: ix,
-        ...out,
-      })),
+        ...out
+      }))
     }
   }
 }

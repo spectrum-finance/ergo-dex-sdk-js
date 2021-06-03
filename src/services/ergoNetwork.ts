@@ -1,8 +1,8 @@
-import axios, { AxiosInstance } from "axios"
-import { ErgoTree, AssetInfo, ErgoBox, HexString, TokenId } from "../ergo"
+import axios, {AxiosInstance} from "axios"
+import {ErgoTree, AssetInfo, ErgoBox, HexString, TokenId} from "../ergo"
 import * as network from "../network/models"
-import { Paging } from "../network/paging"
-import { NetworkContext } from "../ergo/entities/networkContext"
+import {Paging} from "../network/paging"
+import {NetworkContext} from "../ergo/entities/networkContext"
 
 export interface ErgoNetwork {
   /** Get unspent boxes with a given ErgoTree.
@@ -41,7 +41,7 @@ export class Explorer implements ErgoNetwork {
     this.backend = axios.create({
       baseURL: uri,
       timeout: 5000,
-      headers: { "Content-Type": "application/json" }
+      headers: {"Content-Type": "application/json"}
     })
   }
 
