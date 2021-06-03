@@ -1,22 +1,30 @@
-import {PoolSetupParams} from "../models/poolSetupParams"
-import {SwapParams} from "../models/swapParams"
-import {T2tPoolContracts as scripts} from "../contracts/t2tPoolContracts"
-import {EmissionLP} from "../constants"
-import {InsufficientInputs} from "../../ergo/errors/insufficientInputs"
-import {TransactionContext} from "../../ergo/wallet/entities/transactionContext"
-import {MinBoxAmountNErgs} from "../../ergo/constants"
-import {ByteaConstant, Int32Constant, BoxSelection, ErgoTx, Prover, ErgoBoxCandidate} from "../../ergo"
-import {DepositParams} from "../models/depositParams"
-import {RedeemParams} from "../models/redeemParams"
-import {ergoTreeFromAddress} from "../../ergo/entities/ergoTree"
-import {PoolOps} from "./poolOps"
-import {EmptyRegisters, RegisterId, registers} from "../../ergo/entities/registers"
-import {stringToBytea} from "../../utils/utf8"
-import {TxRequest} from "../../ergo/wallet/entities/txRequest"
-import {TxAssembler} from "../../ergo"
+import { PoolSetupParams } from "../models/poolSetupParams"
+import { SwapParams } from "../models/swapParams"
+import { T2tPoolContracts as scripts } from "../contracts/t2tPoolContracts"
+import { EmissionLP } from "../constants"
+import { InsufficientInputs } from "../../ergo/errors/insufficientInputs"
+import { MinBoxAmountNErgs } from "../../ergo/constants"
+import {
+  ByteaConstant,
+  Int32Constant,
+  BoxSelection,
+  ErgoTx,
+  Prover,
+  ErgoBoxCandidate,
+  TransactionContext
+} from "../../ergo"
+import { DepositParams } from "../models/depositParams"
+import { RedeemParams } from "../models/redeemParams"
+import { ergoTreeFromAddress } from "../../ergo/entities/ergoTree"
+import { PoolOps } from "./poolOps"
+import { EmptyRegisters, RegisterId, registers } from "../../ergo/entities/registers"
+import { stringToBytea } from "../../utils/utf8"
+import { TxRequest } from "../../ergo/wallet/entities/txRequest"
+import { TxAssembler } from "../../ergo"
 
 export class T2tPoolOps implements PoolOps {
-  constructor(public readonly prover: Prover, public readonly txAsm: TxAssembler) {}
+  constructor(public readonly prover: Prover, public readonly txAsm: TxAssembler) {
+  }
 
   async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<ErgoTx[]> {
     let [x, y] = [params.x.asset, params.y.asset]
@@ -25,58 +33,58 @@ export class T2tPoolOps implements PoolOps {
     let outputGranted = inputs.totalOutputWithoutChange
     let pairIn = [
       outputGranted.assets.filter((t, _i, _xs) => t.tokenId === x.id),
-      outputGranted.assets.filter((t, _i, _xs) => t.tokenId === y.id),
+      outputGranted.assets.filter((t, _i, _xs) => t.tokenId === y.id)
     ].flat()
     if (pairIn.length === 2) {
       let [tickerX, tickerY] = [x.name || x.id.slice(0, 8), y.name || y.id.slice(0, 8)]
-      let newTokenLP = {tokenId: inputs.newTokenId, amount: EmissionLP}
+      let newTokenLP = { tokenId: inputs.newTokenId, amount: EmissionLP }
       let bootOut: ErgoBoxCandidate = {
         value: outputGranted.nErgs - ctx.feeNErgs,
         ergoTree: ergoTreeFromAddress(ctx.selfAddress),
         creationHeight: height,
         assets: [newTokenLP, ...pairIn],
         additionalRegisters: registers([
-          [RegisterId.R4, new ByteaConstant(stringToBytea(`${tickerX}_${tickerY}_LP`))],
-        ]),
+          [RegisterId.R4, new ByteaConstant(stringToBytea(`${tickerX}_${tickerY}_LP`))]
+        ])
       }
       let txr0: TxRequest = {
         inputs: inputs,
         dataInputs: [],
         outputs: [bootOut],
         changeAddress: ctx.changeAddress,
-        feeNErgs: ctx.feeNErgs,
+        feeNErgs: ctx.feeNErgs
       }
       let tx0 = await this.prover.sign(this.txAsm.assemble(txr0, ctx.network))
 
       let lpP2Pk = ergoTreeFromAddress(ctx.changeAddress)
-      let lpShares = {tokenId: newTokenLP.tokenId, amount: params.outputShare}
+      let lpShares = { tokenId: newTokenLP.tokenId, amount: params.outputShare }
       let lpOut: ErgoBoxCandidate = {
         value: MinBoxAmountNErgs, // todo: calc against actual feeBerByte.
         ergoTree: lpP2Pk,
         creationHeight: height,
         assets: [lpShares],
-        additionalRegisters: EmptyRegisters,
+        additionalRegisters: EmptyRegisters
       }
 
       let poolBootBox = tx0.outputs[0]
       let tx1Inputs = BoxSelection.safe(poolBootBox)
 
-      let newTokenNFT = {tokenId: tx1Inputs.newTokenId, amount: 1n}
+      let newTokenNFT = { tokenId: tx1Inputs.newTokenId, amount: 1n }
       let poolAmountLP = newTokenLP.amount - lpShares.amount
-      let poolLP = {tokenId: newTokenLP.tokenId, amount: poolAmountLP}
+      let poolLP = { tokenId: newTokenLP.tokenId, amount: poolAmountLP }
       let poolOut: ErgoBoxCandidate = {
         value: poolBootBox.value - lpOut.value - ctx.feeNErgs,
         ergoTree: scripts.pool(EmissionLP),
         creationHeight: height,
         assets: [newTokenNFT, poolLP, ...poolBootBox.assets.slice(1)],
-        additionalRegisters: registers([[RegisterId.R4, new Int32Constant(params.feeNumerator)]]),
+        additionalRegisters: registers([[RegisterId.R4, new Int32Constant(params.feeNumerator)]])
       }
       let txr1: TxRequest = {
         inputs: tx1Inputs,
         dataInputs: [],
         outputs: [poolOut, lpOut],
         changeAddress: ctx.changeAddress,
-        feeNErgs: ctx.feeNErgs,
+        feeNErgs: ctx.feeNErgs
       }
       let tx1 = await this.prover.sign(this.txAsm.assemble(txr1, ctx.network))
 
@@ -92,7 +100,7 @@ export class T2tPoolOps implements PoolOps {
     let outputGranted = ctx.inputs.totalOutputWithoutChange
     let pairIn = [
       outputGranted.assets.filter((t, _i, _xs) => t.tokenId === x.id),
-      outputGranted.assets.filter((t, _i, _xs) => t.tokenId === y.id),
+      outputGranted.assets.filter((t, _i, _xs) => t.tokenId === y.id)
     ].flat()
     if (pairIn.length == 2) {
       let out: ErgoBoxCandidate = {
@@ -100,14 +108,14 @@ export class T2tPoolOps implements PoolOps {
         ergoTree: proxyScript,
         creationHeight: ctx.network.height,
         assets: pairIn,
-        additionalRegisters: EmptyRegisters,
+        additionalRegisters: EmptyRegisters
       }
       let txr = {
         inputs: ctx.inputs,
         dataInputs: [],
         outputs: [out],
         changeAddress: ctx.changeAddress,
-        feeNErgs: ctx.feeNErgs,
+        feeNErgs: ctx.feeNErgs
       }
       return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
     } else {
@@ -125,14 +133,14 @@ export class T2tPoolOps implements PoolOps {
         ergoTree: proxyScript,
         creationHeight: ctx.network.height,
         assets: tokensIn,
-        additionalRegisters: EmptyRegisters,
+        additionalRegisters: EmptyRegisters
       }
       let txr = {
         inputs: ctx.inputs,
         dataInputs: [],
         outputs: [out],
         changeAddress: ctx.changeAddress,
-        feeNErgs: ctx.feeNErgs,
+        feeNErgs: ctx.feeNErgs
       }
       return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
     } else {
@@ -158,14 +166,14 @@ export class T2tPoolOps implements PoolOps {
         ergoTree: proxyScript,
         creationHeight: ctx.network.height,
         assets: tokensIn,
-        additionalRegisters: EmptyRegisters,
+        additionalRegisters: EmptyRegisters
       }
       let txr: TxRequest = {
         inputs: ctx.inputs,
         dataInputs: [],
         outputs: [out],
         changeAddress: ctx.changeAddress,
-        feeNErgs: ctx.feeNErgs,
+        feeNErgs: ctx.feeNErgs
       }
       return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
     } else {
