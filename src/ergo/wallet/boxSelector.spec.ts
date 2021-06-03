@@ -12,7 +12,7 @@ test.before(async () => {
 test("BoxSelector: Insufficient inputs", async t =>
   t.deepEqual(
     DefaultBoxSelector.select([], {
-      nErgs: 100n,
+      nErgs: 100,
       assets: [],
     }),
     new InsufficientInputs("'NErgs' required: 100, given: 0")
@@ -21,8 +21,8 @@ test("BoxSelector: Insufficient inputs", async t =>
 test("BoxSelector: Select ERGs", async t =>
   t.deepEqual(
     DefaultBoxSelector.select(boxes, {
-      nErgs: 39999500000n,
+      nErgs: 39999500000,
       assets: [],
     }),
-    BoxSelection.make(boxes, {value: 59999200000n, assets: []})
+    BoxSelection.make(boxes, {value: 59999200000, assets: []})
   ))

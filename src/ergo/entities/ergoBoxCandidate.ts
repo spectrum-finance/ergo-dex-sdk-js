@@ -3,7 +3,7 @@ import {ErgoTree} from "./ergoTree"
 import {Registers} from "./registers"
 
 export type ErgoBoxCandidate = {
-  readonly value: bigint
+  readonly value: number
   readonly ergoTree: ErgoTree
   readonly creationHeight: number
   readonly assets: TokenAmount[]

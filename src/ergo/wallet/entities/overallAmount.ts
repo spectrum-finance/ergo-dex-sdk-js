@@ -1,6 +1,6 @@
 import {TokenAmount} from "../../entities/tokenAmount"
 
 export type OverallAmount = {
-  nErgs: bigint
+  nErgs: number
   assets: TokenAmount[]
 }

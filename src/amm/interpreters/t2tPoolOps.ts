@@ -37,9 +37,9 @@ export class T2tPoolOps implements PoolOps {
     ].flat()
     if (pairIn.length === 2) {
       let [tickerX, tickerY] = [x.name || x.id.slice(0, 8), y.name || y.id.slice(0, 8)]
-      let newTokenLP = { tokenId: inputs.newTokenId, amount: EmissionLP }
+      let newTokenLP = { tokenId: inputs.newTokenId, amount: Number(EmissionLP) }
       let bootOut: ErgoBoxCandidate = {
-        value: outputGranted.nErgs - ctx.feeNErgs,
+        value: outputGranted.nErgs - Number(ctx.feeNErgs),
         ergoTree: ergoTreeFromAddress(ctx.selfAddress),
         creationHeight: height,
         assets: [newTokenLP, ...pairIn],
@@ -57,9 +57,9 @@ export class T2tPoolOps implements PoolOps {
       let tx0 = await this.prover.sign(this.txAsm.assemble(txr0, ctx.network))
 
       let lpP2Pk = ergoTreeFromAddress(ctx.changeAddress)
-      let lpShares = { tokenId: newTokenLP.tokenId, amount: params.outputShare }
+      let lpShares = { tokenId: newTokenLP.tokenId, amount: Number(params.outputShare) }
       let lpOut: ErgoBoxCandidate = {
-        value: MinBoxAmountNErgs, // todo: calc against actual feeBerByte.
+        value: Number(MinBoxAmountNErgs), // todo: calc against actual feeBerByte.
         ergoTree: lpP2Pk,
         creationHeight: height,
         assets: [lpShares],
@@ -69,11 +69,11 @@ export class T2tPoolOps implements PoolOps {
       let poolBootBox = tx0.outputs[0]
       let tx1Inputs = BoxSelection.safe(poolBootBox)
 
-      let newTokenNFT = { tokenId: tx1Inputs.newTokenId, amount: 1n }
+      let newTokenNFT = { tokenId: tx1Inputs.newTokenId, amount: 1 }
       let poolAmountLP = newTokenLP.amount - lpShares.amount
       let poolLP = { tokenId: newTokenLP.tokenId, amount: poolAmountLP }
       let poolOut: ErgoBoxCandidate = {
-        value: poolBootBox.value - lpOut.value - ctx.feeNErgs,
+        value: poolBootBox.value - lpOut.value - Number(ctx.feeNErgs),
         ergoTree: scripts.pool(EmissionLP),
         creationHeight: height,
         assets: [newTokenNFT, poolLP, ...poolBootBox.assets.slice(1)],
@@ -104,7 +104,7 @@ export class T2tPoolOps implements PoolOps {
     ].flat()
     if (pairIn.length == 2) {
       let out: ErgoBoxCandidate = {
-        value: outputGranted.nErgs,
+        value: Number(outputGranted.nErgs),
         ergoTree: proxyScript,
         creationHeight: ctx.network.height,
         assets: pairIn,
@@ -129,7 +129,7 @@ export class T2tPoolOps implements PoolOps {
     let tokensIn = outputGranted.assets.filter((t, _i, _xs) => t.tokenId === params.lp.id)
     if (tokensIn.length == 1) {
       let out = {
-        value: outputGranted.nErgs,
+        value: Number(outputGranted.nErgs),
         ergoTree: proxyScript,
         creationHeight: ctx.network.height,
         assets: tokensIn,
@@ -162,7 +162,7 @@ export class T2tPoolOps implements PoolOps {
     let tokensIn = outputGranted.assets.filter((t, _i, _xs) => t.tokenId === baseAssetId)
     if (tokensIn.length == 1) {
       let out: ErgoBoxCandidate = {
-        value: outputGranted.nErgs,
+        value: Number(outputGranted.nErgs),
         ergoTree: proxyScript,
         creationHeight: ctx.network.height,
         assets: tokensIn,
