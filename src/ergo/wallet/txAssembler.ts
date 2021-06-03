@@ -38,12 +38,12 @@ export class DefaultTxAssembler implements TxAssembler {
       : []
     let outputs = [...req.outputs, ...changeBox, ...feeBox]
     return {
-      id: "",
+      id: "026fb3ec6303a7b64fc947df86b84b3ef78c6693c1990c52ea56037c50b674c0",
       inputs: req.inputs.unsignedInputs,
       dataInputs: req.dataInputs,
       outputs: outputs.map((out, ix, _xs) => ({
-        boxId: "",
-        transactionId: "",
+        boxId: "026fb3ec6303a7b64fc947df86b84b3ef78c6693c1990c52ea56037c50b674c0",
+        transactionId: "026fb3ec6303a7b64fc947df86b84b3ef78c6693c1990c52ea56037c50b674c0",
         index: ix,
         ...out
       }))
