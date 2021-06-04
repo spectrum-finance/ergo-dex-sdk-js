@@ -43,7 +43,7 @@ export class DefaultTxAssembler implements TxAssembler {
       id: dummyTxId,
       inputs: req.inputs.unsignedInputs,
       dataInputs: req.dataInputs,
-      outputs: outputs.map((out, ix, _xs) => JSON.parse(boxCandidateToWasmBox(out, dummyTxId, ix).to_json()))
+      outputs: outputs.map((out, ix, _xs) => boxCandidateToWasmBox(out, dummyTxId, ix).to_json())
     }
   }
 }
