@@ -34,7 +34,13 @@ export class T2tPoolOps implements PoolOps {
       outputGranted.assets.filter((t, _i, _xs) => t.tokenId === x.id),
       outputGranted.assets.filter((t, _i, _xs) => t.tokenId === y.id)
     ].flat()
-    if (pairIn.length === 2) {
+    let minNErgs = ctx.feeNErgs * 2n + params.lockNanoErgs + MinBoxAmountNErgs
+
+    if (outputGranted.nErgs < minNErgs)
+      return Promise.reject(new InsufficientInputs(`Token pair {${x.name}|${y.name}} not provided`))
+    if (pairIn.length !== 2)
+      return Promise.reject(new InsufficientInputs(`Token pair {${x.name}|${y.name}} not provided`))
+    else {
       let [tickerX, tickerY] = [x.name || x.id.slice(0, 8), y.name || y.id.slice(0, 8)]
       let newTokenLP = {tokenId: inputs.newTokenId, amount: Number(EmissionLP)}
       let bootOut: ErgoBoxCandidate = {
@@ -88,8 +94,6 @@ export class T2tPoolOps implements PoolOps {
       let tx1 = await this.prover.sign(this.txAsm.assemble(txr1, ctx.network))
 
       return Promise.resolve([tx0, tx1])
-    } else {
-      return Promise.reject(new InsufficientInputs(`Token pair {${x.name}|${y.name}} not provided`))
     }
   }
 

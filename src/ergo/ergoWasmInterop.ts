@@ -5,7 +5,7 @@ import {ErgoBox} from "./entities/ergoBox"
 import {ErgoTree, ergoTreeToBytea} from "./entities/ergoTree"
 import {TokenAmount} from "./entities/tokenAmount"
 import {ErgoBoxCandidate} from "./entities/ergoBoxCandidate"
-import { BoxId, TxId } from "./types"
+import {BoxId, TxId} from "./types"
 
 export function boxSelectionToWasm(inputs: BoxSelection): wasm.BoxSelection {
   let boxes = new RustModule.SigmaRust.ErgoBoxes(boxToWasm(inputs.inputs[0]))
@@ -55,7 +55,7 @@ export function boxCandidateToWasm(box: ErgoBoxCandidate): wasm.ErgoBoxCandidate
 }
 
 export function computeBoxId(box: ErgoBoxCandidate, txId: TxId, idx: number): BoxId {
-    return boxCandidateToWasmBox(box, txId, idx).box_id().to_str()
+  return boxCandidateToWasmBox(box, txId, idx).box_id().to_str()
 }
 
 export function boxCandidateToWasmBox(box: ErgoBoxCandidate, txId: TxId, idx: number): wasm.ErgoBox {

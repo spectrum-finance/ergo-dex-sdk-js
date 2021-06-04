@@ -4,7 +4,7 @@ import {NetworkContext} from "../entities/networkContext"
 import {ergoTreeFromAddress} from "../entities/ergoTree"
 import {EmptyRegisters} from "../entities/registers"
 import {MinerAddressMainnet, MinerAddressTestnet} from "../constants"
-import {computeBoxId} from "../ergoWasmInterop"
+import {boxCandidateToWasmBox} from "../ergoWasmInterop"
 
 export interface TxAssembler {
   assemble(req: TxRequest, ctx: NetworkContext): UnsignedErgoTx
@@ -43,12 +43,7 @@ export class DefaultTxAssembler implements TxAssembler {
       id: dummyTxId,
       inputs: req.inputs.unsignedInputs,
       dataInputs: req.dataInputs,
-      outputs: outputs.map((out, ix, _xs) => ({
-        boxId: computeBoxId(out, dummyTxId, ix),
-        transactionId: dummyTxId,
-        index: ix,
-        ...out
-      }))
+      outputs: outputs.map((out, ix, _xs) => JSON.parse(boxCandidateToWasmBox(out, dummyTxId, ix).to_json()))
     }
   }
 }
