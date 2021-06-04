@@ -1,20 +1,13 @@
-import type {
-  BoxSelection as wasmBoxSelection,
-  ErgoBoxCandidates as wasmErgoBoxCandidates,
-  ErgoBoxCandidate as wasmErgoBoxCandidate,
-  ErgoBox as wasmErgoBox,
-  ErgoTree as wasmErgoTree,
-  Token as wasmToken,
-  Tokens as wasmTokens
-} from "ergo-lib-wasm-browser"
+import type * as wasm from "ergo-lib-wasm-browser"
 import {RustModule} from "../utils/rustLoader"
 import {BoxSelection} from "./wallet/entities/boxSelection"
 import {ErgoBox} from "./entities/ergoBox"
 import {ErgoTree, ergoTreeToBytea} from "./entities/ergoTree"
 import {TokenAmount} from "./entities/tokenAmount"
 import {ErgoBoxCandidate} from "./entities/ergoBoxCandidate"
+import { BoxId, TxId } from "./types"
 
-export function boxSelectionToWasm(inputs: BoxSelection): wasmBoxSelection {
+export function boxSelectionToWasm(inputs: BoxSelection): wasm.BoxSelection {
   let boxes = new RustModule.SigmaRust.ErgoBoxes(boxToWasm(inputs.inputs[0]))
   let tokens = new RustModule.SigmaRust.Tokens()
   let changeList = new RustModule.SigmaRust.ErgoBoxAssetsDataList()
@@ -38,13 +31,13 @@ export function boxSelectionToWasm(inputs: BoxSelection): wasmBoxSelection {
   return new RustModule.SigmaRust.BoxSelection(boxes, changeList)
 }
 
-export function boxCandidatesToWasm(boxes: ErgoBoxCandidate[]): wasmErgoBoxCandidates {
+export function boxCandidatesToWasm(boxes: ErgoBoxCandidate[]): wasm.ErgoBoxCandidates {
   let candidates = RustModule.SigmaRust.ErgoBoxCandidates.empty()
   for (let box of boxes) candidates.add(boxCandidateToWasm(box))
   return candidates
 }
 
-export function boxCandidateToWasm(box: ErgoBoxCandidate): wasmErgoBoxCandidate {
+export function boxCandidateToWasm(box: ErgoBoxCandidate): wasm.ErgoBoxCandidate {
   let value = RustModule.SigmaRust.BoxValue.from_i64(RustModule.SigmaRust.I64.from_str(box.value.toString()))
   let contract = RustModule.SigmaRust.Contract.pay_to_address(
     RustModule.SigmaRust.Address.recreate_from_ergo_tree(ergoTreeToWasm(box.ergoTree))
@@ -61,11 +54,25 @@ export function boxCandidateToWasm(box: ErgoBoxCandidate): wasmErgoBoxCandidate 
   return builder.build()
 }
 
+export function computeBoxId(box: ErgoBoxCandidate, txId: TxId, idx: number): BoxId {
+    return boxCandidateToWasmBox(box, txId, idx).box_id().to_str()
+}
+
+export function boxCandidateToWasmBox(box: ErgoBoxCandidate, txId: TxId, idx: number): wasm.ErgoBox {
+  let value = RustModule.SigmaRust.BoxValue.from_i64(RustModule.SigmaRust.I64.from_str(box.value.toString()))
+  let contract = RustModule.SigmaRust.Contract.pay_to_address(
+    RustModule.SigmaRust.Address.recreate_from_ergo_tree(ergoTreeToWasm(box.ergoTree))
+  )
+  let transactionId = RustModule.SigmaRust.TxId.from_str(txId)
+  let tokens = tokensToWasm(box.assets)
+  return new RustModule.SigmaRust.ErgoBox(value, box.creationHeight, contract, transactionId, idx, tokens)
+}
+
 export function registerIdToWasm(id: string): number {
   return Number(id[1])
 }
 
-export function boxToWasm(box: ErgoBox): wasmErgoBox {
+export function boxToWasm(box: ErgoBox): wasm.ErgoBox {
   let value = RustModule.SigmaRust.BoxValue.from_i64(RustModule.SigmaRust.I64.from_str(box.value.toString()))
   let contract = RustModule.SigmaRust.Contract.pay_to_address(
     RustModule.SigmaRust.Address.recreate_from_ergo_tree(ergoTreeToWasm(box.ergoTree))
@@ -75,11 +82,11 @@ export function boxToWasm(box: ErgoBox): wasmErgoBox {
   return new RustModule.SigmaRust.ErgoBox(value, box.creationHeight, contract, txId, box.index, tokens)
 }
 
-export function ergoTreeToWasm(tree: ErgoTree): wasmErgoTree {
+export function ergoTreeToWasm(tree: ErgoTree): wasm.ErgoTree {
   return RustModule.SigmaRust.ErgoTree.from_bytes(ergoTreeToBytea(tree))
 }
 
-export function tokenToWasm(token: TokenAmount): wasmToken {
+export function tokenToWasm(token: TokenAmount): wasm.Token {
   let id = RustModule.SigmaRust.TokenId.from_str(token.tokenId)
   let amount = RustModule.SigmaRust.TokenAmount.from_i64(
     RustModule.SigmaRust.I64.from_str(token.amount.toString())
@@ -87,7 +94,7 @@ export function tokenToWasm(token: TokenAmount): wasmToken {
   return new RustModule.SigmaRust.Token(id, amount)
 }
 
-export function tokensToWasm(tokens: TokenAmount[]): wasmTokens {
+export function tokensToWasm(tokens: TokenAmount[]): wasm.Tokens {
   let bf = new RustModule.SigmaRust.Tokens()
   for (let t of tokens) bf.add(tokenToWasm(t))
   return bf
