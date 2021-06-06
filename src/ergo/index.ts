@@ -1,5 +1,6 @@
 export {Wallet} from "./wallet/wallet"
 export {Prover} from "./wallet/prover"
+export {Transactions, DefaultTransactions} from "./wallet/services/transactions"
 export {TxAssembler, DefaultTxAssembler} from "./wallet/txAssembler"
 export {BoxSelector, DefaultBoxSelector} from "./wallet/boxSelector"
 export {BoxSelection} from "./wallet/entities/boxSelection"
