@@ -1,7 +1,8 @@
 import {TxRequest} from "./entities/txRequest"
 import {UnsignedErgoTx} from "../entities/unsignedErgoTx"
 import {NetworkContext} from "../entities/networkContext"
-import {txRequestToWasmTransaction} from "../ergoWasmInterop"
+import { boxCandidateToWasmBox, txRequestToWasmTransaction } from "../ergoWasmInterop"
+import { ErgoBoxCandidate } from "../entities/ergoBoxCandidate"
 
 export interface TxAssembler {
   assemble(req: TxRequest, ctx: NetworkContext): UnsignedErgoTx
@@ -28,7 +29,7 @@ export class DefaultTxAssembler implements TxAssembler {
     //       {
     //         value: Number(req.feeNErgs),
     //         ergoTree: ergoTreeFromAddress(this.mainnet ? MinerAddressMainnet : MinerAddressTestnet),
-    //         creationHeight: ctx.height,
+    //         creationHeight : ctx.height,
     //         assets: [],
     //         additionalRegisters: EmptyRegisters
     //       }
@@ -41,10 +42,12 @@ export class DefaultTxAssembler implements TxAssembler {
     //   outputs: outputs
     // }
     const tx = txRequestToWasmTransaction(req, ctx)
+    const txJson = tx.to_json()
     return {
-      ...tx.to_json(),
+      ...txJson,
       id: tx.id().to_str(),
-      inputs: req.inputs.unsignedInputs
+      inputs: req.inputs.unsignedInputs,
+      outputs: (txJson["outputs"] as ErgoBoxCandidate[]).map((out, ix, _xs) => boxCandidateToWasmBox(out, tx.id().to_str(), ix).to_json())
     }
   }
 }
