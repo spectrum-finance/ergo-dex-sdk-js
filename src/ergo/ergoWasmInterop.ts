@@ -6,8 +6,8 @@ import {ErgoTree, ergoTreeToBytea} from "./entities/ergoTree"
 import {TokenAmount} from "./entities/tokenAmount"
 import {ErgoBoxCandidate} from "./entities/ergoBoxCandidate"
 import {BoxId, TxId} from "./types"
-import { TxRequest } from "./wallet/entities/txRequest"
-import { NetworkContext } from "./entities/networkContext"
+import {TxRequest} from "./wallet/entities/txRequest"
+import {NetworkContext} from "./entities/networkContext"
 
 export function txRequestToWasmTransaction(req: TxRequest, ctx: NetworkContext): wasm.UnsignedTransaction {
   const inputs = boxSelectionToWasm(req.inputs)

@@ -1,7 +1,7 @@
 import {TxRequest} from "./entities/txRequest"
 import {UnsignedErgoTx} from "../entities/unsignedErgoTx"
 import {NetworkContext} from "../entities/networkContext"
-import { txRequestToWasmTransaction } from "../ergoWasmInterop"
+import {txRequestToWasmTransaction} from "../ergoWasmInterop"
 
 export interface TxAssembler {
   assemble(req: TxRequest, ctx: NetworkContext): UnsignedErgoTx
@@ -40,6 +40,11 @@ export class DefaultTxAssembler implements TxAssembler {
     //   dataInputs: req.dataInputs,
     //   outputs: outputs
     // }
-    return txRequestToWasmTransaction(req, ctx).to_json()
+    const tx = txRequestToWasmTransaction(req, ctx)
+    return {
+      ...tx.to_json(),
+      id: tx.id().to_str(),
+      inputs: req.inputs.unsignedInputs
+    }
   }
 }
