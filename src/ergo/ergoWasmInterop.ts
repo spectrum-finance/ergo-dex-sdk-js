@@ -6,6 +6,19 @@ import {ErgoTree, ergoTreeToBytea} from "./entities/ergoTree"
 import {TokenAmount} from "./entities/tokenAmount"
 import {ErgoBoxCandidate} from "./entities/ergoBoxCandidate"
 import {BoxId, TxId} from "./types"
+import { TxRequest } from "./wallet/entities/txRequest"
+import { NetworkContext } from "./entities/networkContext"
+
+export function txRequestToWasmTransaction(req: TxRequest, ctx: NetworkContext): wasm.UnsignedTransaction {
+  const inputs = boxSelectionToWasm(req.inputs)
+  const outputs = boxCandidatesToWasm(req.outputs)
+  const feeAmount = req.feeNErgs || 0n
+  const fee = RustModule.SigmaRust.BoxValue.from_i64(RustModule.SigmaRust.I64.from_str(feeAmount.toString()))
+  const changeAddr = RustModule.SigmaRust.Address.from_base58(req.changeAddress)
+  const minValue = RustModule.SigmaRust.BoxValue.SAFE_USER_MIN()
+  const txb = RustModule.SigmaRust.TxBuilder.new(inputs, outputs, ctx.height, fee, changeAddr, minValue)
+  return txb.build()
+}
 
 export function boxSelectionToWasm(inputs: BoxSelection): wasm.BoxSelection {
   let boxes = new RustModule.SigmaRust.ErgoBoxes(boxToWasm(inputs.inputs[0]))
