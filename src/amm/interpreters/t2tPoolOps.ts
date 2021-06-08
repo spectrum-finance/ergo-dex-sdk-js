@@ -165,7 +165,7 @@ export class T2tPoolOps implements PoolOps {
     let tokensIn = outputGranted.assets.filter((t, _i, _xs) => t.tokenId === baseAssetId)
     if (tokensIn.length == 1) {
       let out: ErgoBoxCandidate = {
-        value: Number(outputGranted.nErgs),
+        value: outputGranted.nErgs - Number(ctx.feeNErgs),
         ergoTree: proxyScript,
         creationHeight: ctx.network.height,
         assets: tokensIn,
