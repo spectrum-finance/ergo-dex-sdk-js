@@ -1,12 +1,11 @@
 import {PoolId} from "../types"
 import * as templates from "./templates"
 import {HexString, NErg, TokenId, ErgoTree, PublicKey} from "../../ergo"
-import {fromHex, toHex} from "../../utils/hex"
-import {Blake2b256} from "../../utils/blake2b256"
-import {fromErgoTree} from "../../ergo/entities/ergoTreeTemplate"
+import {fromHex} from "../../utils/hex"
 import {RustModule} from "../../utils/rustLoader"
 
 export class T2tPoolContracts {
+
   static pool(emissionLP: bigint): ErgoTree {
     let tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tPool)
     tree.set_constant(
@@ -20,8 +19,8 @@ export class T2tPoolContracts {
     return tree.to_base16_bytes()
   }
 
-  static poolTemplateHash(emissionLP: bigint): HexString {
-    return toHex(Blake2b256.hash(fromErgoTree(this.pool(emissionLP))))
+  static poolTemplateHash(): HexString {
+    return templates.T2tPoolHash
   }
 
   static deposit(emissionLP: bigint, poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {

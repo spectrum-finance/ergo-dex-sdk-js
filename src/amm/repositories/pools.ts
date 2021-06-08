@@ -1,7 +1,7 @@
 import {PoolId} from "../types"
 import {AmmPool} from "../entities/ammPool"
 import {ErgoNetwork} from "../../services/ergoNetwork"
-import {AssetAmount, Int32Constant} from "../../ergo"
+import { AssetAmount, Int32Constant } from "../../ergo"
 import {RegisterId} from "../../ergo/entities/registers"
 import {Blake2b256} from "../../utils/blake2b256"
 import {toHex} from "../../utils/hex"
@@ -13,7 +13,7 @@ import {deserializeConstant} from "../../ergo/entities/constant"
 export interface Pools {
   get(id: PoolId): Promise<AmmPool | undefined>
 
-  getAll(paging: Paging): Promise<AmmPool[]>
+  getAll(paging: Paging): Promise<[AmmPool[], number]>
 }
 
 export class NetworkPools implements Pools {
@@ -34,9 +34,9 @@ export class NetworkPools implements Pools {
     return undefined
   }
 
-  async getAll(paging: Paging): Promise<AmmPool[]> {
-    let boxes = await this.network.getUnspentByErgoTreeTemplateHash(
-      T2tPoolContracts.poolTemplateHash(EmissionLP),
+  async getAll(paging: Paging): Promise<[AmmPool[], number]> {
+    let [boxes, totalBoxes] = await this.network.getUnspentByErgoTreeTemplateHash(
+      T2tPoolContracts.poolTemplateHash(),
       paging
     )
     let pools = []
@@ -44,12 +44,17 @@ export class NetworkPools implements Pools {
       let nft = box.assets[0].tokenId
       let assetX = AssetAmount.fromToken(box.assets[2])
       let assetY = AssetAmount.fromToken(box.assets[3])
-      let r4 = deserializeConstant(box.additionalRegisters[RegisterId.R4])
-      if (r4 instanceof Int32Constant) {
-        let scriptHash = toHex(Blake2b256.hash(box.ergoTree))
-        pools.push(new AmmPool(nft, assetX, assetY, scriptHash, r4.value))
+      let r4 = box.additionalRegisters[RegisterId.R4]
+      if (r4) {
+        let feeNum = deserializeConstant(r4)
+        if (feeNum instanceof Int32Constant) {
+          let scriptHash = toHex(Blake2b256.hash(box.ergoTree))
+          pools.push(new AmmPool(nft, assetX, assetY, scriptHash, feeNum.value))
+        }
       }
     }
-    return pools
+    const invalid = boxes.length - pools.length
+    const total = totalBoxes - invalid
+    return [pools, total]
   }
 }

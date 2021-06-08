@@ -19,7 +19,7 @@ export interface ErgoNetwork {
 
   /** Get unspent boxes by a given hash of ErgoTree template.
    */
-  getUnspentByErgoTreeTemplateHash(hash: HexString, paging: Paging): Promise<ErgoBox[]>
+  getUnspentByErgoTreeTemplateHash(hash: HexString, paging: Paging): Promise<[ErgoBox[], number]>
 
   /** Get a token info by id.
    */
@@ -72,13 +72,13 @@ export class Explorer implements ErgoNetwork {
       .then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
   }
 
-  async getUnspentByErgoTreeTemplateHash(hash: HexString, paging: Paging): Promise<ErgoBox[]> {
+  async getUnspentByErgoTreeTemplateHash(hash: HexString, paging: Paging): Promise<[ErgoBox[], number]> {
     return this.backend
       .request<network.Items<network.ErgoBox>>({
         url: `/api/v1/boxes/unspent/byErgoTreeTemplateHash/${hash}`,
         params: paging
       })
-      .then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
+      .then(res => [res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)), res.data.total])
   }
 
   async getToken(tokenId: TokenId): Promise<AssetInfo | undefined> {

@@ -5,6 +5,6 @@ import {toHex} from "../../utils/hex"
 
 export type ErgoTreeTemplate = HexString
 
-export function fromErgoTree(tree: ErgoTree): ErgoTreeTemplate {
+export function treeTemplateFromErgoTree(tree: ErgoTree): ErgoTreeTemplate {
   return toHex(RustModule.SigmaRust.ErgoTree.from_base16_bytes(tree).template_bytes())
 }
