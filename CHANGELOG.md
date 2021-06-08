@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.88](https://github.com/ergoplatform/ergo-dex-sdk-js/compare/v0.0.86...v0.0.88) (2021-06-08)
+
 ### [0.0.86](https://github.com/ergoplatform/ergo-dex-sdk-js/compare/v0.0.84...v0.0.86) (2021-06-08)
 
 ### [0.0.84](https://github.com/ergoplatform/ergo-dex-sdk-js/compare/v0.0.82...v0.0.84) (2021-06-08)
