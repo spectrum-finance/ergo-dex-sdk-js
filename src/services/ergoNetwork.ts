@@ -7,7 +7,7 @@ import {NetworkContext} from "../ergo/entities/networkContext"
 export interface ErgoNetwork {
   /** Get unspent boxes with a given ErgoTree.
    */
-  getUnspentByErgoTree(tree: ErgoTree, paging: Paging): Promise<ErgoBox[]>
+  getUnspentByErgoTree(tree: ErgoTree, paging: Paging): Promise<[ErgoBox[], number]>
 
   /** Get unspent boxes with scripts matching a given template hash.
    */
@@ -45,13 +45,13 @@ export class Explorer implements ErgoNetwork {
     })
   }
 
-  async getUnspentByErgoTree(tree: ErgoTree, paging: Paging): Promise<ErgoBox[]> {
+  async getUnspentByErgoTree(tree: ErgoTree, paging: Paging): Promise<[ErgoBox[], number]> {
     return this.backend
       .request<network.Items<network.ErgoBox>>({
         url: `/api/v1/boxes/unspent/byErgoTree/${tree}`,
         params: paging
       })
-      .then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
+      .then(res => [res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)), res.data.total])
   }
 
   async getUnspentByErgoTreeTemplate(templateHash: HexString, paging: Paging): Promise<ErgoBox[]> {

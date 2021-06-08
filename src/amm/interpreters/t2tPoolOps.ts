@@ -79,7 +79,7 @@ export class T2tPoolOps implements PoolOps {
       let poolLP = {tokenId: newTokenLP.tokenId, amount: poolAmountLP}
       let poolOut: ErgoBoxCandidate = {
         value: poolBootBox.value - lpOut.value - Number(ctx.feeNErgs),
-        ergoTree: scripts.pool(EmissionLP),
+        ergoTree: scripts.pool(),
         creationHeight: height,
         assets: [newTokenNFT, poolLP, ...poolBootBox.assets.slice(1)],
         additionalRegisters: registers([[RegisterId.R4, new Int32Constant(params.feeNumerator)]])
@@ -99,7 +99,7 @@ export class T2tPoolOps implements PoolOps {
 
   deposit(params: DepositParams, ctx: TransactionContext): Promise<ErgoTx> {
     let [x, y] = [params.x, params.y]
-    let proxyScript = scripts.deposit(EmissionLP, params.poolId, params.pk, params.dexFee)
+    let proxyScript = scripts.deposit(params.poolId, params.pk, params.dexFee)
     let outputGranted = ctx.inputs.totalOutputWithoutChange
     let pairIn = [
       outputGranted.assets.filter((t, _i, _xs) => t.tokenId === x.id),
@@ -127,7 +127,7 @@ export class T2tPoolOps implements PoolOps {
   }
 
   redeem(params: RedeemParams, ctx: TransactionContext): Promise<ErgoTx> {
-    let proxyScript = scripts.redeem(EmissionLP, params.poolId, params.pk, params.dexFee)
+    let proxyScript = scripts.redeem(params.poolId, params.pk, params.dexFee)
     let outputGranted = ctx.inputs.totalOutputWithoutChange
     let tokensIn = outputGranted.assets.filter((t, _i, _xs) => t.tokenId === params.lp.id)
     if (tokensIn.length == 1) {

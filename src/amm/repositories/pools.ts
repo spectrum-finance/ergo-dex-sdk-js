@@ -6,7 +6,6 @@ import {RegisterId} from "../../ergo/entities/registers"
 import {Blake2b256} from "../../utils/blake2b256"
 import {toHex} from "../../utils/hex"
 import {T2tPoolContracts} from "../contracts/t2tPoolContracts"
-import {EmissionLP} from "../constants"
 import {Paging} from "../../network/paging"
 import {deserializeConstant} from "../../ergo/entities/constant"
 
@@ -26,7 +25,7 @@ export class NetworkPools implements Pools {
       let assetX = AssetAmount.fromToken(poolBox.assets[2])
       let assetY = AssetAmount.fromToken(poolBox.assets[3])
       let r4 = deserializeConstant(poolBox.additionalRegisters[RegisterId.R4])
-      if (r4 instanceof Int32Constant && poolBox.ergoTree === T2tPoolContracts.pool(EmissionLP)) {
+      if (r4 instanceof Int32Constant && poolBox.ergoTree === T2tPoolContracts.pool()) {
         let scriptHash = toHex(Blake2b256.hash(poolBox.ergoTree))
         return new AmmPool(id, assetX, assetY, scriptHash, r4.value)
       }
@@ -35,8 +34,8 @@ export class NetworkPools implements Pools {
   }
 
   async getAll(paging: Paging): Promise<[AmmPool[], number]> {
-    let [boxes, totalBoxes] = await this.network.getUnspentByErgoTreeTemplateHash(
-      T2tPoolContracts.poolTemplateHash(),
+    let [boxes, totalBoxes] = await this.network.getUnspentByErgoTree(
+      T2tPoolContracts.pool(),
       paging
     )
     let pools = []

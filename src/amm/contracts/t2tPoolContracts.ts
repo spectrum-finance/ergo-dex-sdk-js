@@ -6,30 +6,13 @@ import {RustModule} from "../../utils/rustLoader"
 
 export class T2tPoolContracts {
 
-  static pool(emissionLP: bigint): ErgoTree {
-    let tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tPool)
-    tree.set_constant(
-      7,
-      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(emissionLP.toString()))
-    )
-    tree.set_constant(
-      8,
-      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(emissionLP.toString()))
-    )
-    return tree.to_base16_bytes()
+  static pool(): ErgoTree {
+    return templates.T2tPool
   }
 
-  static poolTemplateHash(): HexString {
-    return templates.T2tPoolHash
-  }
-
-  static deposit(emissionLP: bigint, poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
+  static deposit(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
     let tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tDeposit)
     tree.set_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(pk))
-    tree.set_constant(
-      5,
-      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(emissionLP.toString()))
-    )
     tree.set_constant(8, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
     tree.set_constant(
       10,
@@ -38,13 +21,9 @@ export class T2tPoolContracts {
     return tree.to_base16_bytes()
   }
 
-  static redeem(emissionLP: bigint, poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
+  static redeem(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
     let tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tRedeem)
     tree.set_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(pk))
-    tree.set_constant(
-      7,
-      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(emissionLP.toString()))
-    )
     tree.set_constant(10, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
     tree.set_constant(
       12,

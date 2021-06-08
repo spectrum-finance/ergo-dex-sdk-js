@@ -7,5 +7,5 @@ test.before(async () => {
 })
 
 test("Contract instantiation: Pool", async t => {
-  t.notThrows(() => T2tPoolContracts.pool(1000000000000000000n))
+  t.notThrows(() => T2tPoolContracts.pool())
 })
