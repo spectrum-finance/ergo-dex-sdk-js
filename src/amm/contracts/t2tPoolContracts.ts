@@ -1,8 +1,8 @@
-import {PoolId} from "../types"
+import { PoolId } from "../types"
 import * as templates from "./templates"
-import {HexString, NErg, TokenId, ErgoTree, PublicKey} from "../../ergo"
-import {fromHex} from "../../utils/hex"
-import {RustModule} from "../../utils/rustLoader"
+import { HexString, NErg, TokenId, ErgoTree, PublicKey } from "../../ergo"
+import { fromHex } from "../../utils/hex"
+import { RustModule } from "../../utils/rustLoader"
 
 export class T2tPoolContracts {
 
@@ -41,7 +41,8 @@ export class T2tPoolContracts {
     pk: PublicKey
   ): ErgoTree {
     let tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tSwap)
-    tree.set_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(pk)) // todo: is that correct?
+    let pkConst = RustModule.SigmaRust.Address.from_public_key(fromHex(pk)).to_ergo_tree().get_constant(0)!
+    tree.set_constant(0, pkConst)
     tree.set_constant(3, RustModule.SigmaRust.Constant.from_byte_array(fromHex(quoteId)))
     tree.set_constant(8, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
     tree.set_constant(9, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolScriptHash)))
