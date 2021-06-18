@@ -1,7 +1,7 @@
 import {PoolId} from "../types"
 import {AmmPool} from "../entities/ammPool"
 import {ErgoNetwork} from "../../services/ergoNetwork"
-import { AssetAmount, Int32Constant } from "../../ergo"
+import {AssetAmount, Int32Constant} from "../../ergo"
 import {RegisterId} from "../../ergo/entities/registers"
 import {Blake2b256} from "../../utils/blake2b256"
 import {toHex} from "../../utils/hex"
@@ -34,10 +34,7 @@ export class NetworkPools implements Pools {
   }
 
   async getAll(paging: Paging): Promise<[AmmPool[], number]> {
-    let [boxes, totalBoxes] = await this.network.getUnspentByErgoTree(
-      T2tPoolContracts.pool(),
-      paging
-    )
+    let [boxes, totalBoxes] = await this.network.getUnspentByErgoTree(T2tPoolContracts.pool(), paging)
     let pools = []
     for (let box of boxes) {
       let nft = box.assets[0].tokenId

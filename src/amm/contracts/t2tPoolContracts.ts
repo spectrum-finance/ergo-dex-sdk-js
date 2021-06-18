@@ -1,12 +1,11 @@
-import { PoolId } from "../types"
+import {PoolId} from "../types"
 import * as templates from "./templates"
-import { NErg, TokenId, ErgoTree, PublicKey } from "../../ergo"
-import { fromHex } from "../../utils/hex"
-import { RustModule } from "../../utils/rustLoader"
-import { SigmaPropConstPrefixHex } from "../constants"
+import {NErg, TokenId, ErgoTree, PublicKey} from "../../ergo"
+import {fromHex} from "../../utils/hex"
+import {RustModule} from "../../utils/rustLoader"
+import {SigmaPropConstPrefixHex} from "../constants"
 
 export class T2tPoolContracts {
-
   static pool(): ErgoTree {
     return templates.T2tPool
   }

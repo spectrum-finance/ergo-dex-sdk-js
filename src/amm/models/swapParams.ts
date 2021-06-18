@@ -1,5 +1,5 @@
 import {AssetAmount, PublicKey, NErg, TokenId} from "../../ergo"
-import { PoolId } from "../types"
+import {PoolId} from "../types"
 
 export type SwapParams = {
   readonly pk: PublicKey
