@@ -1,6 +1,6 @@
 import { PoolId } from "../types"
 import * as templates from "./templates"
-import { HexString, NErg, TokenId, ErgoTree, PublicKey } from "../../ergo"
+import { NErg, TokenId, ErgoTree, PublicKey } from "../../ergo"
 import { fromHex } from "../../utils/hex"
 import { RustModule } from "../../utils/rustLoader"
 
