@@ -153,7 +153,7 @@ export class T2tPoolOps implements PoolOps {
 
   swap(params: SwapParams, ctx: TransactionContext): Promise<ErgoTx> {
     let proxyScript = scripts.swap(
-      params.poolScriptHash,
+      params.poolId,
       params.poolFeeNum,
       params.quoteAsset,
       params.minQuoteOutput,

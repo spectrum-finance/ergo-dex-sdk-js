@@ -1,8 +1,9 @@
-import {AssetAmount, PublicKey, HexString, NErg, TokenId} from "../../ergo"
+import {AssetAmount, PublicKey, NErg, TokenId} from "../../ergo"
+import { PoolId } from "../types"
 
 export type SwapParams = {
   readonly pk: PublicKey
-  readonly poolScriptHash: HexString
+  readonly poolId: PoolId
   readonly poolFeeNum: number
   readonly baseInput: AssetAmount
   readonly quoteAsset: TokenId

@@ -33,7 +33,7 @@ export class T2tPoolContracts {
   }
 
   static swap(
-    poolScriptHash: HexString,
+    poolId: PoolId,
     poolFeeNum: number,
     quoteId: TokenId,
     minQuoteAmount: bigint,
@@ -44,16 +44,17 @@ export class T2tPoolContracts {
     let pkConst = RustModule.SigmaRust.Address.from_public_key(fromHex(pk)).to_ergo_tree().get_constant(0)!
     tree.set_constant(0, pkConst)
     tree.set_constant(3, RustModule.SigmaRust.Constant.from_byte_array(fromHex(quoteId)))
-    tree.set_constant(8, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
-    tree.set_constant(9, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolScriptHash)))
+    tree.set_constant(10, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
     tree.set_constant(
-      11,
+      12,
       RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(minQuoteAmount.toString()))
     )
     tree.set_constant(
-      12,
+      13,
       RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFeePerToken.toString()))
     )
+    tree.set_constant(14, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
+    tree.set_constant(15, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
     return tree.to_base16_bytes()
   }
 }
