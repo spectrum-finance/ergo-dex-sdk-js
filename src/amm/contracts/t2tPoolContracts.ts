@@ -1,10 +1,9 @@
 import { PoolId } from "../types"
 import * as templates from "./templates"
-import { NErg, TokenId, ErgoTree, PublicKey, HexString } from "../../ergo"
+import { NErg, TokenId, ErgoTree, PublicKey } from "../../ergo"
 import { fromHex } from "../../utils/hex"
 import { RustModule } from "../../utils/rustLoader"
-
-const SigmaPropConstPrefixHex: HexString = "07"
+import { SigmaPropConstPrefixHex } from "../constants"
 
 export class T2tPoolContracts {
 
