@@ -44,8 +44,8 @@
         "axios": "^0.21.1",
         "blakejs": "^1.1.0",
         "bs58": "^4.0.1",
-        "ergo-lib-wasm-browser": "0.13.3",
-        "ergo-lib-wasm-nodejs": "0.13.3"
+        "ergo-lib-wasm-browser": "0.14.0-alpha-9c8aa7b",
+        "ergo-lib-wasm-nodejs": "0.14.0-alpha-9c8aa7b"
     },
     "devDependencies": {
         "@ava/typescript": "^1.1.1",
