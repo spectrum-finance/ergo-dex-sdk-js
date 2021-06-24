@@ -1,18 +1,23 @@
 import {PoolId} from "../types"
-import {AssetInfo, AssetAmount, HexString} from "../../ergo"
+import {AssetInfo, AssetAmount} from "../../ergo"
 import {Price} from "../../entities/price"
+import {EmissionLP} from "../constants"
 
 export class AmmPool {
   constructor(
     public readonly id: PoolId,
+    public readonly lp: AssetAmount,
     public readonly x: AssetAmount,
     public readonly y: AssetAmount,
-    public readonly poolScriptHash: HexString,
     public readonly poolFeeNum: number
   ) {}
 
   private feeDenom: bigint = 1000n
   private feeNum: bigint = BigInt(this.poolFeeNum)
+
+  get supplyLP(): bigint {
+    return EmissionLP - this.lp.amount
+  }
 
   get assetX(): AssetInfo {
     return this.x.asset
@@ -34,12 +39,23 @@ export class AmmPool {
     return new Price(this.x.amount, this.y.amount)
   }
 
-  /** @return Proportional amount of one token to a given input of the other
+  /** @return proportional amount of one token to a given input of the other
    */
   depositAmount(input: AssetAmount): AssetAmount {
     if (input.asset === this.assetX)
       return this.y.withAmount((input.amount * this.priceX.numerator) / this.priceX.denominator)
     else return this.x.withAmount((input.amount * this.priceY.numerator) / this.priceY.denominator)
+  }
+
+  shares(input: AssetAmount): [AssetAmount, AssetAmount] {
+    if (input.asset === this.lp.asset) {
+      return [
+        this.x.withAmount((input.amount * this.x.amount) / this.supplyLP),
+        this.y.withAmount((input.amount * this.y.amount) / this.supplyLP)
+      ]
+    } else {
+      return [this.x.withAmount(0n), this.y.withAmount(0n)]
+    }
   }
 
   /** @return Input amount of one token for a given output amount of the other
