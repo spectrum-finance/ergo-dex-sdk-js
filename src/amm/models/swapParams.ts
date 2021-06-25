@@ -1,4 +1,4 @@
-import {AssetAmount, PublicKey, NErg, TokenId} from "../../ergo"
+import {AssetAmount, PublicKey, TokenId} from "../../ergo"
 import {PoolId} from "../types"
 
 export type SwapParams = {
@@ -8,5 +8,5 @@ export type SwapParams = {
   readonly baseInput: AssetAmount
   readonly quoteAsset: TokenId
   readonly minQuoteOutput: bigint
-  readonly dexFeePerToken: NErg
+  readonly dexFeePerToken: number
 }
