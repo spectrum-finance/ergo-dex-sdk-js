@@ -47,6 +47,8 @@ export class AmmPool {
     else return this.x.withAmount((input.amount * this.priceY.numerator) / this.priceY.denominator)
   }
 
+  /** @return pair of asset amounts proportional to a given input of LP tokens.
+   */
   shares(input: AssetAmount): [AssetAmount, AssetAmount] {
     if (input.asset === this.lp.asset) {
       return [
@@ -55,6 +57,18 @@ export class AmmPool {
       ]
     } else {
       return [this.x.withAmount(0n), this.y.withAmount(0n)]
+    }
+  }
+
+  /** @return amount of LP asset proportional to the amounts of assets deposited..
+   */
+  rewardLP(inputX: AssetAmount, inputY: AssetAmount): AssetAmount {
+    if (inputX.asset === this.x.asset && inputY.asset === this.y.asset) {
+      const rewardXWise = (inputX.amount * this.supplyLP) / this.x.amount
+      const rewardYWise = (inputY.amount * this.supplyLP) / this.y.amount
+      return this.lp.withAmount(rewardXWise <= rewardYWise ? rewardXWise : rewardYWise)
+    } else {
+      return this.lp.withAmount(0n)
     }
   }
 
