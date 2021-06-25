@@ -1,13 +1,19 @@
 import {PoolId} from "../types"
 import * as templates from "./templates"
-import {TokenId, ErgoTree, PublicKey} from "../../ergo"
-import {fromHex} from "../../utils/hex"
+import {TokenId, ErgoTree, PublicKey, HexString} from "../../ergo"
+import {fromHex, toHex} from "../../utils/hex"
 import {RustModule} from "../../utils/rustLoader"
 import {SigmaPropConstPrefixHex} from "../constants"
+import * as crypto from "crypto-js"
 
 export class T2tPoolContracts {
   static pool(): ErgoTree {
     return templates.T2tPool
+  }
+
+  static poolTemplateHash(): HexString {
+    const template = RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tPool).template_bytes()
+    return crypto.SHA256(toHex(template)).toString(crypto.enc.Hex)
   }
 
   static deposit(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {

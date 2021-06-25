@@ -1,16 +1,24 @@
 import {PoolId} from "../types"
 import {AmmPool} from "../entities/ammPool"
 import {ErgoNetwork} from "../../services/ergoNetwork"
-import {AssetAmount, ErgoBox, Int32Constant} from "../../ergo"
+import {AssetAmount, ErgoBox, Int32Constant, TokenId} from "../../ergo"
 import {RegisterId} from "../../ergo/entities/registers"
 import {T2tPoolContracts} from "../contracts/t2tPoolContracts"
 import {Paging} from "../../network/paging"
 import {deserializeConstant} from "../../ergo/entities/constant"
 
 export interface Pools {
+  /** Get a pool by the given pool `id`.
+   */
   get(id: PoolId): Promise<AmmPool | undefined>
 
+  /** Get all pools from the network.
+   */
   getAll(paging: Paging): Promise<[AmmPool[], number]>
+
+  /** Get pools containing specific tokens from the network.
+   */
+  getByTokens(tokens: TokenId[], paging: Paging): Promise<[AmmPool[], number]>
 }
 
 export class NetworkPools implements Pools {
@@ -26,16 +34,30 @@ export class NetworkPools implements Pools {
   }
 
   async getAll(paging: Paging): Promise<[AmmPool[], number]> {
-    let [boxes, totalBoxes] = await this.network.getUnspentByErgoTree(T2tPoolContracts.pool(), paging)
-    let pools = []
-    for (let box of boxes) {
-      let pool = parsePool(box)
-      if (pool) pools.push(pool)
-    }
+    const [boxes, totalBoxes] = await this.network.getUnspentByErgoTree(T2tPoolContracts.pool(), paging)
+    const pools = filterValidPool(boxes)
     const invalid = boxes.length - pools.length
     const total = totalBoxes - invalid
     return [pools, total]
   }
+
+  async getByTokens(tokens: TokenId[], paging: Paging): Promise<[AmmPool[], number]> {
+    const req = {ergoTreeTemplateHash: T2tPoolContracts.poolTemplateHash(), assets: tokens}
+    const [boxes, totalBoxes] = await this.network.searchUnspentBoxes(req, paging)
+    const pools = filterValidPool(boxes)
+    const invalid = boxes.length - pools.length
+    const total = totalBoxes - invalid
+    return [pools, total]
+  }
+}
+
+function filterValidPool(boxes: ErgoBox[]): AmmPool[] {
+  let pools = []
+  for (let box of boxes) {
+    let pool = parsePool(box)
+    if (pool) pools.push(pool)
+  }
+  return pools
 }
 
 function parsePool(box: ErgoBox): AmmPool | undefined {

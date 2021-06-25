@@ -3,6 +3,7 @@ import {ErgoTree, AssetInfo, ErgoBox, HexString, TokenId} from "../ergo"
 import * as network from "../network/models"
 import {Paging} from "../network/paging"
 import {NetworkContext} from "../ergo/entities/networkContext"
+import {BoxSearch} from "../network/models"
 
 export interface ErgoNetwork {
   /** Get unspent boxes with a given ErgoTree.
@@ -20,6 +21,10 @@ export interface ErgoNetwork {
   /** Get unspent boxes by a given hash of ErgoTree template.
    */
   getUnspentByErgoTreeTemplateHash(hash: HexString, paging: Paging): Promise<[ErgoBox[], number]>
+
+  /** Detailed search among unspent boxes.
+   */
+  searchUnspentBoxes(req: BoxSearch, paging: Paging): Promise<[ErgoBox[], number]>
 
   /** Get a token info by id.
    */
@@ -77,6 +82,17 @@ export class Explorer implements ErgoNetwork {
       .request<network.Items<network.ErgoBox>>({
         url: `/api/v1/boxes/unspent/byErgoTreeTemplateHash/${hash}`,
         params: paging
+      })
+      .then(res => [res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)), res.data.total])
+  }
+
+  searchUnspentBoxes(req: BoxSearch, paging: Paging): Promise<[ErgoBox[], number]> {
+    return this.backend
+      .request<network.Items<network.ErgoBox>>({
+        url: `/api/v1/boxes/unspent/search`,
+        params: paging,
+        method: "POST",
+        data: req
       })
       .then(res => [res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)), res.data.total])
   }

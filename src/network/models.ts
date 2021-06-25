@@ -1,4 +1,4 @@
-import {Registers, SigmaType} from "../ergo"
+import {HexString, Registers, SigmaType, TokenId} from "../ergo"
 import {parseRegisterId} from "../ergo/entities/registers"
 import * as wallet from "../ergo"
 
@@ -34,6 +34,11 @@ export type BoxRegister = {
   serializedValue: string
   sigmaType: SigmaType
   renderedValue: string
+}
+
+export type BoxSearch = {
+  ergoTreeTemplateHash: HexString
+  assets: TokenId[]
 }
 
 export function toWalletToken(asset: BoxAsset): wallet.TokenAmount {
