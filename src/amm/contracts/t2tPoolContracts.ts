@@ -13,7 +13,7 @@ export class T2tPoolContracts {
 
   static poolTemplateHash(): HexString {
     const template = RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tPool).template_bytes()
-    return crypto.SHA256(toHex(template)).toString(crypto.enc.Hex)
+    return crypto.SHA256(crypto.enc.Hex.parse(toHex(template))).toString(crypto.enc.Hex)
   }
 
   static deposit(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {

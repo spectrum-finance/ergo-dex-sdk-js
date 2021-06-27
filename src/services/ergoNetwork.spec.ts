@@ -27,3 +27,11 @@ test("ergoNetwork getNetworkContext", async t => {
 test("ergoNetwork getTokens", async t => {
   await t.notThrowsAsync(explorer.getTokens(defaultPaging))
 })
+
+test("ergoNetwork searchUnspentBoxesByTokensUnion", async t => {
+  const req = {
+    ergoTreeTemplateHash: "4b0c28331ab1ca67fc9f3de3e6661d6a80a1da38a9dae86dfa7eac1b9fc699a1",
+    assets: ["7f14228a5fd5b5c5d74bfbced3491916e2dc305106dd043f78b65b4cced9c2b9"]
+  }
+  await t.notThrowsAsync(explorer.searchUnspentBoxesByTokensUnion(req, defaultPaging))
+})
