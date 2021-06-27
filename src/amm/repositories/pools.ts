@@ -16,9 +16,13 @@ export interface Pools {
    */
   getAll(paging: Paging): Promise<[AmmPool[], number]>
 
-  /** Get pools containing specific tokens from the network.
+  /** Get pools containing all of given tokens from the network.
    */
   getByTokens(tokens: TokenId[], paging: Paging): Promise<[AmmPool[], number]>
+
+  /** Get pools containing any of the given tokens from the network.
+   */
+  getByTokensUnion(tokens: TokenId[], paging: Paging): Promise<[AmmPool[], number]>
 }
 
 export class NetworkPools implements Pools {
@@ -44,6 +48,15 @@ export class NetworkPools implements Pools {
   async getByTokens(tokens: TokenId[], paging: Paging): Promise<[AmmPool[], number]> {
     const req = {ergoTreeTemplateHash: T2tPoolContracts.poolTemplateHash(), assets: tokens}
     const [boxes, totalBoxes] = await this.network.searchUnspentBoxes(req, paging)
+    const pools = filterValidPool(boxes)
+    const invalid = boxes.length - pools.length
+    const total = totalBoxes - invalid
+    return [pools, total]
+  }
+
+  async getByTokensUnion(tokens: TokenId[], paging: Paging): Promise<[AmmPool[], number]> {
+    const req = {ergoTreeTemplateHash: T2tPoolContracts.poolTemplateHash(), assets: tokens}
+    const [boxes, totalBoxes] = await this.network.searchUnspentBoxesByTokensUnion(req, paging)
     const pools = filterValidPool(boxes)
     const invalid = boxes.length - pools.length
     const total = totalBoxes - invalid

@@ -41,6 +41,11 @@ export type BoxSearch = {
   assets: TokenId[]
 }
 
+export type BoxAssetsSearch = {
+  ergoTreeTemplateHash: HexString
+  assets: TokenId[]
+}
+
 export function toWalletToken(asset: BoxAsset): wallet.TokenAmount {
   return {
     tokenId: asset.tokenId,
