@@ -107,7 +107,7 @@ export class T2tPoolOps implements PoolOps {
     ].flat()
     if (pairIn.length == 2) {
       let out: ErgoBoxCandidate = {
-        value: Number(outputGranted.nErgs),
+        value: outputGranted.nErgs - Number(ctx.feeNErgs),
         ergoTree: proxyScript,
         creationHeight: ctx.network.height,
         assets: pairIn,
@@ -132,7 +132,7 @@ export class T2tPoolOps implements PoolOps {
     let tokensIn = outputGranted.assets.filter((t, _i, _xs) => t.tokenId === params.lp.id)
     if (tokensIn.length == 1) {
       let out = {
-        value: Number(outputGranted.nErgs),
+        value: outputGranted.nErgs - Number(ctx.feeNErgs),
         ergoTree: proxyScript,
         creationHeight: ctx.network.height,
         assets: tokensIn,

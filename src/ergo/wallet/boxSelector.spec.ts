@@ -2,7 +2,7 @@ import test from "ava"
 import {RustModule} from "../../utils/rustLoader"
 import {DefaultBoxSelector} from "./boxSelector"
 import {InsufficientInputs} from "../errors/insufficientInputs"
-import {boxes} from "../samples"
+import {boxes, boxesWithAssets} from "../samples"
 import {BoxSelection} from "./entities/boxSelection"
 
 test.before(async () => {
@@ -25,4 +25,19 @@ test("BoxSelector: Select ERGs", async t =>
       assets: []
     }),
     BoxSelection.make(boxes, {value: 59999200000, assets: []})
+  ))
+
+test("BoxSelector: Select ERGs and assets (+ irrelevant tokens in inputs)", async t =>
+  t.deepEqual(
+    DefaultBoxSelector.select(boxesWithAssets, {
+      nErgs: 39999500000,
+      assets: [{tokenId: "x", amount: 10}]
+    }),
+    BoxSelection.make(boxesWithAssets, {
+      value: 59999200000,
+      assets: [
+        {tokenId: "x", amount: 140},
+        {tokenId: "y", amount: 500}
+      ]
+    })
   ))

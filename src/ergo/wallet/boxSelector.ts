@@ -21,9 +21,9 @@ class DefaultBoxSelectorImpl implements BoxSelector {
     }
     let deltaNErgs = totalNErgs - target.nErgs
     let deltaAssets: TokenAmount[] = []
-    for (let t of target.assets) {
-      let total = totalAssets.get(t.tokenId) || 0
-      deltaAssets.push({tokenId: t.tokenId, amount: total - t.amount})
+    for (let [id, totalAmt] of totalAssets) {
+      let targetAmt = target.assets.find((a, _i, _xs) => a.tokenId === id)?.amount || 0
+      deltaAssets.push({tokenId: id, amount: totalAmt - targetAmt})
     }
     if (deltaNErgs < 0)
       return new InsufficientInputs(`'NErgs' required: ${target.nErgs}, given: ${totalNErgs}`)
