@@ -1,6 +1,6 @@
 {
     "name": "ergo-dex-sdk",
-    "version": "0.0.142",
+    "version": "0.1.0",
     "description": "ErgoDEX SDK",
     "main": "build/module/index.js",
     "typings": "build/module/index.d.ts",
