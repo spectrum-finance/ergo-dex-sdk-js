@@ -1,3 +1,3 @@
-import {TokenId} from "../ergo/types"
+import {TokenId} from "../ergo"
 
 export type PoolId = TokenId

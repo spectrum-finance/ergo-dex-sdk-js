@@ -1,4 +1,4 @@
-import {HexString, Registers, SigmaType, TokenId} from "../ergo"
+import {BoxId, HexString, Registers, SigmaType, TokenId} from "../ergo"
 import {parseRegisterId} from "../ergo/entities/registers"
 import * as wallet from "../ergo"
 
@@ -20,6 +20,15 @@ export type ErgoBox = {
   assets: BoxAsset[]
   additionalRegisters: {[key: string]: BoxRegister}
   spentTransactionId?: string
+}
+
+export type FullAssetInfo = {
+  readonly id: TokenId
+  readonly boxId: BoxId
+  readonly emissionAmount: bigint
+  readonly name?: string
+  readonly decimals?: number
+  readonly description?: string
 }
 
 export type BoxAsset = {

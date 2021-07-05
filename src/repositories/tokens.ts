@@ -11,6 +11,6 @@ export class NetworkTokens implements Tokens {
   constructor(public readonly network: ErgoNetwork) {}
 
   get(id: TokenId): Promise<AssetInfo | undefined> {
-    return this.network.getToken(id)
+    return this.network.getFullTokenInfo(id)
   }
 }

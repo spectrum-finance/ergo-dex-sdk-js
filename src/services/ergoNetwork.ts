@@ -1,9 +1,10 @@
 import axios, {AxiosInstance} from "axios"
-import {ErgoTree, AssetInfo, ErgoBox, HexString, TokenId} from "../ergo"
+import {ErgoTree, ErgoBox, HexString, TokenId} from "../ergo"
 import * as network from "../network/models"
 import {Paging} from "../network/paging"
 import {NetworkContext} from "../ergo/entities/networkContext"
-import {BoxAssetsSearch, BoxSearch} from "../network/models"
+import {BoxAssetsSearch, BoxSearch, FullAssetInfo} from "../network/models"
+import {Sorting} from "../network/sorting"
 
 export interface ErgoNetwork {
   /** Get unspent boxes with a given ErgoTree.
@@ -16,7 +17,7 @@ export interface ErgoNetwork {
 
   /** Get unspent boxes containing a token with given id.
    */
-  getUnspentByTokenId(tokenId: TokenId, paging: Paging): Promise<ErgoBox[]>
+  getUnspentByTokenId(tokenId: TokenId, paging: Paging, sort?: Sorting): Promise<ErgoBox[]>
 
   /** Get unspent boxes by a given hash of ErgoTree template.
    */
@@ -32,11 +33,11 @@ export interface ErgoNetwork {
 
   /** Get a token info by id.
    */
-  getToken(tokenId: TokenId): Promise<AssetInfo | undefined>
+  getFullTokenInfo(tokenId: TokenId): Promise<FullAssetInfo | undefined>
 
   /** Get all available tokens.
    */
-  getTokens(paging: Paging): Promise<[AssetInfo[], number]>
+  getTokens(paging: Paging): Promise<[FullAssetInfo[], number]>
 
   /** Get current network context.
    */
@@ -72,11 +73,11 @@ export class Explorer implements ErgoNetwork {
       .then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
   }
 
-  async getUnspentByTokenId(tokenId: TokenId, paging: Paging): Promise<ErgoBox[]> {
+  async getUnspentByTokenId(tokenId: TokenId, paging: Paging, sort?: Sorting): Promise<ErgoBox[]> {
     return this.backend
       .request<network.Items<network.ErgoBox>>({
         url: `/api/v1/boxes/unspent/byTokenId/${tokenId}`,
-        params: paging
+        params: {...paging, sortDirection: sort || "asc"}
       })
       .then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
   }
@@ -112,17 +113,17 @@ export class Explorer implements ErgoNetwork {
       .then(res => [res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)), res.data.total])
   }
 
-  async getToken(tokenId: TokenId): Promise<AssetInfo | undefined> {
+  async getFullTokenInfo(tokenId: TokenId): Promise<FullAssetInfo | undefined> {
     return this.backend
-      .request<AssetInfo>({
+      .request<FullAssetInfo>({
         url: `/api/v1/tokens/${tokenId}`
       })
       .then(res => (res.status != 404 ? res.data : undefined))
   }
 
-  async getTokens(paging: Paging): Promise<[AssetInfo[], number]> {
+  async getTokens(paging: Paging): Promise<[FullAssetInfo[], number]> {
     return this.backend
-      .request<network.Items<AssetInfo>>({
+      .request<network.Items<FullAssetInfo>>({
         url: `/api/v1/tokens`,
         params: paging
       })
