@@ -50,9 +50,9 @@ export class T2tPoolContracts {
     return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tSwap)
       .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
       .with_constant(3, RustModule.SigmaRust.Constant.from_byte_array(fromHex(quoteId)))
+      .with_constant(7, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
       .with_constant(8, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
-      .with_constant(9, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
-      .with_constant(11, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
+      .with_constant(10, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
       .with_constant(
         13,
         RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(minQuoteAmount.toString()))
