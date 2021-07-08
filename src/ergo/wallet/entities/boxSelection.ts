@@ -44,4 +44,8 @@ export class BoxSelection {
     tokensAgg.forEach((amount, tokenId, _xs) => tokens.push({tokenId, amount}))
     return {nErgs, assets: tokens}
   }
+
+  addInput(input: ErgoBox): BoxSelection {
+    return BoxSelection.safe(input, this.inputs, this.change)
+  }
 }

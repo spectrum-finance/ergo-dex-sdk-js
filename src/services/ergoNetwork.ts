@@ -1,5 +1,5 @@
 import axios, {AxiosInstance} from "axios"
-import {ErgoTree, ErgoBox, HexString, TokenId} from "../ergo"
+import {ErgoTree, ErgoBox, HexString, TokenId, TxId, ErgoTx} from "../ergo"
 import * as network from "../network/models"
 import {Paging} from "../network/paging"
 import {NetworkContext} from "../ergo/entities/networkContext"
@@ -7,6 +7,10 @@ import {BoxAssetsSearch, BoxSearch, FullAssetInfo} from "../network/models"
 import {Sorting} from "../network/sorting"
 
 export interface ErgoNetwork {
+  /** Get confirmed transaction by id.
+   */
+  getTx(id: TxId): Promise<ErgoTx | undefined>
+
   /** Get unspent boxes with a given ErgoTree.
    */
   getUnspentByErgoTree(tree: ErgoTree, paging: Paging): Promise<[ErgoBox[], number]>
@@ -53,6 +57,14 @@ export class Explorer implements ErgoNetwork {
       timeout: 5000,
       headers: {"Content-Type": "application/json"}
     })
+  }
+
+  async getTx(id: TxId): Promise<ErgoTx | undefined> {
+    return this.backend
+      .request<ErgoTx>({
+        url: `/api/v1/transactions/${id}`
+      })
+      .then(res => res.data)
   }
 
   async getUnspentByErgoTree(tree: ErgoTree, paging: Paging): Promise<[ErgoBox[], number]> {
