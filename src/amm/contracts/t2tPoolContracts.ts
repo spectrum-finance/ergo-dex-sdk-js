@@ -74,8 +74,7 @@ export class T2tPoolContracts {
 }
 
 export function decimalToFractional(n: number): [bigint, bigint] {
-  const s = n.toString()
-  const [whole, decimals] = s.includes(".") ? s.split(".") : [s, ""]
+  const [whole, decimals = ""] = n.toString().split(".")
   const numDecimals = decimals.length
   const denominator = BigInt(Math.pow(10, numDecimals))
   const numerator = BigInt(whole) * denominator + BigInt(decimals)
