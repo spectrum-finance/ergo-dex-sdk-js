@@ -18,7 +18,7 @@ test("Contract template hash calculation: Pool", async t => {
 })
 
 test("decimals to fractional", async t => {
-  const numbers = [0.1, 0.01, 1.1, 1.01, 11.01]
+  const numbers = [0.1, 0.01, 1.1, 1.01, 11.01, 1.0, 1]
   for (const i of numbers) {
     const [n, d] = decimalToFractional(i)
     t.deepEqual(i, Number(n) / Number(d))
