@@ -10,6 +10,7 @@ export type SwapExtremums = {
 /** @param minDexFee - minimal DEX fee
  *  @param nitro - minimal dex fee multiplier
  *  @param minOutput - minimal output expected
+ *  @return DEX fee per token, swap extremums
  */
 export function swapVars(
   minDexFee: number,
