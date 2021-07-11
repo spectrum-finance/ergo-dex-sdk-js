@@ -151,6 +151,7 @@ export class T2tPoolOps implements PoolOps {
     }
   }
 
+  // todo: check if input is sufficient
   swap(params: SwapParams, ctx: TransactionContext): Promise<ErgoTx> {
     let proxyScript = scripts.swap(
       params.poolId,
