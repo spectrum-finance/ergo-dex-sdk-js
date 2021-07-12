@@ -21,7 +21,7 @@ export class AMMOrderRefunds implements Refunds {
 
   async refund(params: RefundParams, ctx: TransactionContext): Promise<ErgoTx> {
     const tx = await this.network.getTx(params.txId)
-    const allowedScripts = [templates.T2tDeposit, templates.T2tRedeem, templates.T2tSwap]
+    const allowedScripts = [templates.T2tDepositSample, templates.T2tRedeemSample, templates.T2tSwapSample]
     const allowedTemplates = allowedScripts.map((t, _ix, _xs) => treeTemplateFromErgoTree(t))
     const outputToRefund = tx?.outputs.find((o, _ix, _xs) => {
       const template = treeTemplateFromErgoTree(o.ergoTree)

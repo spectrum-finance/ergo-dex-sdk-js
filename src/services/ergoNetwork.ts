@@ -1,15 +1,24 @@
 import axios, {AxiosInstance} from "axios"
-import {ErgoTree, ErgoBox, HexString, TokenId, TxId, ErgoTx} from "../ergo"
+import {ErgoTree, ErgoBox, HexString, TokenId, TxId, ErgoTx, BoxId, Address} from "../ergo"
 import * as network from "../network/models"
 import {Paging} from "../network/paging"
 import {NetworkContext} from "../ergo/entities/networkContext"
 import {BoxAssetsSearch, BoxSearch, FullAssetInfo} from "../network/models"
 import {Sorting} from "../network/sorting"
+import {FullOutput} from "../ergo/entities/ergoBox"
 
 export interface ErgoNetwork {
   /** Get confirmed transaction by id.
    */
   getTx(id: TxId): Promise<ErgoTx | undefined>
+
+  /** Get confirmed output by id.
+   */
+  getOutput(id: BoxId): Promise<FullOutput | undefined>
+
+  /** Get transactions by address.
+   */
+  getTxsByAddress(address: Address, paging: Paging): Promise<[ErgoTx[], number]>
 
   /** Get unspent boxes with a given ErgoTree.
    */
@@ -65,6 +74,23 @@ export class Explorer implements ErgoNetwork {
         url: `/api/v1/transactions/${id}`
       })
       .then(res => res.data)
+  }
+
+  async getOutput(id: BoxId): Promise<FullOutput | undefined> {
+    return this.backend
+      .request<FullOutput>({
+        url: `/api/v1/boxes/${id}`
+      })
+      .then(res => res.data)
+  }
+
+  async getTxsByAddress(address: Address, paging: Paging): Promise<[ErgoTx[], number]> {
+    return this.backend
+      .request<network.Items<ErgoTx>>({
+        url: `/api/v1/addresses/${address}/transactions`,
+        params: paging
+      })
+      .then(res => [res.data.items, res.data.total])
   }
 
   async getUnspentByErgoTree(tree: ErgoTree, paging: Paging): Promise<[ErgoBox[], number]> {

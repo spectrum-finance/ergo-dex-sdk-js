@@ -8,16 +8,16 @@ import * as crypto from "crypto-js"
 
 export class T2tPoolContracts {
   static pool(): ErgoTree {
-    return templates.T2tPool
+    return templates.T2tPoolSample
   }
 
   static poolTemplateHash(): HexString {
-    const template = RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tPool).template_bytes()
+    const template = RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tPoolSample).template_bytes()
     return crypto.SHA256(crypto.enc.Hex.parse(toHex(template))).toString(crypto.enc.Hex)
   }
 
   static deposit(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
-    return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tDeposit)
+    return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tDepositSample)
       .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
       .with_constant(8, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
       .with_constant(
@@ -28,7 +28,7 @@ export class T2tPoolContracts {
   }
 
   static redeem(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
-    return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tRedeem)
+    return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tRedeemSample)
       .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
       .with_constant(10, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
       .with_constant(
@@ -47,7 +47,7 @@ export class T2tPoolContracts {
     pk: PublicKey
   ): ErgoTree {
     const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(dexFeePerToken)
-    return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tSwap)
+    return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tSwapSample)
       .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
       .with_constant(3, RustModule.SigmaRust.Constant.from_byte_array(fromHex(quoteId)))
       .with_constant(7, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))

@@ -13,3 +13,5 @@ export type ErgoBox = {
   readonly assets: TokenAmount[]
   readonly additionalRegisters: Registers
 }
+
+export type FullOutput = ErgoBox & {readonly spentTransactionId: TxId | undefined}
