@@ -4,9 +4,15 @@ import {ErgoNetwork} from "../../services/ergoNetwork"
 import {AmmOpsParser} from "../parsers/ammOpsParser"
 
 export interface Operations {
+  /** Get operation by txId.
+   */
   getByTxId(txId: TxId): Promise<AmmOperation | undefined>
 
-  getAllByAddress(address: Address, displayFirst: number): Promise<AmmOperation[]>
+  /** Get operations by a given address.
+   * @address - address to fetch operations by
+   * @displayLatest - number of latest operations to display
+   */
+  getAllByAddress(address: Address, displayLatest: number): Promise<AmmOperation[]>
 }
 
 export class NetworkOperations implements Operations {
