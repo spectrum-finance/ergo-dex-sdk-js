@@ -21,7 +21,7 @@ export type RedeemSummary = {
 }
 
 export type PoolSetupSummary = {
-  inX: AssetAmount
-  inY: AssetAmount
+  initX: AssetAmount
+  initY: AssetAmount
   poolId: PoolId
 }
