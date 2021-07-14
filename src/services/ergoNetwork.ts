@@ -1,9 +1,9 @@
-import axios, {AxiosInstance} from "axios"
+import axios, { AxiosInstance } from "axios"
 import {ErgoTree, ErgoBox, HexString, TokenId, TxId, ErgoTx, BoxId, Address} from "../ergo"
 import * as network from "../network/models"
 import {Paging} from "../network/paging"
 import {NetworkContext} from "../ergo/entities/networkContext"
-import {BoxAssetsSearch, BoxSearch, FullAssetInfo} from "../network/models"
+import { BoxAssetsSearch, BoxSearch, FullAssetInfo, fullAssetInfoFromJson, FullAssetInfoJson } from "../network/models"
 import {Sorting} from "../network/sorting"
 import {FullOutput} from "../ergo/entities/ergoBox"
 
@@ -55,6 +55,10 @@ export interface ErgoNetwork {
   /** Get current network context.
    */
   getNetworkContext(): Promise<NetworkContext>
+}
+
+function jsonBigNumStringify(json: string): string {
+  return json.replace(/([\[:])?([\d\.]+)([,\}\]])/g, "$1\"$2\"$3")
 }
 
 export class Explorer implements ErgoNetwork {
@@ -153,10 +157,11 @@ export class Explorer implements ErgoNetwork {
 
   async getFullTokenInfo(tokenId: TokenId): Promise<FullAssetInfo | undefined> {
     return this.backend
-      .request<FullAssetInfo>({
-        url: `/api/v1/tokens/${tokenId}`
+      .request<FullAssetInfoJson>({
+        url: `/api/v1/tokens/${tokenId}`,
+        transformResponse: data => JSON.parse(jsonBigNumStringify(data))
       })
-      .then(res => (res.status != 404 ? res.data : undefined))
+      .then(res => res.status != 404 ? fullAssetInfoFromJson(res.data) : undefined)
   }
 
   async getTokens(paging: Paging): Promise<[FullAssetInfo[], number]> {

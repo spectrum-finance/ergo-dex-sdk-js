@@ -22,6 +22,15 @@ export type ErgoBox = {
   spentTransactionId?: string
 }
 
+export type FullAssetInfoJson = {
+  readonly id: TokenId
+  readonly boxId: BoxId
+  readonly emissionAmount: string
+  readonly name?: string
+  readonly decimals?: number
+  readonly description?: string
+}
+
 export type FullAssetInfo = {
   readonly id: TokenId
   readonly boxId: BoxId
@@ -29,6 +38,13 @@ export type FullAssetInfo = {
   readonly name?: string
   readonly decimals?: number
   readonly description?: string
+}
+
+export function fullAssetInfoFromJson(json: FullAssetInfoJson) {
+  return {
+    ...json,
+    emissionAmount: BigInt(json.emissionAmount)
+  }
 }
 
 export type BoxAsset = {
