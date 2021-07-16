@@ -14,21 +14,50 @@ export * as address from "./entities/address"
 export {AssetAmount} from "./entities/assetAmount"
 export {AssetInfo} from "./entities/assetInfo"
 export {ContextExtension} from "./entities/contextExtension"
-export {ErgoBoxCandidate} from "./entities/ergoBoxCandidate"
+export {
+  ErgoBoxCandidate,
+  ErgoBoxCandidateProxy,
+  ergoBoxCandidateToProxy,
+  ergoBoxCandidateFromProxy
+} from "./entities/ergoBoxCandidate"
 export {ErgoTree} from "./entities/ergoTree"
 export * as ergoTree from "./entities/ergoTree"
 export {ErgoTreeTemplate} from "./entities/ergoTreeTemplate"
 export * as ergoTreeTemplate from "./entities/ergoTreeTemplate"
-export {ErgoBox, ErgoBoxProxy, ergoBoxToProxy, ergoBoxFromProxy, fixErgoBox, fixFullOutput} from "./entities/ergoBox"
+export {
+  ErgoBox,
+  ErgoBoxProxy,
+  ergoBoxToProxy,
+  ergoBoxFromProxy,
+  fixErgoBox,
+  fixFullOutput
+} from "./entities/ergoBox"
 export {ErgoTx, ErgoTxProxy, ergoTxToProxy, ergoTxFromProxy, fixErgoTx} from "./entities/ergoTx"
-export {UnsignedErgoTx} from "./entities/unsignedErgoTx"
+export {
+  UnsignedErgoTx,
+  UnsignedErgoTxProxy,
+  unsignedErgoTxToProxy,
+  unsignedErgoTxFromProxy
+} from "./entities/unsignedErgoTx"
 export {Input} from "./entities/input"
+export {
+  UnsignedInput,
+  UnsignedInputProxy,
+  unsignedInputToProxy,
+  unsignedInputFromProxy
+} from "./entities/unsignedInput"
 export {ProverResult} from "./entities/proverResult"
 export {PublicKey} from "./entities/publicKey"
 export * as publicKey from "./entities/publicKey"
 export {Registers} from "./entities/registers"
 export * as registers from "./entities/registers"
 export {SigmaType} from "./entities/sigmaType"
-export {TokenAmount, TokenAmountProxy, tokenAmountToProxy, tokenAmountFromProxy, fixTokenAmount} from "./entities/tokenAmount"
+export {
+  TokenAmount,
+  TokenAmountProxy,
+  tokenAmountToProxy,
+  tokenAmountFromProxy,
+  fixTokenAmount
+} from "./entities/tokenAmount"
 export {Constant, Int32Constant, Int64Constant, ByteaConstant} from "./entities/constant"
 export {TxId, BoxId, TokenId, HexString, NErg, Base58String} from "./types"
