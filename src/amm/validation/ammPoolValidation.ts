@@ -2,11 +2,11 @@ import {ErgoNetwork} from "../../services/ergoNetwork"
 import {AmmPool} from "../entities/ammPool"
 import {BurnLP, EmissionLP} from "../constants"
 
-export type OK = "OK"
+export const OK = "OK"
+
+export type OK = typeof OK
 export type ValidationErrors = string[]
 export type ValidationResult = OK | ValidationErrors
-
-export const OK = "OK"
 
 export interface AmmPoolValidation {
   /** Check whether the given pool is properly initialized.

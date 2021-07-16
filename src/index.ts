@@ -4,9 +4,22 @@ export {Refunds, AMMOrderRefunds} from "./amm/interpreters/refunds"
 export {Tokens, NetworkTokens} from "./repositories/tokens"
 export {Pools, NetworkPools} from "./amm/repositories/pools"
 export {Operations, NetworkOperations} from "./amm/repositories/operations"
+export {
+  OperationSummary,
+  SwapSummary,
+  RedeemSummary,
+  DepositSummary,
+  PoolSetupSummary
+} from "./amm/models/operationSummary"
 export {AmmOpsParser, DefaultAmmOpsParser} from "./amm/parsers/ammOpsParser"
 export {Swaps} from "./amm/repositories/swaps"
-export {AmmPoolValidation, NetworkAmmPoolValidation} from "./amm/validation/ammPoolValidation"
+export {
+  AmmPoolValidation,
+  NetworkAmmPoolValidation,
+  ValidationResult,
+  ValidationErrors,
+  OK
+} from "./amm/validation/ammPoolValidation"
 export {AmmPool} from "./amm/entities/ammPool"
 export {Swap} from "./amm/entities/swap"
 export {PoolSetupParams} from "./amm/models/poolSetupParams"
