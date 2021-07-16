@@ -7,11 +7,10 @@ import {
   BoxAssetsSearch,
   BoxSearch,
   FullAssetInfo,
-  fullAssetInfoFromJson,
-  FullAssetInfoJson
 } from "../network/models"
 import {Sorting} from "../network/sorting"
 import {FullOutput} from "../ergo/entities/ergoBox"
+import JSONBigInt from "json-bigint"
 
 export interface ErgoNetwork {
   /** Get confirmed transaction by id.
@@ -63,9 +62,7 @@ export interface ErgoNetwork {
   getNetworkContext(): Promise<NetworkContext>
 }
 
-function jsonBigNumStringify(json: string): string {
-  return json.replace(/([\[:])?([\d\.]+)([,\}\]])/g, '$1"$2"$3')
-}
+const JSONBI = JSONBigInt({ useNativeBigInt: true})
 
 export class Explorer implements ErgoNetwork {
   readonly backend: AxiosInstance
@@ -81,7 +78,8 @@ export class Explorer implements ErgoNetwork {
   async getTx(id: TxId): Promise<ErgoTx | undefined> {
     return this.backend
       .request<ErgoTx>({
-        url: `/api/v1/transactions/${id}`
+        url: `/api/v1/transactions/${id}`,
+        transformResponse: data => JSONBI.parse(data)
       })
       .then(res => res.data)
   }
@@ -89,7 +87,8 @@ export class Explorer implements ErgoNetwork {
   async getOutput(id: BoxId): Promise<FullOutput | undefined> {
     return this.backend
       .request<FullOutput>({
-        url: `/api/v1/boxes/${id}`
+        url: `/api/v1/boxes/${id}`,
+        transformResponse: data => JSONBI.parse(data)
       })
       .then(res => res.data)
   }
@@ -98,7 +97,8 @@ export class Explorer implements ErgoNetwork {
     return this.backend
       .request<network.Items<ErgoTx>>({
         url: `/api/v1/addresses/${address}/transactions`,
-        params: paging
+        params: paging,
+        transformResponse: data => JSONBI.parse(data)
       })
       .then(res => [res.data.items, res.data.total])
   }
@@ -107,7 +107,8 @@ export class Explorer implements ErgoNetwork {
     return this.backend
       .request<network.Items<network.ErgoBox>>({
         url: `/api/v1/boxes/unspent/byErgoTree/${tree}`,
-        params: paging
+        params: paging,
+        transformResponse: data => JSONBI.parse(data)
       })
       .then(res => [res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)), res.data.total])
   }
@@ -116,7 +117,8 @@ export class Explorer implements ErgoNetwork {
     return this.backend
       .request<network.Items<network.ErgoBox>>({
         url: `/api/v1/boxes/unspent/byErgoTreeTemplateHash/${templateHash}`,
-        params: paging
+        params: paging,
+        transformResponse: data => JSONBI.parse(data)
       })
       .then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
   }
@@ -125,7 +127,8 @@ export class Explorer implements ErgoNetwork {
     return this.backend
       .request<network.Items<network.ErgoBox>>({
         url: `/api/v1/boxes/unspent/byTokenId/${tokenId}`,
-        params: {...paging, sortDirection: sort || "asc"}
+        params: {...paging, sortDirection: sort || "asc"},
+        transformResponse: data => JSONBI.parse(data)
       })
       .then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
   }
@@ -134,7 +137,8 @@ export class Explorer implements ErgoNetwork {
     return this.backend
       .request<network.Items<network.ErgoBox>>({
         url: `/api/v1/boxes/unspent/byErgoTreeTemplateHash/${hash}`,
-        params: paging
+        params: paging,
+        transformResponse: data => JSONBI.parse(data)
       })
       .then(res => [res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)), res.data.total])
   }
@@ -145,7 +149,8 @@ export class Explorer implements ErgoNetwork {
         url: `/api/v1/boxes/unspent/search`,
         params: paging,
         method: "POST",
-        data: req
+        data: req,
+        transformResponse: data => JSONBI.parse(data)
       })
       .then(res => [res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)), res.data.total])
   }
@@ -156,25 +161,27 @@ export class Explorer implements ErgoNetwork {
         url: `/api/v1/boxes/unspent/search/union`,
         params: paging,
         method: "POST",
-        data: req
+        data: req,
+        transformResponse: data => JSONBI.parse(data)
       })
       .then(res => [res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)), res.data.total])
   }
 
   async getFullTokenInfo(tokenId: TokenId): Promise<FullAssetInfo | undefined> {
     return this.backend
-      .request<FullAssetInfoJson>({
+      .request<FullAssetInfo>({
         url: `/api/v1/tokens/${tokenId}`,
-        transformResponse: data => JSON.parse(jsonBigNumStringify(data))
+        transformResponse: data => JSONBI.parse(data)
       })
-      .then(res => (res.status != 404 ? fullAssetInfoFromJson(res.data) : undefined))
+      .then(res => (res.status != 404 ? res.data : undefined))
   }
 
   async getTokens(paging: Paging): Promise<[FullAssetInfo[], number]> {
     return this.backend
       .request<network.Items<FullAssetInfo>>({
         url: `/api/v1/tokens`,
-        params: paging
+        params: paging,
+        transformResponse: data => JSONBI.parse(data)
       })
       .then(res => [res.data.items, res.data.total])
   }

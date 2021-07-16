@@ -46,13 +46,15 @@
         "bs58": "^4.0.1",
         "crypto-js": "^4.0.0",
         "ergo-lib-wasm-browser": "0.14.0-alpha-9c8aa7b",
-        "ergo-lib-wasm-nodejs": "0.14.0-alpha-9c8aa7b"
+        "ergo-lib-wasm-nodejs": "0.14.0-alpha-9c8aa7b",
+        "json-bigint": "^1.0.0"
     },
     "devDependencies": {
         "@ava/typescript": "^1.1.1",
         "@istanbuljs/nyc-config-typescript": "^1.0.1",
         "@types/bs58": "^4.0.1",
         "@types/crypto-js": "^4.0.1",
+        "@types/json-bigint": "^1.0.1",
         "@types/node": "^15.6.1",
         "@typescript-eslint/eslint-plugin": "^4.0.1",
         "@typescript-eslint/parser": "^4.0.1",
