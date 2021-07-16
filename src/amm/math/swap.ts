@@ -1,5 +1,5 @@
 import {AssetAmount} from "../../ergo"
-import { MaxDecimals } from "../constants"
+import {MaxDecimals} from "../constants"
 
 export type SwapExtremums = {
   minDexFee: number
