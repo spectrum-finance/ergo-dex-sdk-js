@@ -6,3 +6,5 @@ export const EmissionLP = 9223372036854775807n
 export const BurnLP = 1000n
 
 export const SigmaPropConstPrefixHex = "08cd"
+
+export const MaxDecimals = 17

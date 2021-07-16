@@ -1,4 +1,5 @@
 import {AssetAmount} from "../../ergo"
+import { MaxDecimals } from "../constants"
 
 export type SwapExtremums = {
   minDexFee: number
@@ -13,7 +14,7 @@ export type SwapExtremums = {
  *  @return DEX fee per token, swap extremums
  */
 export function swapVars(minDexFee: number, nitro: number, minOutput: AssetAmount): [number, SwapExtremums] {
-  const dexFeePerToken = minDexFee / Number(minOutput.amount)
+  const dexFeePerToken = Number((minDexFee / Number(minOutput.amount)).toFixed(MaxDecimals))
   const maxDexFee = Math.floor(minDexFee * nitro)
   const maxOutput = minOutput.withAmount(BigInt(Math.floor(maxDexFee / dexFeePerToken)))
   return [dexFeePerToken, {minDexFee, maxDexFee, minOutput, maxOutput}]
