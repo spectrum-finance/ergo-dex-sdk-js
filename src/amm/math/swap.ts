@@ -14,7 +14,7 @@ export type SwapExtremums = {
  */
 export function swapVars(minDexFee: number, nitro: number, minOutput: AssetAmount): [number, SwapExtremums] {
   const dexFeePerToken = minDexFee / Number(minOutput.amount)
-  const maxDexFee = minDexFee * nitro
-  const maxOutput = minOutput.withAmount(BigInt(maxDexFee / dexFeePerToken))
+  const maxDexFee = Math.floor(minDexFee * nitro)
+  const maxOutput = minOutput.withAmount(BigInt(Math.floor(maxDexFee / dexFeePerToken)))
   return [dexFeePerToken, {minDexFee, maxDexFee, minOutput, maxOutput}]
 }
