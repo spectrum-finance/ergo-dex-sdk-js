@@ -1,7 +1,7 @@
 import {ErgoNetwork} from "../../services/ergoNetwork"
 import {AmmPool} from "../entities/ammPool"
 import {BurnLP, EmissionLP} from "../constants"
-import { sqrt } from "../../utils/sqrt"
+import {sqrt} from "../../utils/sqrt"
 
 export const OK = "OK"
 

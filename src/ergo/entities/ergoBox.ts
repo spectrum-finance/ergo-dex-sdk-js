@@ -1,4 +1,4 @@
-import { TokenAmount, tokenAmountFromProxy, TokenAmountProxy, tokenAmountToProxy } from "./tokenAmount"
+import {TokenAmount, tokenAmountFromProxy, TokenAmountProxy, tokenAmountToProxy} from "./tokenAmount"
 import {BoxId, TxId} from "../types"
 import {ErgoTree} from "./ergoTree"
 import {Registers} from "./registers"
@@ -29,7 +29,7 @@ export function ergoBoxFromProxy(proxy: ErgoBoxProxy): ErgoBox {
   return {
     ...proxy,
     value: BigInt(proxy.value),
-    assets: proxy.assets.map((t) => tokenAmountFromProxy(t))
+    assets: proxy.assets.map(t => tokenAmountFromProxy(t))
   }
 }
 
@@ -37,7 +37,7 @@ export function ergoBoxToProxy(box: ErgoBox): ErgoBoxProxy {
   return {
     ...box,
     value: box.value.toString(),
-    assets: box.assets.map((t) => tokenAmountToProxy(t))
+    assets: box.assets.map(t => tokenAmountToProxy(t))
   }
 }
 

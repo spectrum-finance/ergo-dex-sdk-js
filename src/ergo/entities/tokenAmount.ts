@@ -15,7 +15,7 @@ export type TokenAmountProxy = {
 }
 
 export function tokenAmountFromProxy(proxy: TokenAmountProxy): TokenAmount {
-  return { ...proxy, amount: BigInt(proxy.amount) }
+  return {...proxy, amount: BigInt(proxy.amount)}
 }
 
 export function tokenAmountToProxy(tokenAmount: TokenAmount): TokenAmountProxy {

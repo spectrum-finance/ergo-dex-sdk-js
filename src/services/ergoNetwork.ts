@@ -3,11 +3,7 @@ import {ErgoTree, ErgoBox, HexString, TokenId, TxId, ErgoTx, BoxId, Address} fro
 import * as network from "../network/models"
 import {Paging} from "../network/paging"
 import {NetworkContext} from "../ergo/entities/networkContext"
-import {
-  BoxAssetsSearch,
-  BoxSearch,
-  FullAssetInfo,
-} from "../network/models"
+import {BoxAssetsSearch, BoxSearch, FullAssetInfo} from "../network/models"
 import {Sorting} from "../network/sorting"
 import {FullOutput} from "../ergo/entities/ergoBox"
 import JSONBigInt from "json-bigint"
@@ -62,7 +58,7 @@ export interface ErgoNetwork {
   getNetworkContext(): Promise<NetworkContext>
 }
 
-const JSONBI = JSONBigInt({ useNativeBigInt: true})
+const JSONBI = JSONBigInt({useNativeBigInt: true})
 
 export class Explorer implements ErgoNetwork {
   readonly backend: AxiosInstance

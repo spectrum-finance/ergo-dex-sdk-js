@@ -1,5 +1,5 @@
 import {Input} from "./input"
-import { ErgoBox, ergoBoxFromProxy, ErgoBoxProxy, ergoBoxToProxy } from "./ergoBox"
+import {ErgoBox, ergoBoxFromProxy, ErgoBoxProxy, ergoBoxToProxy} from "./ergoBox"
 import {DataInput} from "./dataInput"
 import {TxId} from "../types"
 
@@ -22,13 +22,13 @@ export type ErgoTxProxy = {
 export function ergoTxFromProxy(proxy: ErgoTxProxy): ErgoTx {
   return {
     ...proxy,
-    outputs: proxy.outputs.map((o) => ergoBoxFromProxy(o))
+    outputs: proxy.outputs.map(o => ergoBoxFromProxy(o))
   }
 }
 
 export function ergoTxToProxy(tx: ErgoTx): ErgoTxProxy {
   return {
     ...tx,
-    outputs: tx.outputs.map((o) => ergoBoxToProxy(o))
+    outputs: tx.outputs.map(o => ergoBoxToProxy(o))
   }
 }
