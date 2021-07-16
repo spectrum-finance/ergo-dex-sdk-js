@@ -1,6 +1,7 @@
 import {ErgoNetwork} from "../../services/ergoNetwork"
 import {AmmPool} from "../entities/ammPool"
 import {BurnLP, EmissionLP} from "../constants"
+import { sqrt } from "../../utils/sqrt"
 
 export const OK = "OK"
 
@@ -36,9 +37,9 @@ export class NetworkAmmPoolValidation implements AmmPoolValidation {
       const poolTokensNum = 4
       if (genesisBox.assets.length === poolTokensNum) {
         const [nft0, lp0, x0, y0] = genesisBox.assets
-        if (nft0.amount !== 1 || nft0.tokenId !== pool.id) errorsAcc.push(`Wrong genesis NFT.`)
-        const allowedLP = Math.sqrt(x0.amount * y0.amount)
-        const takenLP = Number(requiredEmission) - lp0.amount
+        if (nft0.amount !== 1n || nft0.tokenId !== pool.id) errorsAcc.push(`Wrong genesis NFT.`)
+        const allowedLP = sqrt(x0.amount * y0.amount)
+        const takenLP = requiredEmission - lp0.amount
         if (allowedLP < takenLP)
           errorsAcc.push(`Illegal pool initialization. Allowed LP: ${allowedLP}, taken: ${takenLP}`)
       } else {

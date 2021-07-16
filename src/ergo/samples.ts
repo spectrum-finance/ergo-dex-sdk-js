@@ -5,7 +5,7 @@ export const boxes = [
     index: 1,
     ergoTree: "0008cd02f5b53e746b83c3a12b0ee1ecfd14be592347a9a1834caa04f8341e5559d2ffce",
     creationHeight: 499608,
-    value: 59999220000,
+    value: 59999220000n,
     assets: [],
     additionalRegisters: {}
   },
@@ -15,7 +15,7 @@ export const boxes = [
     index: 0,
     ergoTree: "0008cd02197ba8bb74366ed0c0e94c3b8d30297361c6aad7238b7d57cf900f9b97c436c1",
     creationHeight: 499608,
-    value: 39999480000,
+    value: 39999480000n,
     assets: [],
     additionalRegisters: {}
   }
@@ -28,10 +28,10 @@ export const boxesWithAssets = [
     index: 0,
     ergoTree: "0008cd02197ba8bb74366ed0c0e94c3b8d30297361c6aad7238b7d57cf900f9b97c436c1",
     creationHeight: 499608,
-    value: 39999480000,
+    value: 39999480000n,
     assets: [
-      {tokenId: "x", amount: 100},
-      {tokenId: "y", amount: 500}
+      {tokenId: "x", amount: 100n},
+      {tokenId: "y", amount: 500n}
     ],
     additionalRegisters: {}
   },
@@ -41,8 +41,8 @@ export const boxesWithAssets = [
     index: 1,
     ergoTree: "0008cd02f5b53e746b83c3a12b0ee1ecfd14be592347a9a1834caa04f8341e5559d2ffce",
     creationHeight: 499608,
-    value: 59999220000,
-    assets: [{tokenId: "x", amount: 50}],
+    value: 59999220000n,
+    assets: [{tokenId: "x", amount: 50n}],
     additionalRegisters: {}
   }
 ]

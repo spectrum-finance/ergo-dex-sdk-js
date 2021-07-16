@@ -1,6 +1,7 @@
 import test from "ava"
 import {AmmPool} from "./ammPool"
 import {AssetAmount} from "../../ergo"
+import { sqrt } from "../../utils/sqrt"
 
 export class PoolEmulation {
   constructor(public readonly pool: AmmPool) {}
@@ -25,7 +26,7 @@ export class PoolEmulation {
   }
 }
 
-const pool = initPool(1000000, 5000000)
+const pool = initPool(1000000n, 5000000n)
 const emul0 = new PoolEmulation(pool)
 
 test("Pool math (depositAmount, X -> Y)", t => {
@@ -76,8 +77,8 @@ test("Pool math (outputAmount, Y -> X, 5% slippage)", t => {
   t.true(emul0.swapPossible(inputY, outputX))
 })
 
-function initPool(inX: number, inY: number): AmmPool {
-  const share = BigInt(Math.sqrt(inX * inY).toFixed(0))
+function initPool(inX: bigint, inY: bigint): AmmPool {
+  const share = sqrt(inX * inY)
   const lp = new AssetAmount({id: "lp"}, share)
   const x = new AssetAmount({id: "x"}, BigInt(inX))
   const y = new AssetAmount({id: "y"}, BigInt(inY))

@@ -10,7 +10,7 @@ export type UnsignedInput = {
   readonly index: number
   readonly ergoTree: ErgoTree
   readonly creationHeight: number
-  readonly value: number
+  readonly value: bigint
   readonly assets: TokenAmount[]
   readonly additionalRegisters: Registers
   readonly extension: ContextExtension

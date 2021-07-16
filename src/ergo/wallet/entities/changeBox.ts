@@ -1,6 +1,6 @@
 import {TokenAmount} from "../../entities/tokenAmount"
 
 export type ChangeBox = {
-  readonly value: number
+  readonly value: bigint
   readonly assets: TokenAmount[]
 }

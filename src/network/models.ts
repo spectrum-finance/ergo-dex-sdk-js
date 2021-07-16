@@ -58,7 +58,7 @@ export type BoxAssetsSearch = {
 export function toWalletToken(asset: BoxAsset): wallet.TokenAmount {
   return {
     tokenId: asset.tokenId,
-    amount: Number(asset.amount),
+    amount: asset.amount,
     name: asset.name,
     decimals: asset.decimals
   }
@@ -76,7 +76,7 @@ export function toWalletErgoBox(box: ErgoBox): wallet.ErgoBox {
     index: box.index,
     ergoTree: box.ergoTree,
     creationHeight: box.creationHeight,
-    value: Number(box.value),
+    value: box.value,
     assets: box.assets.map((a, _ix, _xs) => toWalletToken(a)),
     additionalRegisters: registers
   }
