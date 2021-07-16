@@ -1,5 +1,5 @@
 import {Input} from "./input"
-import {ErgoBox, ergoBoxFromProxy, ErgoBoxProxy, ergoBoxToProxy} from "./ergoBox"
+import {ErgoBox, ergoBoxFromProxy, ErgoBoxProxy, ergoBoxToProxy, fixErgoBox} from "./ergoBox"
 import {DataInput} from "./dataInput"
 import {TxId} from "../types"
 
@@ -9,6 +9,10 @@ export type ErgoTx = {
   readonly dataInputs: DataInput[]
   readonly outputs: ErgoBox[]
   readonly size: number
+}
+
+export function fixErgoTx(tx: ErgoTx): ErgoTx {
+  return {...tx, outputs: tx.outputs.map(o => fixErgoBox(o))}
 }
 
 export type ErgoTxProxy = {

@@ -22,6 +22,10 @@ export type ErgoBox = {
   spentTransactionId?: string
 }
 
+export function fixErgoBox(box: ErgoBox): ErgoBox {
+  return {...box, value: BigInt(box.value), assets: box.assets.map(a => fixBoxAsset(a))}
+}
+
 export type FullAssetInfo = {
   readonly id: TokenId
   readonly boxId: BoxId
@@ -37,6 +41,10 @@ export type BoxAsset = {
   amount: bigint
   name?: string
   decimals?: number
+}
+
+export function fixBoxAsset(asset: BoxAsset): BoxAsset {
+  return {...asset, amount: BigInt(asset.amount)}
 }
 
 export type BoxRegister = {

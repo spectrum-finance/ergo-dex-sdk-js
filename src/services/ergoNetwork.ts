@@ -3,10 +3,11 @@ import {ErgoTree, ErgoBox, HexString, TokenId, TxId, ErgoTx, BoxId, Address} fro
 import * as network from "../network/models"
 import {Paging} from "../network/paging"
 import {NetworkContext} from "../ergo/entities/networkContext"
-import {BoxAssetsSearch, BoxSearch, FullAssetInfo} from "../network/models"
+import {BoxAssetsSearch, BoxSearch, fixErgoBox, FullAssetInfo} from "../network/models"
 import {Sorting} from "../network/sorting"
-import {FullOutput} from "../ergo/entities/ergoBox"
+import {fixFullOutput, FullOutput} from "../ergo/entities/ergoBox"
 import JSONBigInt from "json-bigint"
+import {fixErgoTx} from "../ergo/entities/ergoTx"
 
 export interface ErgoNetwork {
   /** Get confirmed transaction by id.
@@ -77,7 +78,7 @@ export class Explorer implements ErgoNetwork {
         url: `/api/v1/transactions/${id}`,
         transformResponse: data => JSONBI.parse(data)
       })
-      .then(res => res.data)
+      .then(res => fixErgoTx(res.data))
   }
 
   async getOutput(id: BoxId): Promise<FullOutput | undefined> {
@@ -86,7 +87,7 @@ export class Explorer implements ErgoNetwork {
         url: `/api/v1/boxes/${id}`,
         transformResponse: data => JSONBI.parse(data)
       })
-      .then(res => res.data)
+      .then(res => fixFullOutput(res.data))
   }
 
   async getTxsByAddress(address: Address, paging: Paging): Promise<[ErgoTx[], number]> {
@@ -96,7 +97,7 @@ export class Explorer implements ErgoNetwork {
         params: paging,
         transformResponse: data => JSONBI.parse(data)
       })
-      .then(res => [res.data.items, res.data.total])
+      .then(res => [res.data.items.map(tx => fixErgoTx(tx)), res.data.total])
   }
 
   async getUnspentByErgoTree(tree: ErgoTree, paging: Paging): Promise<[ErgoBox[], number]> {
@@ -106,7 +107,10 @@ export class Explorer implements ErgoNetwork {
         params: paging,
         transformResponse: data => JSONBI.parse(data)
       })
-      .then(res => [res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)), res.data.total])
+      .then(res => [
+        res.data.items.map(b => fixErgoBox(b)).map(b => network.toWalletErgoBox(b)),
+        res.data.total
+      ])
   }
 
   async getUnspentByErgoTreeTemplate(templateHash: HexString, paging: Paging): Promise<ErgoBox[]> {
@@ -116,7 +120,7 @@ export class Explorer implements ErgoNetwork {
         params: paging,
         transformResponse: data => JSONBI.parse(data)
       })
-      .then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
+      .then(res => res.data.items.map(b => fixErgoBox(b)).map(b => network.toWalletErgoBox(b)))
   }
 
   async getUnspentByTokenId(tokenId: TokenId, paging: Paging, sort?: Sorting): Promise<ErgoBox[]> {
@@ -126,7 +130,7 @@ export class Explorer implements ErgoNetwork {
         params: {...paging, sortDirection: sort || "asc"},
         transformResponse: data => JSONBI.parse(data)
       })
-      .then(res => res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)))
+      .then(res => res.data.items.map(b => fixErgoBox(b)).map(b => network.toWalletErgoBox(b)))
   }
 
   async getUnspentByErgoTreeTemplateHash(hash: HexString, paging: Paging): Promise<[ErgoBox[], number]> {
@@ -136,7 +140,10 @@ export class Explorer implements ErgoNetwork {
         params: paging,
         transformResponse: data => JSONBI.parse(data)
       })
-      .then(res => [res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)), res.data.total])
+      .then(res => [
+        res.data.items.map(b => fixErgoBox(b)).map(b => network.toWalletErgoBox(b)),
+        res.data.total
+      ])
   }
 
   async searchUnspentBoxes(req: BoxSearch, paging: Paging): Promise<[ErgoBox[], number]> {
@@ -148,7 +155,10 @@ export class Explorer implements ErgoNetwork {
         data: req,
         transformResponse: data => JSONBI.parse(data)
       })
-      .then(res => [res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)), res.data.total])
+      .then(res => [
+        res.data.items.map(b => fixErgoBox(b)).map(b => network.toWalletErgoBox(b)),
+        res.data.total
+      ])
   }
 
   async searchUnspentBoxesByTokensUnion(req: BoxAssetsSearch, paging: Paging): Promise<[ErgoBox[], number]> {
@@ -160,7 +170,10 @@ export class Explorer implements ErgoNetwork {
         data: req,
         transformResponse: data => JSONBI.parse(data)
       })
-      .then(res => [res.data.items.map((b, _ix, _xs) => network.toWalletErgoBox(b)), res.data.total])
+      .then(res => [
+        res.data.items.map(b => fixErgoBox(b)).map(b => network.toWalletErgoBox(b)),
+        res.data.total
+      ])
   }
 
   async getFullTokenInfo(tokenId: TokenId): Promise<FullAssetInfo | undefined> {

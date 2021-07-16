@@ -1,4 +1,10 @@
-import {TokenAmount, tokenAmountFromProxy, TokenAmountProxy, tokenAmountToProxy} from "./tokenAmount"
+import {
+  fixTokenAmount,
+  TokenAmount,
+  tokenAmountFromProxy,
+  TokenAmountProxy,
+  tokenAmountToProxy
+} from "./tokenAmount"
 import {BoxId, TxId} from "../types"
 import {ErgoTree} from "./ergoTree"
 import {Registers} from "./registers"
@@ -12,6 +18,10 @@ export type ErgoBox = {
   readonly value: bigint
   readonly assets: TokenAmount[]
   readonly additionalRegisters: Registers
+}
+
+export function fixErgoBox(box: ErgoBox): ErgoBox {
+  return {...box, value: BigInt(box.value), assets: box.assets.map(a => fixTokenAmount(a))}
 }
 
 export type ErgoBoxProxy = {
@@ -42,3 +52,7 @@ export function ergoBoxToProxy(box: ErgoBox): ErgoBoxProxy {
 }
 
 export type FullOutput = ErgoBox & {readonly spentTransactionId: TxId | undefined}
+
+export function fixFullOutput(box: FullOutput): FullOutput {
+  return {...box, value: BigInt(box.value), assets: box.assets.map(a => fixTokenAmount(a))}
+}

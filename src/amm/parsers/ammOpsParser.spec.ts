@@ -3,15 +3,19 @@ import {RustModule} from "../../utils/rustLoader"
 import {DefaultAmmOpsParser} from "./ammOpsParser"
 import {AssetAmount, BoxId, ErgoTx} from "../../ergo"
 import {OperationSummary} from "../models/operationSummary"
+import JSONBigInt from "json-bigint"
+import {fixErgoTx} from "../../ergo/entities/ergoTx"
 
 test.before(async () => {
   await RustModule.load(true)
 })
 
+const JSONBI = JSONBigInt({useNativeBigInt: true})
+
 const parser = new DefaultAmmOpsParser()
 
 test("parse swap", t => {
-  const tx: ErgoTx = JSON.parse(txJson)
+  const tx: ErgoTx = fixErgoTx(JSONBI.parse(txJson))
   const parsed = parser.parse(tx)
   const expected: [OperationSummary, BoxId] = [
     {
