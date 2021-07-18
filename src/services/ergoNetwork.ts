@@ -7,7 +7,7 @@ import {BoxAssetsSearch, BoxSearch, fixErgoBox, FullAssetInfo} from "../network/
 import {Sorting} from "../network/sorting"
 import {fixFullOutput, FullOutput} from "../ergo/entities/ergoBox"
 import JSONBigInt from "json-bigint"
-import {fixErgoTx} from "../ergo/entities/ergoTx"
+import {fixErgoTx} from "../ergo"
 
 export interface ErgoNetwork {
   /** Get confirmed transaction by id.

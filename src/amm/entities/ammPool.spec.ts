@@ -53,6 +53,14 @@ test("Pool math (outputAmount, X -> Y, 0% slippage)", t => {
   t.true(emul0.swapPossible(inputX, outputY))
 })
 
+test("Pool math (inputAmount, X -> Y, 0% slippage)", t => {
+  const outputX = new AssetAmount({id: "x"}, 1000n)
+  const inputY = pool.inputAmount(outputX, 0)
+  const expectedY = new AssetAmount({id: "y"}, 5021n)
+  t.deepEqual(inputY, expectedY)
+  t.true(emul0.swapPossible(inputY!, outputX))
+})
+
 test("Pool math (outputAmount, Y -> X, 0% slippage)", t => {
   const inputY = new AssetAmount({id: "y"}, 1000n)
   const outputX = pool.outputAmount(inputY, 0)
