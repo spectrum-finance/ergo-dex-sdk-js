@@ -9,6 +9,7 @@ export const Executed: OpStatus = "executed"
 export const Settled: OpStatus = "settled"
 
 export type AmmOperationType = "swap" | "deposit" | "redeem" | "setup"
+export type RefundableAmmOperationType = Exclude<AmmOperationType, "setup">
 
 export const Swap: AmmOperationType = "swap"
 export const Deposit: AmmOperationType = "deposit"

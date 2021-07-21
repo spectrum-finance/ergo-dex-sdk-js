@@ -1,13 +1,13 @@
-import {BoxId, HexString, Registers, SigmaType, TokenId} from "../ergo"
+import {BoxId, ErgoBox, HexString, Input, Registers, SigmaType, TokenId, TxId} from "../ergo"
 import {parseRegisterId} from "../ergo/entities/registers"
-import * as wallet from "../ergo"
+import {DataInput} from "../ergo/entities/dataInput"
 
 export type Items<T> = {
   items: T[]
   total: number
 }
 
-export type ErgoBox = {
+export type ExplorerErgoBox = {
   boxId: string
   transactionId: string
   blockId: string
@@ -22,8 +22,45 @@ export type ErgoBox = {
   spentTransactionId?: string
 }
 
-export function fixErgoBox(box: ErgoBox): ErgoBox {
-  return {...box, value: BigInt(box.value), assets: box.assets.map(a => fixBoxAsset(a))}
+export type AugErgoBox = Omit<
+  ExplorerErgoBox,
+  "additionalRegisters" | "blockId" | "settlementHeight" | "address"
+> &
+  Pick<ErgoBox, "additionalRegisters">
+
+export type ExplorerInput = Input & ExplorerErgoBox
+
+export type AugInput = Input & AugErgoBox
+
+export function explorerToInput(ein: ExplorerInput): AugInput {
+  return {
+    ...explorerToErgoBox(ein),
+    spendingProof: ein.spendingProof
+  }
+}
+
+export type ExplorerErgoTx = {
+  readonly id: TxId
+  readonly inputs: ExplorerInput[]
+  readonly dataInputs: DataInput[]
+  readonly outputs: ExplorerErgoBox[]
+  readonly size: number
+}
+
+export type AugErgoTx = {
+  readonly id: TxId
+  readonly inputs: AugInput[]
+  readonly dataInputs: DataInput[]
+  readonly outputs: AugErgoBox[]
+  readonly size: number
+}
+
+export function explorerToErgoTx(etx: ExplorerErgoTx): AugErgoTx {
+  return {
+    ...etx,
+    inputs: etx.inputs.map(i => explorerToInput(i)),
+    outputs: etx.outputs.map(o => explorerToErgoBox(o))
+  }
 }
 
 export type FullAssetInfo = {
@@ -35,16 +72,16 @@ export type FullAssetInfo = {
   readonly description?: string
 }
 
+export function fixAssetInfo(asset: FullAssetInfo): FullAssetInfo {
+  return {...asset, emissionAmount: BigInt(asset.emissionAmount)}
+}
+
 export type BoxAsset = {
   tokenId: string
   index: number
   amount: bigint
   name?: string
   decimals?: number
-}
-
-export function fixBoxAsset(asset: BoxAsset): BoxAsset {
-  return {...asset, amount: BigInt(asset.amount)}
 }
 
 export type BoxRegister = {
@@ -63,18 +100,9 @@ export type BoxAssetsSearch = {
   assets: TokenId[]
 }
 
-export function toWalletToken(asset: BoxAsset): wallet.TokenAmount {
-  return {
-    tokenId: asset.tokenId,
-    amount: asset.amount,
-    name: asset.name,
-    decimals: asset.decimals
-  }
-}
-
-export function toWalletErgoBox(box: ErgoBox): wallet.ErgoBox {
+export function explorerToErgoBox(box: ExplorerErgoBox): AugErgoBox {
   let registers: Registers = {}
-  Object.entries(box.additionalRegisters).forEach(([k, v], _ix, _xs) => {
+  Object.entries(box.additionalRegisters).forEach(([k, v]) => {
     let regId = parseRegisterId(k)
     if (regId) registers[regId] = v.serializedValue
   })
@@ -84,8 +112,9 @@ export function toWalletErgoBox(box: ErgoBox): wallet.ErgoBox {
     index: box.index,
     ergoTree: box.ergoTree,
     creationHeight: box.creationHeight,
-    value: box.value,
-    assets: box.assets.map((a, _ix, _xs) => toWalletToken(a)),
-    additionalRegisters: registers
+    value: BigInt(box.value), // fix possibly `number` fields to `bigint` only.
+    assets: box.assets.map(a => ({...a, amount: BigInt(a.amount)})),
+    additionalRegisters: registers,
+    spentTransactionId: box.spentTransactionId
   }
 }

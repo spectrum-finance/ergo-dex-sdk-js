@@ -1,23 +1,21 @@
 import test from "ava"
 import {RustModule} from "../../utils/rustLoader"
 import {DefaultAmmOpsParser} from "./ammOpsParser"
-import {AssetAmount, BoxId, ErgoTx} from "../../ergo"
+import {AssetAmount, ErgoTx} from "../../ergo"
 import {OperationSummary} from "../models/operationSummary"
-import JSONBigInt from "json-bigint"
-import {fixErgoTx} from "../../ergo/entities/ergoTx"
+import {explorerToErgoTx} from "../../network/models"
+import {JSONBI} from "../../utils/json"
 
 test.before(async () => {
   await RustModule.load(true)
 })
 
-const JSONBI = JSONBigInt({useNativeBigInt: true})
-
 const parser = new DefaultAmmOpsParser()
 
 test("parse swap", t => {
-  const tx: ErgoTx = fixErgoTx(JSONBI.parse(txJson))
-  const parsed = parser.parse(tx)
-  const expected: [OperationSummary, BoxId] = [
+  const tx: ErgoTx = explorerToErgoTx(JSONBI.parse(txJson))
+  const parsed = tx.outputs.map(o => parser.parse(o)).filter(x => x)
+  const expected: OperationSummary[] = [
     {
       from: new AssetAmount(
         {
@@ -30,9 +28,9 @@ test("parse swap", t => {
       poolId: "51ee3a4e30d0e763d3f1759be12239b1ff163068a5eae699d2e667f9effb348d",
       to: {
         id: "f302c6c042ada3566df8e67069f8ac76d10ce15889535141593c168f3c59e776"
-      }
-    },
-    "bdb07b0c71ba1977df53c5287a5c30550e6ec9cd657ce3c4c7d6fda55d15d9d9"
+      },
+      type: "swap"
+    }
   ]
   t.deepEqual(parsed, expected)
 })

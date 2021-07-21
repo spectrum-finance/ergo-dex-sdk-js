@@ -5,7 +5,7 @@ import * as templates from "../contracts/templates"
 import {treeTemplateFromErgoTree} from "../../ergo/entities/ergoTreeTemplate"
 import {TxRequest} from "../../ergo/wallet/entities/txRequest"
 import {EmptyRegisters} from "../../ergo/entities/registers"
-import { ergoTreeFromAddress } from "../../ergo/entities/ergoTree"
+import {ergoTreeFromAddress} from "../../ergo/entities/ergoTree"
 
 export interface Refunds {
   /** Redeem assets from a proxy order box.
@@ -13,7 +13,7 @@ export interface Refunds {
   refund(params: RefundParams, ctx: TransactionContext): Promise<ErgoTx>
 }
 
-export class AMMOrderRefunds implements Refunds {
+export class AmmOrderRefunds implements Refunds {
   constructor(
     public readonly network: ErgoNetwork,
     public readonly prover: Prover,
@@ -22,8 +22,12 @@ export class AMMOrderRefunds implements Refunds {
 
   async refund(params: RefundParams, ctx: TransactionContext): Promise<ErgoTx> {
     const tx = await this.network.getTx(params.txId)
-    const allowedTemplates = [templates.T2tDepositTemplate, templates.T2tRedeemTemplate, templates.T2tSwapTemplate]
-    const outputToRefund = tx?.outputs.find((o) => {
+    const allowedTemplates = [
+      templates.T2tDepositTemplate,
+      templates.T2tRedeemTemplate,
+      templates.T2tSwapTemplate
+    ]
+    const outputToRefund = tx?.outputs.find(o => {
       const template = treeTemplateFromErgoTree(o.ergoTree)
       return allowedTemplates.includes(template)
     })

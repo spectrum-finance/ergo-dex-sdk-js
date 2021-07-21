@@ -1,9 +1,9 @@
 export {T2tPoolOps} from "./amm/interpreters/t2tPoolOps"
 export {PoolOps} from "./amm/interpreters/poolOps"
-export {Refunds, AMMOrderRefunds} from "./amm/interpreters/refunds"
+export {Refunds, AmmOrderRefunds} from "./amm/interpreters/refunds"
 export {Tokens, NetworkTokens} from "./repositories/tokens"
 export {Pools, NetworkPools} from "./amm/repositories/pools"
-export {Operations, NetworkOperations} from "./amm/repositories/operations"
+export {Operations, NetworkOperations, AmmDexOperation} from "./amm/repositories/operations"
 export {
   OperationSummary,
   SwapSummary,
@@ -11,6 +11,7 @@ export {
   DepositSummary,
   PoolSetupSummary
 } from "./amm/models/operationSummary"
+export {RefundOperation, RefundStatus} from "./amm/models/refundOperation"
 export {AmmOpsParser, DefaultAmmOpsParser} from "./amm/parsers/ammOpsParser"
 export {Swaps} from "./amm/repositories/swaps"
 export {

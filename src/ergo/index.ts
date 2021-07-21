@@ -24,15 +24,8 @@ export {ErgoTree} from "./entities/ergoTree"
 export * as ergoTree from "./entities/ergoTree"
 export {ErgoTreeTemplate} from "./entities/ergoTreeTemplate"
 export * as ergoTreeTemplate from "./entities/ergoTreeTemplate"
-export {
-  ErgoBox,
-  ErgoBoxProxy,
-  ergoBoxToProxy,
-  ergoBoxFromProxy,
-  fixErgoBox,
-  fixFullOutput
-} from "./entities/ergoBox"
-export {ErgoTx, ErgoTxProxy, ergoTxToProxy, ergoTxFromProxy, fixErgoTx} from "./entities/ergoTx"
+export {ErgoBox, ErgoBoxProxy, ergoBoxToProxy, ergoBoxFromProxy} from "./entities/ergoBox"
+export {ErgoTx, ErgoTxProxy, ergoTxToProxy, ergoTxFromProxy} from "./entities/ergoTx"
 export {
   UnsignedErgoTx,
   UnsignedErgoTxProxy,
@@ -52,12 +45,6 @@ export * as publicKey from "./entities/publicKey"
 export {Registers} from "./entities/registers"
 export * as registers from "./entities/registers"
 export {SigmaType} from "./entities/sigmaType"
-export {
-  TokenAmount,
-  TokenAmountProxy,
-  tokenAmountToProxy,
-  tokenAmountFromProxy,
-  fixTokenAmount
-} from "./entities/tokenAmount"
+export {TokenAmount, TokenAmountProxy, tokenAmountToProxy, tokenAmountFromProxy} from "./entities/tokenAmount"
 export {Constant, Int32Constant, Int64Constant, ByteaConstant} from "./entities/constant"
 export {TxId, BoxId, TokenId, HexString, NErg, Base58String} from "./types"
