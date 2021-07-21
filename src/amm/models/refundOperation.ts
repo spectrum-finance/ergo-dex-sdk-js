@@ -8,6 +8,7 @@ export const Executed: RefundStatus = "executed"
 export const Settled: RefundStatus = "settled"
 
 export type RefundOperation = {
+  tag: "refund",
   txId: TxId
   status: RefundStatus
   operation: RefundableAmmOperationType

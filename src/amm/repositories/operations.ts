@@ -86,11 +86,11 @@ export class NetworkOperations implements Operations {
       else if (output) status = Submitted
       else status = Pending
 
-      op = {txId: tx.id, boxId, status, summary}
+      op = {tag: "order", txId: tx.id, boxId, status, summary}
     } else {
       const opInput = tx.inputs.map(i => this.parser.parse(i)).find(x => x)
       if (opInput && opInput.type !== "setup") {
-        op = {txId: tx.id, status: "executed", operation: opInput.type}
+        op = {tag: "refund", txId: tx.id, status: "executed", operation: opInput.type}
       }
     }
     return op
