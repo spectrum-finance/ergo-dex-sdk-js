@@ -6,6 +6,8 @@ import {treeTemplateFromErgoTree} from "../../ergo/entities/ergoTreeTemplate"
 import {TxRequest} from "../../ergo/wallet/entities/txRequest"
 import {EmptyRegisters} from "../../ergo/entities/registers"
 import {ergoTreeFromAddress} from "../../ergo/entities/ergoTree"
+import {EmptyProverResult} from "../../ergo/entities/proverResult"
+import {computeBoxId} from "../../ergo/ergoWasmInterop"
 
 export interface Refunds {
   /** Redeem assets from a proxy order box.
@@ -47,7 +49,16 @@ export class AmmOrderRefunds implements Refunds {
         changeAddress: ctx.changeAddress,
         feeNErgs: ctx.feeNErgs
       }
-      return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
+      const tx = this.txAsm.assemble(txr, ctx.network)
+      const refundInput = {boxId: outputToRefund.boxId, spendingProof: EmptyProverResult}
+      const signedInputs = await Promise.all(
+        tx.inputs.slice(1).map(async (_i, ix) => await this.prover.signInput(tx, ix))
+      )
+      const outputs = tx.outputs.map((c, i) => {
+        const boxId = computeBoxId(c, tx.id, i)
+        return {boxId, transactionId: tx.id, index: i, ...c}
+      })
+      return {...tx, inputs: [refundInput, ...signedInputs], outputs, size: 0}
     } else {
       return Promise.reject(`No AMM orders found in the given Tx{id=${params.txId}`)
     }

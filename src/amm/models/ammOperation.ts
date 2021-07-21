@@ -17,7 +17,7 @@ export const Redeem: AmmOperationType = "redeem"
 export const Setup: AmmOperationType = "setup"
 
 export type AmmOperation = {
-  tag: "order",
+  tag: "order"
   txId: TxId
   boxId: BoxId
   status: OpStatus
