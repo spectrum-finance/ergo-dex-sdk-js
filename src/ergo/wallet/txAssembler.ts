@@ -4,8 +4,6 @@ import {NetworkContext} from "../entities/networkContext"
 import {EmptyRegisters} from "../entities/registers"
 import {MinerAddressMainnet, MinerAddressTestnet} from "../constants"
 import {ergoTreeFromAddress} from "../entities/ergoTree"
-import {JSONBI} from "../../utils/json"
-import {RustModule} from "../../utils/rustLoader"
 
 export interface TxAssembler {
   assemble(req: TxRequest, ctx: NetworkContext): UnsignedErgoTx
@@ -39,15 +37,10 @@ export class DefaultTxAssembler implements TxAssembler {
         ]
       : []
     let outputs = [...req.outputs, ...changeBox, ...feeBox]
-    const preTx = {
+    return {
       inputs: req.inputs.unsignedInputs,
       dataInputs: req.dataInputs,
       outputs: outputs
-    }
-    const txId = RustModule.SigmaRust.UnsignedTransaction.from_json(JSONBI.stringify(preTx)).id().to_str()
-    return {
-      id: txId,
-      ...preTx
     }
   }
 }

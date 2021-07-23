@@ -11,17 +11,14 @@ import {
   ErgoBoxCandidateProxy,
   ergoBoxCandidateToProxy
 } from "./ergoBoxCandidate"
-import {TxId} from "../types"
 
 export type UnsignedErgoTx = {
-  readonly id: TxId
   readonly inputs: UnsignedInput[]
   readonly dataInputs: DataInput[]
   readonly outputs: ErgoBoxCandidate[]
 }
 
 export type UnsignedErgoTxProxy = {
-  readonly id: TxId
   readonly inputs: UnsignedInputProxy[]
   readonly dataInputs: DataInput[]
   readonly outputs: ErgoBoxCandidateProxy[]
