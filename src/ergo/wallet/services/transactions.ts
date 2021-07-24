@@ -15,7 +15,7 @@ export class DefaultTransactions implements Transactions {
   async simple(recipient: Address, ctx: TransactionContext): Promise<ErgoTx> {
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const out = {
-      value: outputGranted.nErgs - Number(ctx.feeNErgs),
+      value: outputGranted.nErgs - ctx.feeNErgs,
       ergoTree: ergoTreeFromAddress(recipient),
       creationHeight: ctx.network.height,
       assets: outputGranted.assets,

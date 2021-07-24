@@ -26,9 +26,7 @@ export function serializeConstant(c: Constant): HexString {
 }
 
 export function deserializeConstant(r: HexString): Constant | undefined {
-  console.log(r)
-  let constant = RustModule.SigmaRust.Constant.decode_from_base16(r)
-  console.log(constant)
+  const constant = RustModule.SigmaRust.Constant.decode_from_base16(r)
   try {
     return new Int32Constant(constant.to_i32())
   } catch (e) {

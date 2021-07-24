@@ -28,7 +28,7 @@ export class DefaultTxAssembler implements TxAssembler {
     let feeBox = req.feeNErgs
       ? [
           {
-            value: Number(req.feeNErgs),
+            value: req.feeNErgs,
             ergoTree: ergoTreeFromAddress(this.mainnet ? MinerAddressMainnet : MinerAddressTestnet),
             creationHeight: ctx.height,
             assets: [],

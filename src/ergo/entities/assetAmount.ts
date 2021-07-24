@@ -11,7 +11,7 @@ export class AssetAmount {
         name: token.name,
         decimals: token.decimals
       },
-      BigInt(token.amount)
+      token.amount
     )
   }
 

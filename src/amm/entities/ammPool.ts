@@ -12,8 +12,8 @@ export class AmmPool {
     public readonly poolFeeNum: number
   ) {}
 
-  private feeDenom: bigint = 1000n
-  private feeNum: bigint = BigInt(this.poolFeeNum)
+  readonly feeDenom: bigint = 1000n
+  readonly feeNum: bigint = BigInt(this.poolFeeNum)
 
   get supplyLP(): bigint {
     return EmissionLP - this.lp.amount
@@ -75,18 +75,18 @@ export class AmmPool {
   /** @return Input amount of one token for a given output amount of the other
    */
   inputAmount(output: AssetAmount, maxSlippage?: number): AssetAmount | undefined {
-    let slippage = BigInt(maxSlippage || 0)
+    let slippage = BigInt((maxSlippage || 0) * 100)
     let minimalOutput = this.outputAmount(output).amount
     if (output.asset.id === this.assetX.id && minimalOutput > 0) {
       return this.y.withAmount(
         (this.y.amount * output.amount * this.feeDenom) /
-          ((this.x.amount + (this.x.amount * slippage) / 100n - output.amount) * this.feeNum) +
+          ((this.x.amount + (this.x.amount * slippage) / (100n * 100n) - output.amount) * this.feeNum) +
           1n
       )
     } else if (output.asset.id === this.assetY.id && minimalOutput > 0) {
       return this.x.withAmount(
         (this.x.amount * output.amount * this.feeDenom) /
-          ((this.y.amount + (this.y.amount * slippage) / 100n - output.amount) * this.feeNum) +
+          ((this.y.amount + (this.y.amount * slippage) / (100n * 100n) - output.amount) * this.feeNum) +
           1n
       )
     } else {
@@ -94,23 +94,23 @@ export class AmmPool {
     }
   }
 
-  /** @return Output amount of one token for a given input amount of the other
+  /** @param input - swap input
+   *  @param maxSlippage - max price slippage allowed % (0 - 100)
+   *  @return Output amount of one token for a given input amount of the other
    */
   outputAmount(input: AssetAmount, maxSlippage?: number): AssetAmount {
     let slippage = BigInt((maxSlippage || 0) * 100)
     if (input.asset.id === this.assetX.id)
       return this.y.withAmount(
-        ((this.y.amount * input.amount * this.feeNum) /
-          (this.x.amount + ((this.x.amount * slippage) / 100n) * 100n)) *
-          this.feeDenom +
-          input.amount * this.feeNum
+        (this.y.amount * input.amount * this.feeNum) /
+          ((this.x.amount + (this.x.amount * slippage) / (100n * 100n)) * this.feeDenom +
+            input.amount * this.feeNum)
       )
     else
       return this.x.withAmount(
-        ((this.x.amount * input.amount * this.feeNum) /
-          (this.y.amount + ((this.y.amount * slippage) / 100n) * 100n)) *
-          this.feeDenom +
-          input.amount * this.feeNum
+        (this.x.amount * input.amount * this.feeNum) /
+          ((this.y.amount + (this.y.amount * slippage) / (100n * 100n)) * this.feeDenom +
+            input.amount * this.feeNum)
       )
   }
 }
