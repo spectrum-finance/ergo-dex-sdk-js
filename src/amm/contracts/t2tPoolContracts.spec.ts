@@ -6,19 +6,15 @@ test.before(async () => {
   await RustModule.load(true)
 })
 
-test("Contract instantiation: Pool", async t => {
-  t.notThrows(() => T2tPoolContracts.pool())
-})
-
 test("Contract template hash calculation: Pool", async t => {
   t.deepEqual(
     T2tPoolContracts.poolTemplateHash(),
-    "4b0c28331ab1ca67fc9f3de3e6661d6a80a1da38a9dae86dfa7eac1b9fc699a1"
+    "3c09deff3b5f49329149d18e02aab675ef6957bf6559a5c7dba817fee883fb3e"
   )
 })
 
 test("decimals to fractional", async t => {
-  const numbers = [0.1, 0.01, 1.1, 1.01, 11.01, 1.0, 1]
+  const numbers = [0.1, 0.01, 1.1, 1.01, 11.01, 1.0, 1, 121212.12121212122]
   for (const i of numbers) {
     const [n, d] = decimalToFractional(i)
     t.deepEqual(i, Number(n) / Number(d))

@@ -1,9 +1,10 @@
 import {AssetAmount} from "../../ergo"
-import {MaxDecimals} from "../constants"
+import {decimalToFractional} from "../contracts/t2tPoolContracts"
+import {I64Max} from "../constants"
 
 export type SwapExtremums = {
-  minDexFee: number
-  maxDexFee: number
+  minDexFee: bigint
+  maxDexFee: bigint
   minOutput: AssetAmount
   maxOutput: AssetAmount
 }
@@ -13,9 +14,23 @@ export type SwapExtremums = {
  *  @param minOutput - minimal output expected
  *  @return DEX fee per token, swap extremums
  */
-export function swapVars(minDexFee: number, nitro: number, minOutput: AssetAmount): [number, SwapExtremums] {
-  const dexFeePerToken = Number((minDexFee / Number(minOutput.amount)).toFixed(MaxDecimals))
-  const maxDexFee = Math.floor(minDexFee * nitro)
+export function swapVars(minDexFee: bigint, nitro: number, minOutput: AssetAmount): [number, SwapExtremums] {
+  let dexFeePerToken = Number(minDexFee) / Number(minOutput.amount)
+  while (true) {
+    const [n, d] = decimalToFractional(dexFeePerToken)
+    if (n <= I64Max && d <= I64Max) break
+    else {
+      const feeStr = String(dexFeePerToken)
+      const idx = feeStr.indexOf(".")
+      const decimalsNum = feeStr.slice(idx + 1).length
+      dexFeePerToken = Number(dexFeePerToken.toFixed(decimalsNum - 1))
+    }
+  }
+  const adjustedMinDexFee = Math.floor(dexFeePerToken * Number(minOutput.amount))
+  const maxDexFee = Math.floor(Number(minDexFee) * nitro)
   const maxOutput = minOutput.withAmount(BigInt(Math.floor(maxDexFee / dexFeePerToken)))
-  return [dexFeePerToken, {minDexFee, maxDexFee, minOutput, maxOutput}]
+  return [
+    dexFeePerToken,
+    {minDexFee: BigInt(adjustedMinDexFee), maxDexFee: BigInt(maxDexFee), minOutput, maxOutput}
+  ]
 }

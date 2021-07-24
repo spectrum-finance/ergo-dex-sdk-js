@@ -7,4 +7,4 @@ export const BurnLP = 1000n
 
 export const SigmaPropConstPrefixHex = "08cd"
 
-export const MaxDecimals = 17
+export const I64Max = 9223372036854775807n

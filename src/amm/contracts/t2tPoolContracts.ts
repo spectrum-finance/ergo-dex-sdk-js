@@ -3,7 +3,7 @@ import * as templates from "./templates"
 import {TokenId, ErgoTree, PublicKey, HexString} from "../../ergo"
 import {fromHex, toHex} from "../../utils/hex"
 import {RustModule} from "../../utils/rustLoader"
-import {MaxDecimals, SigmaPropConstPrefixHex} from "../constants"
+import {SigmaPropConstPrefixHex} from "../constants"
 import * as crypto from "crypto-js"
 
 export class T2tPoolContracts {
@@ -74,7 +74,7 @@ export class T2tPoolContracts {
 }
 
 export function decimalToFractional(n: number): [bigint, bigint] {
-  const [whole, decimals = ""] = n.toFixed(MaxDecimals).split(".")
+  const [whole, decimals = ""] = String(n).split(".")
   const numDecimals = decimals.length
   const denominator = BigInt(Math.pow(10, numDecimals))
   const numerator = BigInt(whole) * denominator + BigInt(decimals)
