@@ -51,20 +51,20 @@ export class T2tPoolContracts {
       .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
       .with_constant(3, RustModule.SigmaRust.Constant.from_byte_array(fromHex(quoteId)))
       .with_constant(7, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
-      .with_constant(8, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
-      .with_constant(10, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
+      .with_constant(7, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
+      .with_constant(9, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
       .with_constant(
-        13,
+        12,
         RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(minQuoteAmount.toString()))
       )
       .with_constant(
-        14,
+        13,
         RustModule.SigmaRust.Constant.from_i64(
           RustModule.SigmaRust.I64.from_str(dexFeePerTokenNum.toString())
         )
       )
       .with_constant(
-        15,
+        14,
         RustModule.SigmaRust.Constant.from_i64(
           RustModule.SigmaRust.I64.from_str(dexFeePerTokenDenom.toString())
         )
