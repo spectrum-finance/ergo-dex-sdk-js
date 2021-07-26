@@ -43,7 +43,7 @@ export class DefaultAmmOpsParser implements AmmOpsParser {
 
   private parseSwap(bx: ErgoBox): OperationSummary | undefined {
     const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
-    const poolIdC = tree.get_constant(10)?.to_byte_array()
+    const poolIdC = tree.get_constant(9)?.to_byte_array()
     const poolId = poolIdC ? toHex(poolIdC) : undefined
     const outIdC = tree.get_constant(3)?.to_byte_array()
     const outId = outIdC ? toHex(outIdC) : undefined
