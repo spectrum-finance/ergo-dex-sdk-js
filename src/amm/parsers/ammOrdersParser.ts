@@ -1,24 +1,23 @@
 import {AssetAmount, ErgoBox} from "../../ergo"
-import {T2tDepositTemplate, T2tPoolTemplate, T2tRedeemTemplate, T2tSwapTemplate} from "../contracts/templates"
+import {T2tDepositTemplate, T2tRedeemTemplate, T2tSwapTemplate} from "../contracts/templates"
 import {treeTemplateFromErgoTree} from "../../ergo/entities/ergoTreeTemplate"
-import {OperationSummary} from "../models/operationSummary"
-import {Swap, Deposit, Redeem, Setup, AmmOperationType} from "../models/ammOperation"
+import {AmmOrderType} from "../models/operations"
 import {RustModule} from "../../utils/rustLoader"
 import {toHex} from "../../utils/hex"
+import {AmmOrderInfo} from "../models/ammOrderInfo"
 
-export interface AmmOpsParser {
-  parse(box: ErgoBox): OperationSummary | undefined
+export interface AmmOrdersParser {
+  parse(box: ErgoBox): AmmOrderInfo | undefined
 }
 
-const AmmTemplates: [string, AmmOperationType][] = [
-  [T2tPoolTemplate, Setup],
-  [T2tSwapTemplate, Swap],
-  [T2tDepositTemplate, Deposit],
-  [T2tRedeemTemplate, Redeem]
+const AmmTemplates: [string, AmmOrderType][] = [
+  [T2tSwapTemplate, "swap"],
+  [T2tDepositTemplate, "deposit"],
+  [T2tRedeemTemplate, "redeem"]
 ]
 
-export class DefaultAmmOpsParser implements AmmOpsParser {
-  parse(bx: ErgoBox): OperationSummary | undefined {
+export class DefaultAmmOrdersParser implements AmmOrdersParser {
+  parse(bx: ErgoBox): AmmOrderInfo | undefined {
     const template = treeTemplateFromErgoTree(bx.ergoTree)
     const match = AmmTemplates.find(x => {
       const [sample] = x
@@ -33,15 +32,13 @@ export class DefaultAmmOpsParser implements AmmOpsParser {
           return this.parseDeposit(bx)
         case "redeem":
           return this.parseRedeem(bx)
-        case "setup":
-          return this.parseSetup(bx)
       }
     } else {
       return undefined
     }
   }
 
-  private parseSwap(bx: ErgoBox): OperationSummary | undefined {
+  private parseSwap(bx: ErgoBox): AmmOrderInfo | undefined {
     const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
     const poolIdC = tree.get_constant(12)?.to_byte_array()
     const poolId = poolIdC ? toHex(poolIdC) : undefined
@@ -53,7 +50,7 @@ export class DefaultAmmOpsParser implements AmmOpsParser {
       : undefined
   }
 
-  private parseDeposit(bx: ErgoBox): OperationSummary | undefined {
+  private parseDeposit(bx: ErgoBox): AmmOrderInfo | undefined {
     const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
     const poolIdC = tree.get_constant(8)?.to_byte_array()
     const poolId = poolIdC ? toHex(poolIdC) : undefined
@@ -64,20 +61,11 @@ export class DefaultAmmOpsParser implements AmmOpsParser {
       : undefined
   }
 
-  private parseRedeem(bx: ErgoBox): OperationSummary | undefined {
+  private parseRedeem(bx: ErgoBox): AmmOrderInfo | undefined {
     const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
     const poolIdC = tree.get_constant(10)?.to_byte_array()
     const poolId = poolIdC ? toHex(poolIdC) : undefined
     const inputLP = bx.assets[0]
     return poolId && inputLP ? {inLP: AssetAmount.fromToken(inputLP), poolId, type: "redeem"} : undefined
-  }
-
-  private parseSetup(bx: ErgoBox): OperationSummary | undefined {
-    const poolId = bx.assets[0]?.tokenId
-    const inputX = bx.assets[2]
-    const inputY = bx.assets[3]
-    return poolId && inputX && inputY
-      ? {initX: AssetAmount.fromToken(inputX), initY: AssetAmount.fromToken(inputY), poolId, type: "setup"}
-      : undefined
   }
 }
