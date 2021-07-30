@@ -3,7 +3,7 @@ export {PoolOps} from "./amm/interpreters/poolOps"
 export {Refunds, AmmOrderRefunds} from "./amm/interpreters/refunds"
 export {Tokens, NetworkTokens} from "./repositories/tokens"
 export {Pools, NetworkPools} from "./amm/repositories/pools"
-export {History, NetworkHistory} from "./amm/repositories/history"
+export {History, NetworkHistory, makeHistory} from "./amm/repositories/history"
 export {AmmOrderInfo} from "./amm/models/ammOrderInfo"
 export {AmmPoolInfo} from "./amm/models/ammPoolInfo"
 export {

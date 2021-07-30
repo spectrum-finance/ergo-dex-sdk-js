@@ -21,10 +21,10 @@ test("BoxSelector: Insufficient inputs", async t =>
 test("BoxSelector: Select ERGs", async t =>
   t.deepEqual(
     DefaultBoxSelector.select(boxes, {
-      nErgs: 39999500000n,
+      nErgs: 59999520000n,
       assets: []
     }),
-    BoxSelection.make(boxes, {value: 59999200000n, assets: []})
+    BoxSelection.make(boxes, {value: 39999180000n, assets: []})
   ))
 
 test("BoxSelector: Select ERGs and assets (+ irrelevant tokens in inputs)", async t =>
@@ -40,4 +40,13 @@ test("BoxSelector: Select ERGs and assets (+ irrelevant tokens in inputs)", asyn
         {tokenId: "y", amount: 500n}
       ]
     })
+  ))
+
+test("BoxSelector: Select ERGs (Use minimal boxes)", async t =>
+  t.deepEqual(
+    DefaultBoxSelector.select(boxes, {
+      nErgs: 1000000n,
+      assets: []
+    }),
+    BoxSelection.make([boxes[0]], {value: 59998220000n, assets: []})
   ))

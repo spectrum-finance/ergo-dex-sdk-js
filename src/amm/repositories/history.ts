@@ -1,10 +1,10 @@
 import {Address, AssetAmount} from "../../ergo"
 import {AmmDexOperation} from "../models/operations"
 import {ErgoNetwork} from "../../services/ergoNetwork"
-import {AmmOrdersParser} from "../parsers/ammOrdersParser"
+import {AmmOrdersParser, DefaultAmmOrdersParser} from "../parsers/ammOrdersParser"
 import {AugErgoBox, AugErgoTx} from "../../network/models"
 import {AmmOrderInfo} from "../models/ammOrderInfo"
-import {AmmPoolsInfoParser} from "../parsers/ammPoolsInfoParser"
+import {AmmPoolsInfoParser, DefaultAmmPoolsInfoParser} from "../parsers/ammPoolsInfoParser"
 
 export interface History {
   /** Get operations by a given address.
@@ -18,6 +18,12 @@ export interface History {
    *  @displayLatest - number of latest operations to display
    */
   getAllByAddresses(addresses: Address[], displayLatest: number): Promise<AmmDexOperation[]>
+}
+
+export function makeHistory(network: ErgoNetwork): History {
+  const ordersParser = new DefaultAmmOrdersParser()
+  const poolParser = new DefaultAmmPoolsInfoParser()
+  return new NetworkHistory(network, ordersParser, poolParser)
 }
 
 export class NetworkHistory implements History {
