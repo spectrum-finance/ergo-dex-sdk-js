@@ -48,9 +48,9 @@ class DefaultBoxSelectorImpl implements BoxSelector {
       const changeRequired = !(deltaNErgs === 0n && deltaAssets.every(a => a.amount === 0n))
       const change = changeRequired
         ? {
-          value: deltaNErgs,
-          assets: deltaAssets.filter(a => a.amount > 0)
-        }
+            value: deltaNErgs,
+            assets: deltaAssets.filter(a => a.amount > 0)
+          }
         : undefined
       return BoxSelection.make(sufficientInputs, change) || new InsufficientInputs("Inputs are empty")
     }
