@@ -49,21 +49,21 @@ export class T2tPoolContracts {
     const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(dexFeePerToken)
     return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tSwapSample)
       .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
-      .with_constant(4, RustModule.SigmaRust.Constant.from_byte_array(fromHex(quoteId)))
-      .with_constant(7, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
-      .with_constant(12, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
+      .with_constant(6, RustModule.SigmaRust.Constant.from_byte_array(fromHex(quoteId)))
+      .with_constant(9, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
+      .with_constant(14, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
       .with_constant(
-        14,
+        16,
         RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(minQuoteAmount.toString()))
       )
       .with_constant(
-        15,
+        17,
         RustModule.SigmaRust.Constant.from_i64(
           RustModule.SigmaRust.I64.from_str(dexFeePerTokenNum.toString())
         )
       )
       .with_constant(
-        16,
+        18,
         RustModule.SigmaRust.Constant.from_i64(
           RustModule.SigmaRust.I64.from_str(dexFeePerTokenDenom.toString())
         )

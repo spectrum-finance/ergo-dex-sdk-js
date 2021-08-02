@@ -1,4 +1,4 @@
-import {ErgoTx, Prover, TransactionContext, TxAssembler} from "../../ergo"
+import {BoxSelection, ErgoTx, MinTransactionContext, Prover, TxAssembler} from "../../ergo"
 import {RefundParams} from "../../models/refundParams"
 import {ErgoNetwork} from "../../services/ergoNetwork"
 import * as templates from "../contracts/templates"
@@ -10,7 +10,7 @@ import {ergoTreeFromAddress} from "../../ergo/entities/ergoTree"
 export interface Refunds {
   /** Redeem assets from a proxy order box.
    */
-  refund(params: RefundParams, ctx: TransactionContext): Promise<ErgoTx>
+  refund(params: RefundParams, ctx: MinTransactionContext): Promise<ErgoTx>
 }
 
 export class AmmOrderRefunds implements Refunds {
@@ -20,7 +20,7 @@ export class AmmOrderRefunds implements Refunds {
     public readonly txAsm: TxAssembler
   ) {}
 
-  async refund(params: RefundParams, ctx: TransactionContext): Promise<ErgoTx> {
+  async refund(params: RefundParams, ctx: MinTransactionContext): Promise<ErgoTx> {
     const tx = await this.network.getTx(params.txId)
     const allowedTemplates = [
       templates.T2tDepositTemplate,
@@ -32,9 +32,9 @@ export class AmmOrderRefunds implements Refunds {
       return allowedTemplates.includes(template)
     })
     if (outputToRefund) {
-      const inputs = ctx.inputs.addInput(outputToRefund)
+      const inputs = BoxSelection.safe(outputToRefund)
       const refundOut = {
-        value: outputToRefund.value,
+        value: outputToRefund.value - ctx.feeNErgs,
         ergoTree: ergoTreeFromAddress(params.recipientAddress),
         creationHeight: ctx.network.height,
         assets: outputToRefund.assets,
@@ -44,7 +44,7 @@ export class AmmOrderRefunds implements Refunds {
         inputs: inputs,
         dataInputs: [],
         outputs: [refundOut],
-        changeAddress: ctx.changeAddress,
+        changeAddress: params.recipientAddress,
         feeNErgs: ctx.feeNErgs
       }
       return this.prover.sign(this.txAsm.assemble(txr, ctx.network))

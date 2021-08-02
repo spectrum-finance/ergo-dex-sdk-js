@@ -9,3 +9,8 @@ export type TransactionContext = {
   readonly feeNErgs: bigint // miner fee
   readonly network: NetworkContext
 }
+
+export type MinTransactionContext = {
+  readonly feeNErgs: bigint // miner fee
+  readonly network: NetworkContext
+}

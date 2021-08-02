@@ -4,7 +4,7 @@ export {Transactions, DefaultTransactions} from "./wallet/services/transactions"
 export {TxAssembler, DefaultTxAssembler} from "./wallet/txAssembler"
 export {BoxSelector, DefaultBoxSelector} from "./wallet/boxSelector"
 export {BoxSelection} from "./wallet/entities/boxSelection"
-export {TransactionContext} from "./wallet/entities/transactionContext"
+export {TransactionContext, MinTransactionContext} from "./wallet/entities/transactionContext"
 export {ChangeBox} from "./wallet/entities/changeBox"
 export {OverallAmount} from "./wallet/entities/overallAmount"
 
