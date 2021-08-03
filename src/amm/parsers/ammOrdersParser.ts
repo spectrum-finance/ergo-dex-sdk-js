@@ -42,7 +42,7 @@ export class DefaultAmmOrdersParser implements AmmOrdersParser {
     const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
     const poolIdC = tree.get_constant(14)?.to_byte_array()
     const poolId = poolIdC ? toHex(poolIdC) : undefined
-    const outIdC = tree.get_constant(6)?.to_byte_array()
+    const outIdC = tree.get_constant(2)?.to_byte_array()
     const outId = outIdC ? toHex(outIdC) : undefined
     const input = bx.assets[0]
     return poolId && outId
