@@ -52,7 +52,7 @@ export class DefaultAmmOrdersParser implements AmmOrdersParser {
 
   private parseDeposit(bx: ErgoBox): AmmOrderInfo | undefined {
     const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
-    const poolIdC = tree.get_constant(8)?.to_byte_array()
+    const poolIdC = tree.get_constant(9)?.to_byte_array()
     const poolId = poolIdC ? toHex(poolIdC) : undefined
     const inputX = bx.assets[0]
     const inputY = bx.assets[1]
@@ -63,7 +63,7 @@ export class DefaultAmmOrdersParser implements AmmOrdersParser {
 
   private parseRedeem(bx: ErgoBox): AmmOrderInfo | undefined {
     const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
-    const poolIdC = tree.get_constant(10)?.to_byte_array()
+    const poolIdC = tree.get_constant(12)?.to_byte_array()
     const poolId = poolIdC ? toHex(poolIdC) : undefined
     const inputLP = bx.assets[0]
     return poolId && inputLP ? {inLP: AssetAmount.fromToken(inputLP), poolId, type: "redeem"} : undefined
