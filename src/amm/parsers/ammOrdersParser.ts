@@ -63,7 +63,7 @@ export class DefaultAmmOrdersParser implements AmmOrdersParser {
 
   private parseRedeem(bx: ErgoBox): AmmOrderInfo | undefined {
     const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
-    const poolIdC = tree.get_constant(12)?.to_byte_array()
+    const poolIdC = tree.get_constant(13)?.to_byte_array()
     const poolId = poolIdC ? toHex(poolIdC) : undefined
     const inputLP = bx.assets[0]
     return poolId && inputLP ? {inLP: AssetAmount.fromToken(inputLP), poolId, type: "redeem"} : undefined

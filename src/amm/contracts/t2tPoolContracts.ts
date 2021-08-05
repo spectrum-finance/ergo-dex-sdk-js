@@ -30,9 +30,9 @@ export class T2tPoolContracts {
   static redeem(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
     return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tRedeemSample)
       .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
-      .with_constant(12, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
+      .with_constant(13, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
       .with_constant(
-        14,
+        15,
         RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFee.toString()))
       )
       .to_base16_bytes()
