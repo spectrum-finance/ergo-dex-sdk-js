@@ -40,5 +40,6 @@ export {Paging} from "./network/paging"
 export {RefundParams} from "./models/refundParams"
 export type {SigmaRust} from "./utils/rustLoader"
 export {RustModule} from "./utils/rustLoader"
+export {decimalToFractional, evaluate} from "./utils/math"
 
 export * as ergo from "./ergo"

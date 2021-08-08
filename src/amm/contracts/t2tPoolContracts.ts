@@ -1,3 +1,4 @@
+import {decimalToFractional} from "../../utils/math"
 import {PoolId} from "../types"
 import * as templates from "./templates"
 import {TokenId, ErgoTree, PublicKey, HexString} from "../../ergo"
@@ -70,12 +71,4 @@ export class T2tPoolContracts {
       )
       .to_base16_bytes()
   }
-}
-
-export function decimalToFractional(n: number): [bigint, bigint] {
-  const [whole, decimals = ""] = String(n).split(".")
-  const numDecimals = decimals.length
-  const denominator = BigInt(Math.pow(10, numDecimals))
-  const numerator = BigInt(whole) * denominator + BigInt(decimals)
-  return [numerator, denominator]
 }
