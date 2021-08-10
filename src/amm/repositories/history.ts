@@ -35,43 +35,54 @@ export class NetworkHistory implements History {
 
   async getAllByAddress(address: Address, displayLatest: number): Promise<AmmDexOperation[]> {
     const ops: AmmDexOperation[] = []
-    let offset = 0
     let uOffset = 0
     const limit = 100
     while (ops.length < displayLatest) {
+      const [txs, total] = await this.network.getUTxsByAddress(address, {offset: uOffset, limit: 100})
+      for (const tx of txs) {
+        const op = this.parseOp(tx, false, [address])
+        if (op) ops.push(op)
+      }
+      if (uOffset < total) uOffset += limit
+      else break
+    }
+    let offset = 0
+    while (ops.length < displayLatest) {
       const [txs, total] = await this.network.getTxsByAddress(address, {offset, limit: 100})
-      const [uTxs, uTotal] = await this.network.getUTxsByAddress(address, {offset: uOffset, limit: 100})
-      const allTxs = txs.map(tx => [tx, true]).concat(uTxs.map(tx => [tx, false])) as [AugErgoTx, boolean][]
-      for (const [tx, confirmed] of allTxs) {
-        const op = this.parseOp(tx, confirmed, [address])
+      for (const tx of txs) {
+        const op = this.parseOp(tx, true, [address])
         if (op) ops.push(op)
       }
       if (offset < total) offset += limit
-      else if (uOffset < uTotal) uOffset += limit
       else break
     }
     return ops
   }
 
-  async getAllByAddresses(addresses: Address[], limitLatest: number): Promise<AmmDexOperation[]> {
+  async getAllByAddresses(addresses: Address[], displayLatest: number): Promise<AmmDexOperation[]> {
     const ops: AmmDexOperation[] = []
     for (const addr of addresses) {
-      let offset = 0
       let uOffset = 0
       const limit = 100
-      while (ops.length < limitLatest) {
-        const [txs, total] = await this.network.getTxsByAddress(addr, {offset, limit})
-        const [uTxs, uTotal] = await this.network.getUTxsByAddress(addr, {offset: uOffset, limit: 100})
-        const allTxs = txs.map(tx => [tx, true]).concat(uTxs.map(tx => [tx, false])) as [AugErgoTx, boolean][]
-        for (const [tx, confirmed] of allTxs) {
-          const op = this.parseOp(tx, confirmed, addresses)
+      while (ops.length < displayLatest) {
+        const [txs, total] = await this.network.getUTxsByAddress(addr, {offset: uOffset, limit: 100})
+        for (const tx of txs) {
+          const op = this.parseOp(tx, false, addresses)
+          if (op) ops.push(op)
+        }
+        if (uOffset < total) uOffset += limit
+        else break
+      }
+      let offset = 0
+      while (ops.length < displayLatest) {
+        const [txs, total] = await this.network.getTxsByAddress(addr, {offset, limit: 100})
+        for (const tx of txs) {
+          const op = this.parseOp(tx, true, addresses)
           if (op) ops.push(op)
         }
         if (offset < total) offset += limit
-        else if (uOffset < uTotal) uOffset += limit
         else break
       }
-      if (ops.length >= limitLatest) break
     }
     return ops
   }
