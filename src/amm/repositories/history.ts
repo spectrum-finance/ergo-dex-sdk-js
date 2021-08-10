@@ -34,33 +34,41 @@ export class NetworkHistory implements History {
   ) {}
 
   async getAllByAddress(address: Address, displayLatest: number): Promise<AmmDexOperation[]> {
-    let ops: AmmDexOperation[] = []
-    let offset: number = 0
+    const ops: AmmDexOperation[] = []
+    let offset = 0
+    let uOffset = 0
     const limit = 100
     while (ops.length < displayLatest) {
       const [txs, total] = await this.network.getTxsByAddress(address, {offset, limit: 100})
-      for (const tx of txs) {
-        const op = this.parseOp(tx, [address])
+      const [uTxs, uTotal] = await this.network.getUTxsByAddress(address, {offset: uOffset, limit: 100})
+      const allTxs = txs.map(tx => [tx, true]).concat(uTxs.map(tx => [tx, false])) as [AugErgoTx, boolean][]
+      for (const [tx, confirmed] of allTxs) {
+        const op = this.parseOp(tx, confirmed, [address])
         if (op) ops.push(op)
       }
       if (offset < total) offset += limit
+      else if (uOffset < uTotal) uOffset += limit
       else break
     }
     return ops
   }
 
   async getAllByAddresses(addresses: Address[], limitLatest: number): Promise<AmmDexOperation[]> {
-    let ops: AmmDexOperation[] = []
+    const ops: AmmDexOperation[] = []
     for (const addr of addresses) {
-      let offset: number = 0
+      let offset = 0
+      let uOffset = 0
       const limit = 100
       while (ops.length < limitLatest) {
         const [txs, total] = await this.network.getTxsByAddress(addr, {offset, limit})
-        for (const tx of txs) {
-          const op = this.parseOp(tx, addresses)
+        const [uTxs, uTotal] = await this.network.getUTxsByAddress(addr, {offset: uOffset, limit: 100})
+        const allTxs = txs.map(tx => [tx, true]).concat(uTxs.map(tx => [tx, false])) as [AugErgoTx, boolean][]
+        for (const [tx, confirmed] of allTxs) {
+          const op = this.parseOp(tx, confirmed, addresses)
           if (op) ops.push(op)
         }
         if (offset < total) offset += limit
+        else if (uOffset < uTotal) uOffset += limit
         else break
       }
       if (ops.length >= limitLatest) break
@@ -68,7 +76,7 @@ export class NetworkHistory implements History {
     return ops
   }
 
-  private parseOp(tx: AugErgoTx, addresses: Address[]): AmmDexOperation | undefined {
+  private parseOp(tx: AugErgoTx, confirmed: boolean, addresses: Address[]): AmmDexOperation | undefined {
     const outputOrder = tx.outputs
       .map(o => {
         const op = this.ordersParser.parse(o)
@@ -82,7 +90,7 @@ export class NetworkHistory implements History {
           type: "order",
           txId: tx.id,
           boxId: output.boxId,
-          status: "submitted",
+          status: confirmed ? "submitted" : "pending",
           order: summary
         }
     }

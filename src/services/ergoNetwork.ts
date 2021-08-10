@@ -31,6 +31,10 @@ export interface ErgoNetwork {
    */
   getTxsByAddress(address: Address, paging: Paging): Promise<[AugErgoTx[], number]>
 
+  /** Get unconfirmed transactions by address.
+   */
+  getUTxsByAddress(address: Address, paging: Paging): Promise<[AugErgoTx[], number]>
+
   /** Get unspent boxes with a given ErgoTree.
    */
   getUnspentByErgoTree(tree: ErgoTree, paging: Paging): Promise<[AugErgoBox[], number]>
@@ -101,6 +105,16 @@ export class Explorer implements ErgoNetwork {
     return this.backend
       .request<network.Items<ExplorerErgoTx>>({
         url: `/api/v1/addresses/${address}/transactions`,
+        params: paging,
+        transformResponse: data => JSONBI.parse(data)
+      })
+      .then(res => [res.data.items.map(tx => explorerToErgoTx(tx)), res.data.total])
+  }
+
+  async getUTxsByAddress(address: Address, paging: Paging): Promise<[AugErgoTx[], number]> {
+    return this.backend
+      .request<network.Items<ExplorerErgoTx>>({
+        url: `/api/v1/mempool/transactions/byAddress/${address}`,
         params: paging,
         transformResponse: data => JSONBI.parse(data)
       })
