@@ -57,7 +57,7 @@ export class DefaultAmmOrdersParser implements AmmOrdersParser {
     const inputX = bx.assets[0]
     const inputY = bx.assets[1]
     return poolId && inputX && inputY
-      ? {inX: AssetAmount.fromToken(inputX), inY: AssetAmount.fromToken(inputX), poolId, type: "deposit"}
+      ? {inX: AssetAmount.fromToken(inputX), inY: AssetAmount.fromToken(inputY), poolId, type: "deposit"}
       : undefined
   }
 
