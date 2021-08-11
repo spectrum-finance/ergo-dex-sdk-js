@@ -47,6 +47,10 @@ export interface ErgoNetwork {
    */
   getUnspentByTokenId(tokenId: TokenId, paging: Paging, sort?: Sorting): Promise<AugErgoBox[]>
 
+  /** Get boxes containing a token with given id.
+   */
+  getByTokenId(tokenId: TokenId, paging: Paging, sort?: Sorting): Promise<AugErgoBox[]>
+
   /** Get unspent boxes by a given hash of ErgoTree template.
    */
   getUnspentByErgoTreeTemplateHash(hash: HexString, paging: Paging): Promise<[AugErgoBox[], number]>
@@ -145,6 +149,16 @@ export class Explorer implements ErgoNetwork {
     return this.backend
       .request<network.Items<network.ExplorerErgoBox>>({
         url: `/api/v1/boxes/unspent/byTokenId/${tokenId}`,
+        params: {...paging, sortDirection: sort || "asc"},
+        transformResponse: data => JSONBI.parse(data)
+      })
+      .then(res => res.data.items.map(b => network.explorerToErgoBox(b)))
+  }
+
+  async getByTokenId(tokenId: TokenId, paging: Paging, sort?: Sorting): Promise<AugErgoBox[]> {
+    return this.backend
+      .request<network.Items<network.ExplorerErgoBox>>({
+        url: `/api/v1/boxes/byTokenId/${tokenId}`,
         params: {...paging, sortDirection: sort || "asc"},
         transformResponse: data => JSONBI.parse(data)
       })

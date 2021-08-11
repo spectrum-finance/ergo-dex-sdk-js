@@ -60,7 +60,7 @@ export class AmmPool {
     }
   }
 
-  /** @return amount of LP asset proportional to the amounts of assets deposited..
+  /** @return amount of LP asset proportional to the amounts of assets deposited.
    */
   rewardLP(inputX: AssetAmount, inputY: AssetAmount): AssetAmount {
     if (inputX.asset.id === this.x.asset.id && inputY.asset.id === this.y.asset.id) {

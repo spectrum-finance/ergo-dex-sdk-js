@@ -21,7 +21,7 @@ export class NetworkAmmPoolValidation implements AmmPoolValidation {
   async validate(pool: AmmPool): Promise<ValidationResult> {
     const nft = await this.network.getFullTokenInfo(pool.id)
     const lp = await this.network.getFullTokenInfo(pool.lp.asset.id)
-    const poolBoxes = await this.network.getUnspentByTokenId(pool.id, {offset: 0, limit: 1})
+    const poolBoxes = await this.network.getByTokenId(pool.id, {offset: 0, limit: 1})
     const genesisBox = poolBoxes[0]
     const errorsAcc = []
     if (nft && lp && genesisBox) {
