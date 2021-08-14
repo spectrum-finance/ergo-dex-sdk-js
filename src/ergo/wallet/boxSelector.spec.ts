@@ -9,7 +9,7 @@ test.before(async () => {
   await RustModule.load(true)
 })
 
-test("BoxSelector: Insufficient inputs", async t =>
+test("BoxSelector: Insufficient inputs (empty inputs)", async t =>
   t.deepEqual(
     DefaultBoxSelector.select([], {
       nErgs: 100n,
@@ -17,6 +17,17 @@ test("BoxSelector: Insufficient inputs", async t =>
     }),
     new InsufficientInputs("'NErgs' required: 100, given: 0")
   ))
+
+test("BoxSelector: Insufficient inputs", async t => {
+  const total = boxes.map(i => i.value).reduce((x, y) => x + y)
+  t.deepEqual(
+    DefaultBoxSelector.select(boxes, {
+      nErgs: total + 1n,
+      assets: []
+    }),
+    new InsufficientInputs(`'NErgs' required: ${total + 1n}, given: ${total}`)
+  )
+})
 
 test("BoxSelector: Select ERGs", async t =>
   t.deepEqual(
@@ -33,7 +44,7 @@ test("BoxSelector: Select ERGs and assets (+ irrelevant tokens in inputs)", asyn
       nErgs: 39999500000n,
       assets: [{tokenId: "x", amount: 10n}]
     }),
-    BoxSelection.make(boxesWithAssets, {
+    BoxSelection.make(boxesWithAssets.slice(0, -1), {
       value: 59999200000n,
       assets: [
         {tokenId: "x", amount: 140n},
@@ -50,3 +61,13 @@ test("BoxSelector: Select ERGs (Use minimal boxes)", async t =>
     }),
     BoxSelection.make([boxes[0]], {value: 59998220000n, assets: []})
   ))
+
+test("BoxSelector: Select tokens (Use minimal boxes)", async t => {
+  t.deepEqual(
+    DefaultBoxSelector.select(boxesWithAssets, {
+      nErgs: 800000n,
+      assets: [{tokenId: "z", amount: 50n}]
+    }),
+    BoxSelection.make([boxesWithAssets[2]], {value: 200000n, assets: []})
+  )
+})

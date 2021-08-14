@@ -16,7 +16,21 @@ class DefaultBoxSelectorImpl implements BoxSelector {
     const sufficientInputs: ErgoBox[] = []
     let totalNErgs = 0n
     const totalAssets = new Map<TokenId, bigint>()
-    for (const i of inputs) {
+    const targetAssetIds = target.assets.map(a => a.tokenId)
+    const sortedInputs = inputs.slice(0).sort((bx0, bx1) => {
+      let entries0 = 0
+      let entries1 = 0
+      bx0.assets.forEach(a => {
+        if (targetAssetIds.includes(a.tokenId)) entries0++
+      })
+      bx1.assets.forEach(a => {
+        if (targetAssetIds.includes(a.tokenId)) entries1++
+      })
+      if (entries0 > entries1) return -1
+      else if (entries0 < entries1) return 1
+      else return 0
+    })
+    for (const i of sortedInputs) {
       totalNErgs += i.value
       for (const t of i.assets) {
         const acc = totalAssets.get(t.tokenId) || 0n
