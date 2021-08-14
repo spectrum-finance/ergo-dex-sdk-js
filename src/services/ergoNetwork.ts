@@ -31,6 +31,10 @@ export interface ErgoNetwork {
    */
   getTxsByAddress(address: Address, paging: Paging): Promise<[AugErgoTx[], number]>
 
+  /** Get unconfirmed transactions by address.
+   */
+  getUTxsByAddress(address: Address, paging: Paging): Promise<[AugErgoTx[], number]>
+
   /** Get unspent boxes with a given ErgoTree.
    */
   getUnspentByErgoTree(tree: ErgoTree, paging: Paging): Promise<[AugErgoBox[], number]>
@@ -42,6 +46,10 @@ export interface ErgoNetwork {
   /** Get unspent boxes containing a token with given id.
    */
   getUnspentByTokenId(tokenId: TokenId, paging: Paging, sort?: Sorting): Promise<AugErgoBox[]>
+
+  /** Get boxes containing a token with given id.
+   */
+  getByTokenId(tokenId: TokenId, paging: Paging, sort?: Sorting): Promise<AugErgoBox[]>
 
   /** Get unspent boxes by a given hash of ErgoTree template.
    */
@@ -107,6 +115,16 @@ export class Explorer implements ErgoNetwork {
       .then(res => [res.data.items.map(tx => explorerToErgoTx(tx)), res.data.total])
   }
 
+  async getUTxsByAddress(address: Address, paging: Paging): Promise<[AugErgoTx[], number]> {
+    return this.backend
+      .request<network.Items<ExplorerErgoTx>>({
+        url: `/api/v1/mempool/transactions/byAddress/${address}`,
+        params: paging,
+        transformResponse: data => JSONBI.parse(data)
+      })
+      .then(res => [res.data.items.map(tx => explorerToErgoTx(tx)), res.data.total])
+  }
+
   async getUnspentByErgoTree(tree: ErgoTree, paging: Paging): Promise<[AugErgoBox[], number]> {
     return this.backend
       .request<network.Items<network.ExplorerErgoBox>>({
@@ -131,6 +149,16 @@ export class Explorer implements ErgoNetwork {
     return this.backend
       .request<network.Items<network.ExplorerErgoBox>>({
         url: `/api/v1/boxes/unspent/byTokenId/${tokenId}`,
+        params: {...paging, sortDirection: sort || "asc"},
+        transformResponse: data => JSONBI.parse(data)
+      })
+      .then(res => res.data.items.map(b => network.explorerToErgoBox(b)))
+  }
+
+  async getByTokenId(tokenId: TokenId, paging: Paging, sort?: Sorting): Promise<AugErgoBox[]> {
+    return this.backend
+      .request<network.Items<network.ExplorerErgoBox>>({
+        url: `/api/v1/boxes/byTokenId/${tokenId}`,
         params: {...paging, sortDirection: sort || "asc"},
         transformResponse: data => JSONBI.parse(data)
       })

@@ -13,35 +13,60 @@ export interface BoxSelector {
 
 class DefaultBoxSelectorImpl implements BoxSelector {
   select(inputs: ErgoBox[], target: OverallAmount): BoxSelection | InsufficientInputs {
-    let totalNErgs = inputs.map((bx, _ix, _xs) => bx.value).reduce((acc, value, _ix, _xs) => acc + value, 0n)
-    let totalAssets = new Map<TokenId, bigint>()
-    for (let t of inputs.flatMap((bx, _ix, _xs) => bx.assets)) {
-      let acc = totalAssets.get(t.tokenId) || 0n
-      totalAssets.set(t.tokenId, t.amount + acc)
+    const sufficientInputs: ErgoBox[] = []
+    let totalNErgs = 0n
+    const totalAssets = new Map<TokenId, bigint>()
+    const targetAssetIds = target.assets.map(a => a.tokenId)
+    const sortedInputs = inputs.slice(0).sort((bx0, bx1) => {
+      let entries0 = 0
+      let entries1 = 0
+      bx0.assets.forEach(a => {
+        if (targetAssetIds.includes(a.tokenId)) entries0++
+      })
+      bx1.assets.forEach(a => {
+        if (targetAssetIds.includes(a.tokenId)) entries1++
+      })
+      if (entries0 > entries1) return -1
+      else if (entries0 < entries1) return 1
+      else return 0
+    })
+    for (const i of sortedInputs) {
+      totalNErgs += i.value
+      for (const t of i.assets) {
+        const acc = totalAssets.get(t.tokenId) || 0n
+        totalAssets.set(t.tokenId, t.amount + acc)
+      }
+      sufficientInputs.push(i)
+      const sufficientErgs = totalNErgs >= target.nErgs
+      const sufficientAssets = () =>
+        target.assets
+          .map(ta => (totalAssets.get(ta.tokenId) || 0n) >= ta.amount)
+          .reduce((f0, f1) => f0 && f1, true)
+      if (sufficientErgs && sufficientAssets()) break
     }
-    let deltaNErgs = totalNErgs - target.nErgs
-    let deltaAssets: TokenAmount[] = []
-    for (let [id, totalAmt] of totalAssets) {
-      let targetAmt = target.assets.find((a, _i, _xs) => a.tokenId === id)?.amount || 0n
+    const deltaNErgs = totalNErgs - target.nErgs
+    const deltaAssets: TokenAmount[] = []
+    for (const [id, totalAmt] of totalAssets) {
+      const targetAmt = target.assets.find(a => a.tokenId === id)?.amount || 0n
       deltaAssets.push({tokenId: id, amount: totalAmt - targetAmt})
     }
     if (deltaNErgs < 0)
       return new InsufficientInputs(`'NErgs' required: ${target.nErgs}, given: ${totalNErgs}`)
-    else if (!deltaAssets.every((a, _ix, _xs) => a.amount >= 0)) {
-      let failedAsset = deltaAssets.find((a, _ix, _xs) => a.amount < 0)!
-      let assetName = failedAsset.name || failedAsset.tokenId
-      let givenAmount = totalAssets.get(failedAsset.tokenId) || 0n
-      let requiredAmount = givenAmount - failedAsset.amount
+    else if (!deltaAssets.every(a => a.amount >= 0)) {
+      const failedAsset = deltaAssets.find(a => a.amount < 0)!
+      const assetName = failedAsset.name || failedAsset.tokenId
+      const givenAmount = totalAssets.get(failedAsset.tokenId) || 0n
+      const requiredAmount = givenAmount - failedAsset.amount
       return new InsufficientInputs(`'${assetName}' required: ${requiredAmount}, given: ${givenAmount}`)
     } else {
-      let changeRequired = !(deltaNErgs === 0n && deltaAssets.every((a, _ix, _xs) => a.amount === 0n))
-      let change = changeRequired
+      const changeRequired = !(deltaNErgs === 0n && deltaAssets.every(a => a.amount === 0n))
+      const change = changeRequired
         ? {
             value: deltaNErgs,
-            assets: deltaAssets.filter((a, _ix, _xs) => a.amount > 0)
+            assets: deltaAssets.filter(a => a.amount > 0)
           }
         : undefined
-      return BoxSelection.make(inputs, change) || new InsufficientInputs("Inputs are empty")
+      return BoxSelection.make(sufficientInputs, change) || new InsufficientInputs("Inputs are empty")
     }
   }
 }

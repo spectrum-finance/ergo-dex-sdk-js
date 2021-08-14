@@ -3,16 +3,21 @@ export {PoolOps} from "./amm/interpreters/poolOps"
 export {Refunds, AmmOrderRefunds} from "./amm/interpreters/refunds"
 export {Tokens, NetworkTokens} from "./repositories/tokens"
 export {Pools, NetworkPools} from "./amm/repositories/pools"
-export {Operations, NetworkOperations, AmmDexOperation} from "./amm/repositories/operations"
+export {History, NetworkHistory, makeHistory} from "./amm/repositories/history"
+export {AmmOrderInfo} from "./amm/models/ammOrderInfo"
+export {AmmPoolInfo} from "./amm/models/ammPoolInfo"
 export {
-  OperationSummary,
-  SwapSummary,
-  RedeemSummary,
-  DepositSummary,
-  PoolSetupSummary
-} from "./amm/models/operationSummary"
-export {RefundOperation, RefundStatus} from "./amm/models/refundOperation"
-export {AmmOpsParser, DefaultAmmOpsParser} from "./amm/parsers/ammOpsParser"
+  AmmDexOperation,
+  AmmOrderType,
+  AmmDexOperationType,
+  AmmOrder,
+  AmmOrderStatus,
+  RefundOperation,
+  TxStatus
+} from "./amm/models/operations"
+export {AmmOrdersParser, DefaultAmmOrdersParser} from "./amm/parsers/ammOrdersParser"
+export {AmmPoolsParser, DefaultAmmPoolsParser} from "./amm/parsers/ammPoolsParser"
+export {AmmPoolsInfoParser, DefaultAmmPoolsInfoParser} from "./amm/parsers/ammPoolsInfoParser"
 export {Swaps} from "./amm/repositories/swaps"
 export {
   AmmPoolValidation,
@@ -35,5 +40,6 @@ export {Paging} from "./network/paging"
 export {RefundParams} from "./models/refundParams"
 export type {SigmaRust} from "./utils/rustLoader"
 export {RustModule} from "./utils/rustLoader"
+export {decimalToFractional, evaluate} from "./utils/math"
 
 export * as ergo from "./ergo"

@@ -22,10 +22,7 @@ export type ExplorerErgoBox = {
   spentTransactionId?: string
 }
 
-export type AugErgoBox = Omit<
-  ExplorerErgoBox,
-  "additionalRegisters" | "blockId" | "settlementHeight" | "address"
-> &
+export type AugErgoBox = Omit<ExplorerErgoBox, "additionalRegisters" | "blockId" | "settlementHeight"> &
   Pick<ErgoBox, "additionalRegisters">
 
 export type ExplorerInput = Input & ExplorerErgoBox
@@ -111,6 +108,7 @@ export function explorerToErgoBox(box: ExplorerErgoBox): AugErgoBox {
     transactionId: box.transactionId,
     index: box.index,
     ergoTree: box.ergoTree,
+    address: box.address,
     creationHeight: box.creationHeight,
     value: BigInt(box.value), // fix possibly `number` fields to `bigint` only.
     assets: box.assets.map(a => ({...a, amount: BigInt(a.amount)})),

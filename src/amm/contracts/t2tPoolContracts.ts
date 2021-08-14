@@ -1,3 +1,4 @@
+import {decimalToFractional} from "../../utils/math"
 import {PoolId} from "../types"
 import * as templates from "./templates"
 import {TokenId, ErgoTree, PublicKey, HexString} from "../../ergo"
@@ -19,9 +20,9 @@ export class T2tPoolContracts {
   static deposit(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
     return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tDepositSample)
       .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
-      .with_constant(8, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
+      .with_constant(9, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
       .with_constant(
-        10,
+        11,
         RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFee.toString()))
       )
       .to_base16_bytes()
@@ -30,9 +31,9 @@ export class T2tPoolContracts {
   static redeem(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
     return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tRedeemSample)
       .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
-      .with_constant(10, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
+      .with_constant(13, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
       .with_constant(
-        12,
+        15,
         RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFee.toString()))
       )
       .to_base16_bytes()
@@ -49,34 +50,25 @@ export class T2tPoolContracts {
     const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(dexFeePerToken)
     return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tSwapSample)
       .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
-      .with_constant(3, RustModule.SigmaRust.Constant.from_byte_array(fromHex(quoteId)))
-      .with_constant(7, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
-      .with_constant(8, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
-      .with_constant(10, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
+      .with_constant(2, RustModule.SigmaRust.Constant.from_byte_array(fromHex(quoteId)))
+      .with_constant(3, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
+      .with_constant(14, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
       .with_constant(
-        13,
+        15,
         RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(minQuoteAmount.toString()))
       )
       .with_constant(
-        14,
+        16,
         RustModule.SigmaRust.Constant.from_i64(
           RustModule.SigmaRust.I64.from_str(dexFeePerTokenNum.toString())
         )
       )
       .with_constant(
-        15,
+        17,
         RustModule.SigmaRust.Constant.from_i64(
           RustModule.SigmaRust.I64.from_str(dexFeePerTokenDenom.toString())
         )
       )
       .to_base16_bytes()
   }
-}
-
-export function decimalToFractional(n: number): [bigint, bigint] {
-  const [whole, decimals = ""] = String(n).split(".")
-  const numDecimals = decimals.length
-  const denominator = BigInt(Math.pow(10, numDecimals))
-  const numerator = BigInt(whole) * denominator + BigInt(decimals)
-  return [numerator, denominator]
 }

@@ -1,5 +1,5 @@
 import {AssetAmount} from "../../ergo"
-import {decimalToFractional} from "../contracts/t2tPoolContracts"
+import {decimalToFractional} from "../../utils/math"
 import {I64Max} from "../constants"
 
 export type SwapExtremums = {

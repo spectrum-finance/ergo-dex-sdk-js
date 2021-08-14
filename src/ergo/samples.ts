@@ -44,5 +44,15 @@ export const boxesWithAssets = [
     value: 59999220000n,
     assets: [{tokenId: "x", amount: 50n}],
     additionalRegisters: {}
+  },
+  {
+    boxId: "3edf03cf64c25544e4d7254e3ac26353b66217a37b5ea1f58bbd9c7e72e632df",
+    transactionId: "410359ce12c60dd8fc8e99d3bef1ee4ac3ba852a1e0253d70a311e82d5f6bc20",
+    index: 1,
+    ergoTree: "0008cd02f5b53e746b83c3a12b0ee1ecfd14be592347a9a1834caa04f8341e5559d2ffce",
+    creationHeight: 499608,
+    value: 1000000n,
+    assets: [{tokenId: "z", amount: 50n}],
+    additionalRegisters: {}
   }
 ]

@@ -60,7 +60,7 @@ export class AmmPool {
     }
   }
 
-  /** @return amount of LP asset proportional to the amounts of assets deposited..
+  /** @return amount of LP asset proportional to the amounts of assets deposited.
    */
   rewardLP(inputX: AssetAmount, inputY: AssetAmount): AssetAmount {
     if (inputX.asset.id === this.x.asset.id && inputY.asset.id === this.y.asset.id) {
@@ -77,13 +77,13 @@ export class AmmPool {
   inputAmount(output: AssetAmount, maxSlippage?: number): AssetAmount | undefined {
     let slippage = BigInt((maxSlippage || 0) * 100)
     let minimalOutput = this.outputAmount(output).amount
-    if (output.asset.id === this.assetX.id && minimalOutput > 0) {
+    if (output.asset.id === this.assetX.id && minimalOutput > 0 && output.amount <= this.x.amount) {
       return this.y.withAmount(
         (this.y.amount * output.amount * this.feeDenom) /
           ((this.x.amount + (this.x.amount * slippage) / (100n * 100n) - output.amount) * this.feeNum) +
           1n
       )
-    } else if (output.asset.id === this.assetY.id && minimalOutput > 0) {
+    } else if (output.asset.id === this.assetY.id && minimalOutput > 0 && output.amount <= this.y.amount) {
       return this.x.withAmount(
         (this.x.amount * output.amount * this.feeDenom) /
           ((this.y.amount + (this.y.amount * slippage) / (100n * 100n) - output.amount) * this.feeNum) +

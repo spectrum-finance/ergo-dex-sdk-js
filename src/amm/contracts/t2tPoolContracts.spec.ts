@@ -1,6 +1,7 @@
 import test from "ava"
+import {decimalToFractional} from "../../utils/math"
 import {RustModule} from "../../utils/rustLoader"
-import {T2tPoolContracts, decimalToFractional} from "./t2tPoolContracts"
+import {T2tPoolContracts} from "./t2tPoolContracts"
 
 test.before(async () => {
   await RustModule.load(true)
@@ -14,7 +15,7 @@ test("Contract template hash calculation: Pool", async t => {
 })
 
 test("decimals to fractional", async t => {
-  const numbers = [0.1, 0.01, 1.1, 1.01, 11.01, 1.0, 1, 121212.12121212122]
+  const numbers = [0.1, 0.01, 1.1, 1.01, 11.01, 1.0, 1, 121212.12121212122, 7.464261489131828e-7]
   for (const i of numbers) {
     const [n, d] = decimalToFractional(i)
     t.deepEqual(i, Number(n) / Number(d))
