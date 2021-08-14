@@ -29,6 +29,7 @@ export class NetworkPools implements Pools {
 
   async get(id: PoolId): Promise<AmmPool | undefined> {
     let boxes = await this.network.getUnspentByTokenId(id, {offset: 0, limit: 1})
+    console.log(boxes)
     if (boxes.length > 0) {
       let poolBox = boxes[0]
       return this.parser.parsePool(poolBox)
