@@ -4,6 +4,7 @@ import {BoxSelection} from "./entities/boxSelection"
 import {InsufficientInputs} from "../errors/insufficientInputs"
 import {TokenId} from "../types"
 import {TokenAmount} from "../entities/tokenAmount"
+import * as R from "ramda"
 
 export interface BoxSelector {
   /** Selects inputs to satisfy target balance and tokens.
@@ -17,19 +18,15 @@ class DefaultBoxSelectorImpl implements BoxSelector {
     let totalNErgs = 0n
     const totalAssets = new Map<TokenId, bigint>()
     const targetAssetIds = target.assets.map(a => a.tokenId)
-    const sortedInputs = inputs.slice(0).sort((bx0, bx1) => {
-      let entries0 = 0
-      let entries1 = 0
-      bx0.assets.forEach(a => {
-        if (targetAssetIds.includes(a.tokenId)) entries0++
+    const byAssetEntries = R.descend((bx: ErgoBox) => {
+      let entries = 0
+      bx.assets.forEach(a => {
+        if (targetAssetIds.includes(a.tokenId)) entries++
       })
-      bx1.assets.forEach(a => {
-        if (targetAssetIds.includes(a.tokenId)) entries1++
-      })
-      if (entries0 > entries1) return -1
-      else if (entries0 < entries1) return 1
-      else return 0
+      return entries
     })
+    const sortedByAssetEntries = R.sortWith([byAssetEntries])
+    const sortedInputs = sortedByAssetEntries(inputs)
     for (const i of sortedInputs) {
       totalNErgs += i.value
       for (const t of i.assets) {
