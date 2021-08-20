@@ -177,23 +177,21 @@ export class T2tPoolOps implements PoolOps {
     )
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const baseAssetId = params.baseInput.asset.id
-    const tokensIn = outputGranted.assets.filter(t => t.tokenId === baseAssetId)
+    const baseIn = outputGranted.assets.filter(t => t.tokenId === baseAssetId)[0]
 
     const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
       )
-    if (tokensIn.length != 1)
-      return Promise.reject(
-        new InsufficientInputs(`Wrong number of input tokens provided ${tokensIn.length}, required 1`)
-      )
+    if (!baseIn)
+      return Promise.reject(new InsufficientInputs(`Base asset ${params.baseInput.asset.name} not provided`))
 
     const out: ErgoBoxCandidate = {
       value: outputGranted.nErgs - ctx.feeNErgs,
       ergoTree: proxyScript,
       creationHeight: ctx.network.height,
-      assets: tokensIn,
+      assets: [baseIn],
       additionalRegisters: EmptyRegisters
     }
     const txr: TxRequest = {

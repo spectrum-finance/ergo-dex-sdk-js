@@ -8,10 +8,7 @@ test.before(async () => {
 })
 
 test("Contract template hash calculation: Pool", async t => {
-  t.deepEqual(
-    T2T.poolTemplateHash(),
-    "3c09deff3b5f49329149d18e02aab675ef6957bf6559a5c7dba817fee883fb3e"
-  )
+  t.deepEqual(T2T.poolTemplateHash(), "3c09deff3b5f49329149d18e02aab675ef6957bf6559a5c7dba817fee883fb3e")
 })
 
 test("decimals to fractional", async t => {

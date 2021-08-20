@@ -1,3 +1,4 @@
+import {isNative} from "../../ergo/entities/assetInfo"
 import {PoolSetupParams} from "../models/poolSetupParams"
 import {SwapParams} from "../models/swapParams"
 import * as N2T from "../contracts/n2tPoolContracts"
@@ -156,7 +157,21 @@ export class N2tPoolOps implements PoolOps {
     return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
   }
 
-  swap(params: SwapParams, ctx: TransactionContext): Promise<ErgoTx> {
+  async swap(params: SwapParams, ctx: TransactionContext): Promise<ErgoTx> {
+    const out = await (isNative(params.baseInput.asset)
+      ? this.mkSwapSell(params, ctx)
+      : this.mkSwapBuy(params, ctx))
+    const txr: TxRequest = {
+      inputs: ctx.inputs,
+      dataInputs: [],
+      outputs: [out],
+      changeAddress: ctx.changeAddress,
+      feeNErgs: ctx.feeNErgs
+    }
+    return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
+  }
+
+  private async mkSwapSell(params: SwapParams, ctx: TransactionContext): Promise<ErgoBoxCandidate> {
     const proxyScript = N2T.swapSell(
       params.poolId,
       params.poolFeeNum,
@@ -166,33 +181,48 @@ export class N2tPoolOps implements PoolOps {
       params.pk
     )
     const outputGranted = ctx.inputs.totalOutputWithoutChange
-    const baseAssetId = params.baseInput.asset.id
-    const tokensIn = outputGranted.assets.filter(t => t.tokenId === baseAssetId)
 
     const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
       )
-    if (tokensIn.length != 1)
-      return Promise.reject(
-        new InsufficientInputs(`Wrong number of input tokens provided ${tokensIn.length}, required 1`)
-      )
 
-    const out: ErgoBoxCandidate = {
+    return {
       value: outputGranted.nErgs - ctx.feeNErgs,
       ergoTree: proxyScript,
       creationHeight: ctx.network.height,
-      assets: tokensIn,
+      assets: [],
       additionalRegisters: EmptyRegisters
     }
-    const txr: TxRequest = {
-      inputs: ctx.inputs,
-      dataInputs: [],
-      outputs: [out],
-      changeAddress: ctx.changeAddress,
-      feeNErgs: ctx.feeNErgs
+  }
+
+  private async mkSwapBuy(params: SwapParams, ctx: TransactionContext): Promise<ErgoBoxCandidate> {
+    const proxyScript = N2T.swapBuy(
+      params.poolId,
+      params.poolFeeNum,
+      params.minQuoteOutput,
+      params.dexFeePerToken,
+      params.pk
+    )
+    const outputGranted = ctx.inputs.totalOutputWithoutChange
+    const baseAssetId = params.baseInput.asset.id
+    const baseIn = outputGranted.assets.filter(t => t.tokenId === baseAssetId)[0]
+
+    const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
+    if (outputGranted.nErgs < minNErgs)
+      return Promise.reject(
+        new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
+      )
+    if (!baseIn)
+      return Promise.reject(new InsufficientInputs(`Base asset ${params.baseInput.asset.name} not provided`))
+
+    return {
+      value: outputGranted.nErgs - ctx.feeNErgs,
+      ergoTree: proxyScript,
+      creationHeight: ctx.network.height,
+      assets: [baseIn],
+      additionalRegisters: EmptyRegisters
     }
-    return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
   }
 }
