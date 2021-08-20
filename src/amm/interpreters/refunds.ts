@@ -22,11 +22,7 @@ export class AmmOrderRefunds implements Refunds {
 
   async refund(params: RefundParams, ctx: MinTransactionContext): Promise<ErgoTx> {
     const tx = await this.network.getTx(params.txId)
-    const allowedTemplates = [
-      T2T.DepositTemplate,
-      T2T.RedeemTemplate,
-      T2T.SwapTemplate
-    ]
+    const allowedTemplates = [T2T.DepositTemplate, T2T.RedeemTemplate, T2T.SwapTemplate]
     const outputToRefund = tx?.outputs.find(o => {
       const template = treeTemplateFromErgoTree(o.ergoTree)
       return allowedTemplates.includes(template)

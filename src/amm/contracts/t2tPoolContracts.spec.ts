@@ -1,7 +1,7 @@
 import test from "ava"
 import {decimalToFractional} from "../../utils/math"
 import {RustModule} from "../../utils/rustLoader"
-import {T2tPoolContracts} from "./t2tPoolContracts"
+import * as T2T from "./t2tPoolContracts"
 
 test.before(async () => {
   await RustModule.load(true)
@@ -9,7 +9,7 @@ test.before(async () => {
 
 test("Contract template hash calculation: Pool", async t => {
   t.deepEqual(
-    T2tPoolContracts.poolTemplateHash(),
+    T2T.poolTemplateHash(),
     "3c09deff3b5f49329149d18e02aab675ef6957bf6559a5c7dba817fee883fb3e"
   )
 })

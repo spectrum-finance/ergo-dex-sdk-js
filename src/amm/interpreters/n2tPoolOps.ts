@@ -1,6 +1,6 @@
 import {PoolSetupParams} from "../models/poolSetupParams"
 import {SwapParams} from "../models/swapParams"
-import * as T2T from "../contracts/t2tPoolContracts"
+import * as N2T from "../contracts/n2tPoolContracts"
 import {BurnLP, EmissionLP, MinPoolBoxValue} from "../constants"
 import {InsufficientInputs} from "../../ergo/errors/insufficientInputs"
 import {MinBoxValue} from "../../ergo/constants"
@@ -22,7 +22,7 @@ import {stringToBytea} from "../../utils/utf8"
 import {TxRequest} from "../../ergo/wallet/entities/txRequest"
 import {TxAssembler} from "../../ergo"
 
-export class T2tPoolOps implements PoolOps {
+export class N2tPoolOps implements PoolOps {
   constructor(public readonly prover: Prover, public readonly txAsm: TxAssembler) {}
 
   async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<ErgoTx[]> {
@@ -30,18 +30,14 @@ export class T2tPoolOps implements PoolOps {
     const height = ctx.network.height
     const inputs = ctx.inputs
     const outputGranted = inputs.totalOutputWithoutChange
-    const pairIn = [
-      outputGranted.assets.filter(t => t.tokenId === x.id),
-      outputGranted.assets.filter(t => t.tokenId === y.id)
-    ].flat()
+    const inY = outputGranted.assets.filter(t => t.tokenId === x.id)[0]
 
     const minNErgs = ctx.feeNErgs * 2n + MinPoolBoxValue + MinBoxValue
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
       )
-    if (pairIn.length !== 2)
-      return Promise.reject(new InsufficientInputs(`Token pair {${x.name}|${y.name}} not provided`))
+    if (!inY) return Promise.reject(new InsufficientInputs(`Token ${y.name} not provided`))
 
     const [tickerX, tickerY] = [x.name || x.id.slice(0, 8), y.name || y.id.slice(0, 8)]
     const newTokenLP = {tokenId: inputs.newTokenId, amount: EmissionLP - BurnLP}
@@ -49,7 +45,7 @@ export class T2tPoolOps implements PoolOps {
       value: outputGranted.nErgs - ctx.feeNErgs,
       ergoTree: ergoTreeFromAddress(ctx.selfAddress),
       creationHeight: height,
-      assets: [newTokenLP, ...pairIn],
+      assets: [newTokenLP, inY],
       additionalRegisters: registers([
         [RegisterId.R4, new ByteaConstant(stringToBytea(`${tickerX}_${tickerY}_LP`))]
       ])
@@ -81,7 +77,7 @@ export class T2tPoolOps implements PoolOps {
     const poolLP = {tokenId: newTokenLP.tokenId, amount: poolAmountLP}
     const poolOut: ErgoBoxCandidate = {
       value: poolBootBox.value - lpOut.value - ctx.feeNErgs,
-      ergoTree: T2T.pool(),
+      ergoTree: N2T.pool(),
       creationHeight: height,
       assets: [newTokenNFT, poolLP, ...poolBootBox.assets.slice(1)],
       additionalRegisters: registers([[RegisterId.R4, new Int32Constant(params.feeNumerator)]])
@@ -100,28 +96,22 @@ export class T2tPoolOps implements PoolOps {
 
   deposit(params: DepositParams, ctx: TransactionContext): Promise<ErgoTx> {
     const [x, y] = [params.x, params.y]
-    const proxyScript = T2T.deposit(params.poolId, params.pk, params.dexFee)
+    const proxyScript = N2T.deposit(params.poolId, params.pk, params.dexFee)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
-    const pairIn = [
-      outputGranted.assets.filter(t => t.tokenId === x.id),
-      outputGranted.assets.filter(t => t.tokenId === y.id)
-    ].flat()
+    const inY = outputGranted.assets.filter(t => t.tokenId === x.id)[0]
 
     const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
       )
-    if (pairIn.length != 2)
-      return Promise.reject(
-        new InsufficientInputs(`Wrong number of input tokens provided ${pairIn.length}, required 2`)
-      )
+    if (!inY) return Promise.reject(new InsufficientInputs(`Token ${y.name} not provided`))
 
     const out: ErgoBoxCandidate = {
       value: outputGranted.nErgs - ctx.feeNErgs,
       ergoTree: proxyScript,
       creationHeight: ctx.network.height,
-      assets: pairIn,
+      assets: [inY],
       additionalRegisters: EmptyRegisters
     }
     const txr = {
@@ -135,7 +125,7 @@ export class T2tPoolOps implements PoolOps {
   }
 
   redeem(params: RedeemParams, ctx: TransactionContext): Promise<ErgoTx> {
-    const proxyScript = T2T.redeem(params.poolId, params.pk, params.dexFee)
+    const proxyScript = N2T.redeem(params.poolId, params.pk, params.dexFee)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.id)
 
@@ -167,7 +157,7 @@ export class T2tPoolOps implements PoolOps {
   }
 
   swap(params: SwapParams, ctx: TransactionContext): Promise<ErgoTx> {
-    const proxyScript = T2T.swap(
+    const proxyScript = N2T.swapSell(
       params.poolId,
       params.poolFeeNum,
       params.quoteAsset,
