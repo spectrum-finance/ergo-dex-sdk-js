@@ -62,12 +62,11 @@ test("BoxSelector: Select ERGs (Use minimal boxes)", async t =>
     BoxSelection.make([boxes[0]], {value: 59998220000n, assets: []})
   ))
 
-test("BoxSelector: Select tokens (Use minimal boxes)", async t => {
+test("BoxSelector: Select tokens (Use minimal boxes)", async t =>
   t.deepEqual(
     DefaultBoxSelector.select(boxesWithAssets, {
       nErgs: 800000n,
       assets: [{tokenId: "z", amount: 50n}]
     }),
     BoxSelection.make([boxesWithAssets[2]], {value: 200000n, assets: []})
-  )
-})
+  ))
