@@ -1,6 +1,6 @@
 import {decimalToFractional} from "../../utils/math"
 import {PoolId} from "../types"
-import * as templates from "./templates"
+import * as T2T from "./t2tTemplates"
 import {TokenId, ErgoTree, PublicKey, HexString} from "../../ergo"
 import {fromHex, toHex} from "../../utils/hex"
 import {RustModule} from "../../utils/rustLoader"
@@ -9,16 +9,16 @@ import * as crypto from "crypto-js"
 
 export class T2tPoolContracts {
   static pool(): ErgoTree {
-    return templates.T2tPoolSample
+    return T2T.PoolSample
   }
 
   static poolTemplateHash(): HexString {
-    const template = RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tPoolSample).template_bytes()
+    const template = RustModule.SigmaRust.ErgoTree.from_base16_bytes(T2T.PoolSample).template_bytes()
     return crypto.SHA256(crypto.enc.Hex.parse(toHex(template))).toString(crypto.enc.Hex)
   }
 
   static deposit(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
-    return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tDepositSample)
+    return RustModule.SigmaRust.ErgoTree.from_base16_bytes(T2T.DepositSample)
       .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
       .with_constant(9, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
       .with_constant(
@@ -29,7 +29,7 @@ export class T2tPoolContracts {
   }
 
   static redeem(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
-    return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tRedeemSample)
+    return RustModule.SigmaRust.ErgoTree.from_base16_bytes(T2T.RedeemSample)
       .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
       .with_constant(13, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
       .with_constant(
@@ -48,7 +48,7 @@ export class T2tPoolContracts {
     pk: PublicKey
   ): ErgoTree {
     const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(dexFeePerToken)
-    return RustModule.SigmaRust.ErgoTree.from_base16_bytes(templates.T2tSwapSample)
+    return RustModule.SigmaRust.ErgoTree.from_base16_bytes(T2T.SwapSample)
       .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
       .with_constant(2, RustModule.SigmaRust.Constant.from_byte_array(fromHex(quoteId)))
       .with_constant(3, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))

@@ -1,5 +1,5 @@
 import {AssetAmount, ErgoBox} from "../../ergo"
-import {T2tDepositTemplate, T2tPoolTemplate, T2tRedeemTemplate, T2tSwapTemplate} from "../contracts/templates"
+import * as T2T from "../contracts/t2tTemplates"
 import {treeTemplateFromErgoTree} from "../../ergo/entities/ergoTreeTemplate"
 import {OperationSummary} from "../models/operationSummary"
 import {Swap, Deposit, Redeem, Setup, AmmOperationType} from "../models/ammOperation"
@@ -11,10 +11,10 @@ export interface AmmOpsParser {
 }
 
 const AmmTemplates: [string, AmmOperationType][] = [
-  [T2tPoolTemplate, Setup],
-  [T2tSwapTemplate, Swap],
-  [T2tDepositTemplate, Deposit],
-  [T2tRedeemTemplate, Redeem]
+  [T2T.PoolTemplate, Setup],
+  [T2T.SwapTemplate, Swap],
+  [T2T.DepositTemplate, Deposit],
+  [T2T.RedeemTemplate, Redeem]
 ]
 
 export class DefaultAmmOpsParser implements AmmOpsParser {

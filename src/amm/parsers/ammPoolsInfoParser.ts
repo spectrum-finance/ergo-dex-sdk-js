@@ -1,7 +1,7 @@
 import {AssetAmount, ErgoBox} from "../../ergo"
 import {AmmPoolInfo} from "../models/ammPoolInfo"
 import {treeTemplateFromErgoTree} from "../../ergo/entities/ergoTreeTemplate"
-import {T2tPoolTemplate} from "../contracts/templates"
+import * as T2T from "../contracts/t2tTemplates"
 
 export interface AmmPoolsInfoParser {
   /** Parse AMM pool info from a given box.
@@ -9,7 +9,7 @@ export interface AmmPoolsInfoParser {
   parse(bx: ErgoBox): AmmPoolInfo | undefined
 }
 
-const AllowedPoolTemplates = [T2tPoolTemplate]
+const AllowedPoolTemplates = [T2T.PoolTemplate]
 
 export class DefaultAmmPoolsInfoParser implements AmmPoolsInfoParser {
   parse(bx: ErgoBox): AmmPoolInfo | undefined {
