@@ -1,4 +1,5 @@
 export {T2tPoolOps} from "./amm/interpreters/t2tPoolOps"
+export {N2tPoolOps} from "./amm/interpreters/n2tPoolOps"
 export {PoolOps} from "./amm/interpreters/poolOps"
 export {Refunds, AmmOrderRefunds} from "./amm/interpreters/refunds"
 export {Tokens, NetworkTokens} from "./repositories/tokens"
@@ -43,3 +44,4 @@ export {RustModule} from "./utils/rustLoader"
 export {decimalToFractional, evaluate} from "./utils/math"
 
 export * as ergo from "./ergo"
+export * as dexConstants from "./constants"
