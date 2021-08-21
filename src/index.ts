@@ -3,7 +3,7 @@ export {N2tPoolOps} from "./amm/interpreters/n2tPoolOps"
 export {PoolOps} from "./amm/interpreters/poolOps"
 export {Refunds, AmmOrderRefunds} from "./amm/interpreters/refunds"
 export {Tokens, NetworkTokens} from "./repositories/tokens"
-export {Pools, NetworkPools} from "./amm/repositories/pools"
+export {Pools, NetworkPools, makePools, makeNativePools} from "./amm/repositories/pools"
 export {History, NetworkHistory, makeHistory} from "./amm/repositories/history"
 export {AmmOrderInfo} from "./amm/models/ammOrderInfo"
 export {AmmPoolInfo} from "./amm/models/ammPoolInfo"
@@ -17,9 +17,8 @@ export {
   TxStatus
 } from "./amm/models/operations"
 export {AmmOrdersParser, DefaultAmmOrdersParser} from "./amm/parsers/ammOrdersParser"
-export {AmmPoolsParser, DefaultAmmPoolsParser} from "./amm/parsers/ammPoolsParser"
-export {AmmPoolsInfoParser, DefaultAmmPoolsInfoParser} from "./amm/parsers/ammPoolsInfoParser"
-export {Swaps} from "./amm/repositories/swaps"
+export {AmmPoolsParser, T2TAmmPoolsParser} from "./amm/parsers/ammPoolsParser"
+export {AmmPoolsInfoParser, T2TAmmPoolsInfoParser} from "./amm/parsers/ammPoolsInfoParser"
 export {
   AmmPoolValidation,
   NetworkAmmPoolValidation,

@@ -1,8 +1,10 @@
+import * as N2T from "../contracts/n2tPoolContracts"
+import {PoolContracts} from "../contracts/poolContracts"
+import * as T2T from "../contracts/t2tPoolContracts"
 import {PoolId} from "../types"
 import {AmmPool} from "../entities/ammPool"
 import {ErgoNetwork} from "../../services/ergoNetwork"
 import {TokenId} from "../../ergo"
-import * as T2T from "../contracts/t2tPoolContracts"
 import {Paging} from "../../network/paging"
 import {AmmPoolsParser} from "../parsers/ammPoolsParser"
 
@@ -24,14 +26,25 @@ export interface Pools {
   getByTokensUnion(tokens: TokenId[], paging: Paging): Promise<[AmmPool[], number]>
 }
 
+export function makeNativePools(network: ErgoNetwork, parser: AmmPoolsParser): NetworkPools {
+  return new NetworkPools(network, parser, N2T.poolBundle())
+}
+
+export function makePools(network: ErgoNetwork, parser: AmmPoolsParser): NetworkPools {
+  return new NetworkPools(network, parser, T2T.poolBundle())
+}
+
 export class NetworkPools implements Pools {
-  constructor(readonly network: ErgoNetwork, readonly parser: AmmPoolsParser) {}
+  constructor(
+    readonly network: ErgoNetwork,
+    readonly parser: AmmPoolsParser,
+    readonly contracts: PoolContracts
+  ) {}
 
   async get(id: PoolId): Promise<AmmPool | undefined> {
-    let boxes = await this.network.getUnspentByTokenId(id, {offset: 0, limit: 1})
-    console.log(boxes)
+    const boxes = await this.network.getUnspentByTokenId(id, {offset: 0, limit: 1})
     if (boxes.length > 0) {
-      let poolBox = boxes[0]
+      const poolBox = boxes[0]
       return this.parser.parsePool(poolBox)
     }
     return undefined

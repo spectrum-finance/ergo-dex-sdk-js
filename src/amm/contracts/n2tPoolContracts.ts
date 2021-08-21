@@ -16,6 +16,13 @@ export function poolTemplateHash(): HexString {
   return crypto.SHA256(crypto.enc.Hex.parse(toHex(template))).toString(crypto.enc.Hex)
 }
 
+export function poolBundle() {
+  return {
+    poolTree: pool(),
+    poolTemplateHash: poolTemplateHash()
+  }
+}
+
 export function deposit(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2T.DepositSample)
     .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))

@@ -2,6 +2,7 @@ import {BoxSelection, ErgoTx, MinTransactionContext, Prover, TxAssembler} from "
 import {RefundParams} from "../../models/refundParams"
 import {ErgoNetwork} from "../../services/ergoNetwork"
 import * as T2T from "../contracts/t2tTemplates"
+import * as N2T from "../contracts/n2tTemplates"
 import {treeTemplateFromErgoTree} from "../../ergo/entities/ergoTreeTemplate"
 import {TxRequest} from "../../ergo/wallet/entities/txRequest"
 import {EmptyRegisters} from "../../ergo/entities/registers"
@@ -13,6 +14,16 @@ export interface Refunds {
   refund(params: RefundParams, ctx: MinTransactionContext): Promise<ErgoTx>
 }
 
+const RefundableTemplates = [
+  T2T.DepositTemplate,
+  T2T.RedeemTemplate,
+  T2T.SwapTemplate,
+  N2T.DepositTemplate,
+  N2T.RedeemTemplate,
+  N2T.SwapSellTemplate,
+  N2T.SwapBuyTemplate
+]
+
 export class AmmOrderRefunds implements Refunds {
   constructor(
     public readonly network: ErgoNetwork,
@@ -22,10 +33,9 @@ export class AmmOrderRefunds implements Refunds {
 
   async refund(params: RefundParams, ctx: MinTransactionContext): Promise<ErgoTx> {
     const tx = await this.network.getTx(params.txId)
-    const allowedTemplates = [T2T.DepositTemplate, T2T.RedeemTemplate, T2T.SwapTemplate]
     const outputToRefund = tx?.outputs.find(o => {
       const template = treeTemplateFromErgoTree(o.ergoTree)
-      return allowedTemplates.includes(template)
+      return RefundableTemplates.includes(template)
     })
     if (outputToRefund) {
       const inputs = BoxSelection.safe(outputToRefund)

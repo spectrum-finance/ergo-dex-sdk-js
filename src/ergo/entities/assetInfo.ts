@@ -1,4 +1,4 @@
-import {NativeAssetId} from "../../constants"
+import {NativeAssetDecimals, NativeAssetId, NativeAssetTicker} from "../../constants"
 import {TokenId} from "../types"
 
 export type AssetInfo = {
@@ -10,4 +10,10 @@ export type AssetInfo = {
 
 export function isNative(ai: AssetInfo): boolean {
   return ai.id === NativeAssetId
+}
+
+export const NativeAssetInfo: AssetInfo = {
+  id: NativeAssetId,
+  name: NativeAssetTicker,
+  decimals: NativeAssetDecimals
 }
