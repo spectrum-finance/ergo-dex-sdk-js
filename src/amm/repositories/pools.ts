@@ -6,7 +6,7 @@ import {AmmPool} from "../entities/ammPool"
 import {ErgoNetwork} from "../../services/ergoNetwork"
 import {TokenId} from "../../ergo"
 import {Paging} from "../../network/paging"
-import {AmmPoolsParser} from "../parsers/ammPoolsParser"
+import {AmmPoolsParser, N2TAmmPoolsParser, T2TAmmPoolsParser} from "../parsers/ammPoolsParser"
 
 export interface Pools {
   /** Get a pool by the given pool `id`.
@@ -26,12 +26,12 @@ export interface Pools {
   getByTokensUnion(tokens: TokenId[], paging: Paging): Promise<[AmmPool[], number]>
 }
 
-export function makeNativePools(network: ErgoNetwork, parser: AmmPoolsParser): NetworkPools {
-  return new NetworkPools(network, parser, N2T.poolBundle())
+export function makeNativePools(network: ErgoNetwork): NetworkPools {
+  return new NetworkPools(network, new N2TAmmPoolsParser(), N2T.poolBundle())
 }
 
-export function makePools(network: ErgoNetwork, parser: AmmPoolsParser): NetworkPools {
-  return new NetworkPools(network, parser, T2T.poolBundle())
+export function makePools(network: ErgoNetwork): NetworkPools {
+  return new NetworkPools(network, new T2TAmmPoolsParser(), T2T.poolBundle())
 }
 
 export class NetworkPools implements Pools {
