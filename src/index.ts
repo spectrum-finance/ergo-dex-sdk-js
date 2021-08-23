@@ -17,8 +17,8 @@ export {
   TxStatus
 } from "./amm/models/operations"
 export {AmmOrdersParser, DefaultAmmOrdersParser} from "./amm/parsers/ammOrdersParser"
-export {AmmPoolsParser, T2TAmmPoolsParser} from "./amm/parsers/ammPoolsParser"
-export {AmmPoolsInfoParser, T2TAmmPoolsInfoParser} from "./amm/parsers/ammPoolsInfoParser"
+export {AmmPoolsParser, T2TAmmPoolsParser, N2TAmmPoolsParser} from "./amm/parsers/ammPoolsParser"
+export {AmmPoolsInfoParser, DefaultAmmPoolsInfoParser} from "./amm/parsers/ammPoolsInfoParser"
 export {
   AmmPoolValidation,
   NetworkAmmPoolValidation,

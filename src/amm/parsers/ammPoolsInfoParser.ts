@@ -10,17 +10,20 @@ export interface AmmPoolsInfoParser {
   parse(bx: ErgoBox): AmmPoolInfo | undefined
 }
 
-const AllowedT2TPoolTemplates = [T2T.PoolTemplate]
-
-export class T2TAmmPoolsInfoParser implements AmmPoolsInfoParser {
+export class DefaultAmmPoolsInfoParser implements AmmPoolsInfoParser {
   parse(bx: ErgoBox): AmmPoolInfo | undefined {
     const template = treeTemplateFromErgoTree(bx.ergoTree)
-    const validScript = AllowedT2TPoolTemplates.includes(template)
+    if (template === T2T.PoolTemplate) return this.parseT2T(bx)
+    else if (template === N2T.PoolTemplate) return this.parseN2T(bx)
+    else return undefined
+  }
+
+  private parseT2T(bx: ErgoBox): AmmPoolInfo | undefined {
     const poolId = bx.assets[0]?.tokenId
     const lp = bx.assets[1]
     const reservesX = bx.assets[2]
     const reservesY = bx.assets[3]
-    return validScript && poolId && reservesX && reservesY
+    return poolId && reservesX && reservesY
       ? {
           id: poolId,
           reservesX: AssetAmount.fromToken(reservesX),
@@ -29,18 +32,12 @@ export class T2TAmmPoolsInfoParser implements AmmPoolsInfoParser {
         }
       : undefined
   }
-}
 
-const AllowedN2TPoolTemplates = [N2T.PoolTemplate]
-
-export class N2TAmmPoolsInfoParser implements AmmPoolsInfoParser {
-  parse(bx: ErgoBox): AmmPoolInfo | undefined {
-    const template = treeTemplateFromErgoTree(bx.ergoTree)
-    const validScript = AllowedN2TPoolTemplates.includes(template)
+  private parseN2T(bx: ErgoBox): AmmPoolInfo | undefined {
     const poolId = bx.assets[0]?.tokenId
     const lp = bx.assets[1]
     const reservesY = bx.assets[2]
-    return validScript && poolId && reservesY
+    return poolId && reservesY
       ? {
           id: poolId,
           reservesX: AssetAmount.native(bx.value),

@@ -4,7 +4,7 @@ import {ErgoNetwork} from "../../services/ergoNetwork"
 import {AmmOrdersParser, DefaultAmmOrdersParser} from "../parsers/ammOrdersParser"
 import {AugErgoBox, AugErgoTx} from "../../network/models"
 import {AmmOrderInfo} from "../models/ammOrderInfo"
-import {AmmPoolsInfoParser, T2TAmmPoolsInfoParser} from "../parsers/ammPoolsInfoParser"
+import {AmmPoolsInfoParser, DefaultAmmPoolsInfoParser} from "../parsers/ammPoolsInfoParser"
 
 export interface History {
   /** Get operations by a given address.
@@ -22,7 +22,7 @@ export interface History {
 
 export function makeHistory(network: ErgoNetwork): History {
   const ordersParser = new DefaultAmmOrdersParser()
-  const poolParser = new T2TAmmPoolsInfoParser()
+  const poolParser = new DefaultAmmPoolsInfoParser()
   return new NetworkHistory(network, ordersParser, poolParser)
 }
 

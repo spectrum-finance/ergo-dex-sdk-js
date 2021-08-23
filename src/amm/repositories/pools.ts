@@ -51,7 +51,7 @@ export class NetworkPools implements Pools {
   }
 
   async getAll(paging: Paging): Promise<[AmmPool[], number]> {
-    const [boxes, totalBoxes] = await this.network.getUnspentByErgoTree(T2T.pool(), paging)
+    const [boxes, totalBoxes] = await this.network.getUnspentByErgoTree(this.contracts.poolTree, paging)
     const pools = this.parser.parseValidPools(boxes)
     const invalid = boxes.length - pools.length
     const total = totalBoxes - invalid
@@ -59,7 +59,7 @@ export class NetworkPools implements Pools {
   }
 
   async getByTokens(tokens: TokenId[], paging: Paging): Promise<[AmmPool[], number]> {
-    const req = {ergoTreeTemplateHash: T2T.poolTemplateHash(), assets: tokens}
+    const req = {ergoTreeTemplateHash: this.contracts.poolTemplateHash, assets: tokens}
     const [boxes, totalBoxes] = await this.network.searchUnspentBoxes(req, paging)
     const pools = this.parser.parseValidPools(boxes)
     const invalid = boxes.length - pools.length
@@ -68,7 +68,7 @@ export class NetworkPools implements Pools {
   }
 
   async getByTokensUnion(tokens: TokenId[], paging: Paging): Promise<[AmmPool[], number]> {
-    const req = {ergoTreeTemplateHash: T2T.poolTemplateHash(), assets: tokens}
+    const req = {ergoTreeTemplateHash: this.contracts.poolTemplateHash, assets: tokens}
     const [boxes, totalBoxes] = await this.network.searchUnspentBoxesByTokensUnion(req, paging)
     const pools = this.parser.parseValidPools(boxes)
     const invalid = boxes.length - pools.length
