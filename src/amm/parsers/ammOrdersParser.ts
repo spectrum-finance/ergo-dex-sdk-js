@@ -1,5 +1,4 @@
-import {AssetAmount, ErgoBox} from "../../ergo"
-import {NativeAssetInfo} from "../../ergo/entities/assetInfo"
+import {AssetAmount, ErgoBox, NativeAssetInfo} from "../../ergo"
 import * as T2T from "../contracts/t2tTemplates"
 import * as N2T from "../contracts/n2tTemplates"
 import {treeTemplateFromErgoTree} from "../../ergo/entities/ergoTreeTemplate"

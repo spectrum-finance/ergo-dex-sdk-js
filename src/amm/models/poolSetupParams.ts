@@ -10,10 +10,14 @@ export type PoolSetupParams = {
   readonly outputShare: bigint
 }
 
-export function make(x: AssetAmount, y: AssetAmount, fee: number): PoolSetupParams | InvalidParams {
-  let invalidPair = x.asset === y.asset ? [{param: "x|y", error: "x|y must contain different tokens"}] : []
-  let invalidFeeRange = fee > 1 && fee < 0 ? [{param: "fee", error: "Fee must be in range [0, 1]"}] : []
-  let invalidFeeResolution =
+export function makePoolSetupParams(
+  x: AssetAmount,
+  y: AssetAmount,
+  fee: number
+): PoolSetupParams | InvalidParams {
+  const invalidPair = x.asset === y.asset ? [{param: "x|y", error: "x|y must contain different tokens"}] : []
+  const invalidFeeRange = fee > 1 && fee < 0 ? [{param: "fee", error: "Fee must be in range [0, 1]"}] : []
+  const invalidFeeResolution =
     fee.toString().split(".")[1].length > PoolFeeMaxDecimals
       ? [
           {
@@ -22,11 +26,11 @@ export function make(x: AssetAmount, y: AssetAmount, fee: number): PoolSetupPara
           }
         ]
       : []
-  let errors = [invalidPair, invalidFeeRange, invalidFeeResolution].flat()
+  const errors = [invalidPair, invalidFeeRange, invalidFeeResolution].flat()
 
   if (errors.length == 0) {
-    let feeNumerator = (1 - fee) * PoolFeeScale
-    let outputShare = sqrt(x.amount * y.amount)
+    const feeNumerator = (1 - fee) * PoolFeeScale
+    const outputShare = sqrt(x.amount * y.amount)
     return {x, y, feeNumerator, outputShare}
   } else {
     return errors

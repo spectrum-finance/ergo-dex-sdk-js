@@ -16,13 +16,13 @@ import {
 import {DepositParams} from "../models/depositParams"
 import {RedeemParams} from "../models/redeemParams"
 import {ergoTreeFromAddress} from "../../ergo/entities/ergoTree"
-import {PoolOps} from "./poolOps"
+import {PoolActions} from "./poolActions"
 import {EmptyRegisters, RegisterId, registers} from "../../ergo/entities/registers"
 import {stringToBytea} from "../../utils/utf8"
 import {TxRequest} from "../../ergo/wallet/entities/txRequest"
 import {TxAssembler} from "../../ergo"
 
-export class T2tPoolOps implements PoolOps {
+export class T2tPoolOps implements PoolActions {
   constructor(public readonly prover: Prover, public readonly txAsm: TxAssembler) {}
 
   async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<ErgoTx[]> {
