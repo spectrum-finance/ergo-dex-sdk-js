@@ -23,7 +23,7 @@ import {stringToBytea} from "../../utils/utf8"
 import {TxRequest} from "../../ergo/wallet/entities/txRequest"
 import {TxAssembler} from "../../ergo"
 
-export class N2tPoolOps implements PoolActions {
+export class N2tPoolActions implements PoolActions {
   constructor(public readonly prover: Prover, public readonly txAsm: TxAssembler) {}
 
   async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<ErgoTx[]> {

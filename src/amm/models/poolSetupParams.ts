@@ -1,6 +1,6 @@
 import {InvalidParams} from "../errors/invalidParams"
 import {PoolFeeMaxDecimals, PoolFeeScale} from "../constants"
-import {AssetAmount} from "../../ergo"
+import {AssetAmount, isNative} from "../../ergo"
 import {sqrt} from "../../utils/sqrt"
 
 export type PoolSetupParams = {
@@ -31,7 +31,7 @@ export function makePoolSetupParams(
   if (errors.length == 0) {
     const feeNumerator = (1 - fee) * PoolFeeScale
     const outputShare = sqrt(x.amount * y.amount)
-    return {x, y, feeNumerator, outputShare}
+    return isNative(y.asset) ? {y, x, feeNumerator, outputShare} : {x, y, feeNumerator, outputShare}
   } else {
     return errors
   }

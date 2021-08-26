@@ -1,6 +1,10 @@
-export {T2tPoolOps} from "./amm/interpreters/t2tPoolOps"
-export {N2tPoolOps} from "./amm/interpreters/n2tPoolOps"
-export {PoolActions, PoolActionsSelector, makeDefaultPoolActionsSelector} from "./amm/interpreters/poolActions"
+export {T2tPoolActions} from "./amm/interpreters/t2tPoolActions"
+export {N2tPoolActions} from "./amm/interpreters/n2tPoolActions"
+export {
+  PoolActions,
+  PoolActionsSelector,
+  makeDefaultPoolActionsSelector
+} from "./amm/interpreters/poolActions"
 export {Refunds, AmmOrderRefunds} from "./amm/interpreters/refunds"
 export {Tokens, NetworkTokens} from "./repositories/tokens"
 export {Pools, NetworkPools, makePools, makeNativePools} from "./amm/repositories/pools"
