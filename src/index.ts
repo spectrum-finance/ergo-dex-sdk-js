@@ -46,5 +46,5 @@ export type {SigmaRust} from "./utils/rustLoader"
 export {RustModule} from "./utils/rustLoader"
 export {decimalToFractional, evaluate} from "./utils/math"
 
-export * as ergo from "./ergo"
-export * as dexConstants from "./constants"
+export * from "./ergo"
+export * from "./constants"

@@ -31,7 +31,7 @@ export class N2tPoolActions implements PoolActions {
     const height = ctx.network.height
     const inputs = ctx.inputs
     const outputGranted = inputs.totalOutputWithoutChange
-    const inY = outputGranted.assets.filter(t => t.tokenId === x.id)[0]
+    const inY = outputGranted.assets.filter(t => t.tokenId === y.id)[0]
 
     const minNErgs = ctx.feeNErgs * 2n + MinPoolBoxValue + MinBoxValue
     if (outputGranted.nErgs < minNErgs)
@@ -96,10 +96,10 @@ export class N2tPoolActions implements PoolActions {
   }
 
   deposit(params: DepositParams, ctx: TransactionContext): Promise<ErgoTx> {
-    const [x, y] = [params.x, params.y]
+    const [, y] = [params.x, params.y]
     const proxyScript = N2T.deposit(params.poolId, params.pk, params.dexFee)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
-    const inY = outputGranted.assets.filter(t => t.tokenId === x.id)[0]
+    const inY = outputGranted.assets.filter(t => t.tokenId === y.id)[0]
 
     const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
     if (outputGranted.nErgs < minNErgs)
@@ -136,9 +136,7 @@ export class N2tPoolActions implements PoolActions {
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
       )
     if (tokensIn.length != 1)
-      return Promise.reject(
-        new InsufficientInputs(`Wrong number of input tokens provided ${tokensIn.length}, required 1`)
-      )
+      return Promise.reject(new InsufficientInputs(`Token ${params.lp.name ?? "LP"} not provided`))
 
     const out = {
       value: outputGranted.nErgs - ctx.feeNErgs,
