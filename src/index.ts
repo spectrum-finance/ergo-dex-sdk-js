@@ -25,7 +25,7 @@ export {AmmPoolsParser, T2TAmmPoolsParser, N2TAmmPoolsParser} from "./amm/parser
 export {AmmPoolsInfoParser, DefaultAmmPoolsInfoParser} from "./amm/parsers/ammPoolsInfoParser"
 export {
   AmmPoolValidation,
-  NetworkAmmPoolValidation,
+  DefaultAmmPoolValidation,
   ValidationResult,
   ValidationErrors,
   OK
