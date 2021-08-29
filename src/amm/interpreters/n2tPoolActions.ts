@@ -172,6 +172,7 @@ export class N2tPoolActions implements PoolActions {
   private async mkSwapSell(params: SwapParams, ctx: TransactionContext): Promise<ErgoBoxCandidate> {
     const proxyScript = N2T.swapSell(
       params.poolId,
+      params.baseInput.amount,
       params.poolFeeNum,
       params.quoteAsset,
       params.minQuoteOutput,

@@ -55,6 +55,7 @@ export function redeem(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree 
 
 export function swapSell(
   poolId: PoolId,
+  baseAmount: bigint,
   poolFeeNum: number,
   quoteId: TokenId,
   minQuoteAmount: bigint,
@@ -64,16 +65,16 @@ export function swapSell(
   const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(dexFeePerToken)
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2T.SwapSellSample)
     .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
-    .with_constant(8, RustModule.SigmaRust.Constant.from_byte_array(fromHex(quoteId)))
+    .with_constant(9, RustModule.SigmaRust.Constant.from_byte_array(fromHex(quoteId)))
     .with_constant(14, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
     .with_constant(18, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
-    .with_constant(7, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
+    .with_constant(8, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
     .with_constant(
-      9,
+      10,
       RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(minQuoteAmount.toString()))
     )
     .with_constant(
-      15,
+      11,
       RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFeePerTokenNum.toString()))
     )
     .with_constant(
@@ -81,6 +82,14 @@ export function swapSell(
       RustModule.SigmaRust.Constant.from_i64(
         RustModule.SigmaRust.I64.from_str(dexFeePerTokenDenom.toString())
       )
+    )
+    .with_constant(
+      2,
+      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(baseAmount.toString()))
+    )
+    .with_constant(
+      17,
+      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(baseAmount.toString()))
     )
     .to_base16_bytes()
 }
