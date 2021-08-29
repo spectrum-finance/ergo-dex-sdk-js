@@ -78,7 +78,7 @@ export function swapSell(
       RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFeePerTokenNum.toString()))
     )
     .with_constant(
-      16,
+      12,
       RustModule.SigmaRust.Constant.from_i64(
         RustModule.SigmaRust.I64.from_str(dexFeePerTokenDenom.toString())
       )
