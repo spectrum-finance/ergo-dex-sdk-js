@@ -75,9 +75,9 @@ class N2TParserIn {
 
   private parseSellSwap(bx: ErgoBox): AmmOrderInfo | undefined {
     const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
-    const poolIdC = tree.get_constant(7)?.to_byte_array()
+    const poolIdC = tree.get_constant(8)?.to_byte_array()
     const poolId = poolIdC ? toHex(poolIdC) : undefined
-    const outIdC = tree.get_constant(8)?.to_byte_array()
+    const outIdC = tree.get_constant(9)?.to_byte_array()
     const outId = outIdC ? toHex(outIdC) : undefined
     return poolId && outId
       ? {from: AssetAmount.native(bx.value), to: {id: outId}, poolId, type: "swap"}
