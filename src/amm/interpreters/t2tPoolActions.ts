@@ -103,8 +103,8 @@ export class T2tPoolActions implements PoolActions {
     const proxyScript = T2T.deposit(params.poolId, params.pk, params.dexFee)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const pairIn = [
-      outputGranted.assets.filter(t => t.tokenId === x.id),
-      outputGranted.assets.filter(t => t.tokenId === y.id)
+      outputGranted.assets.filter(t => t.tokenId === x.asset.id),
+      outputGranted.assets.filter(t => t.tokenId === y.asset.id)
     ].flat()
 
     const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
@@ -137,7 +137,7 @@ export class T2tPoolActions implements PoolActions {
   redeem(params: RedeemParams, ctx: TransactionContext): Promise<ErgoTx> {
     const proxyScript = T2T.redeem(params.poolId, params.pk, params.dexFee)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
-    const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.id)
+    const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.asset.id)
 
     const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
     if (outputGranted.nErgs < minNErgs)

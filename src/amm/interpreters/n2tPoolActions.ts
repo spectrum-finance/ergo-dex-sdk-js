@@ -96,17 +96,17 @@ export class N2tPoolActions implements PoolActions {
   }
 
   deposit(params: DepositParams, ctx: TransactionContext): Promise<ErgoTx> {
-    const [, y] = [params.x, params.y]
-    const proxyScript = N2T.deposit(params.poolId, params.pk, params.dexFee)
+    const [x, y] = [params.x, params.y]
+    const proxyScript = N2T.deposit(params.poolId, params.pk, x.amount, params.dexFee)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
-    const inY = outputGranted.assets.filter(t => t.tokenId === y.id)[0]
+    const inY = outputGranted.assets.filter(t => t.tokenId === y.asset.id)[0]
 
     const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
       )
-    if (!inY) return Promise.reject(new InsufficientInputs(`Token ${y.name} not provided`))
+    if (!inY) return Promise.reject(new InsufficientInputs(`Token ${y.asset.name} not provided`))
 
     const out: ErgoBoxCandidate = {
       value: outputGranted.nErgs - ctx.feeNErgs,
@@ -128,7 +128,7 @@ export class N2tPoolActions implements PoolActions {
   redeem(params: RedeemParams, ctx: TransactionContext): Promise<ErgoTx> {
     const proxyScript = N2T.redeem(params.poolId, params.pk, params.dexFee)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
-    const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.id)
+    const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.asset.id)
 
     const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
     if (outputGranted.nErgs < minNErgs)
@@ -136,7 +136,7 @@ export class N2tPoolActions implements PoolActions {
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
       )
     if (tokensIn.length != 1)
-      return Promise.reject(new InsufficientInputs(`Token ${params.lp.name ?? "LP"} not provided`))
+      return Promise.reject(new InsufficientInputs(`Token ${params.lp.asset.name ?? "LP"} not provided`))
 
     const out = {
       value: outputGranted.nErgs - ctx.feeNErgs,
