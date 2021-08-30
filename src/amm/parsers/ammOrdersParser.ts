@@ -1,4 +1,4 @@
-import {AssetAmount, ErgoBox, NativeAssetInfo} from "../../ergo"
+import {AssetAmount, ErgoBox, ErgoTreeTemplate, NativeAssetInfo} from "../../ergo"
 import * as T2T from "../contracts/t2tTemplates"
 import * as N2T from "../contracts/n2tTemplates"
 import {treeTemplateFromErgoTree} from "../../ergo/entities/ergoTreeTemplate"
@@ -124,7 +124,7 @@ class N2TParserIn {
 const t2tParser = new T2TParserIn()
 const n2tParser = new N2TParserIn()
 
-const AmmTemplates: [string, AmmOrderType, ParserIn][] = [
+const AmmTemplates: [ErgoTreeTemplate, AmmOrderType, ParserIn][] = [
   [T2T.SwapTemplate, "swap", t2tParser],
   [T2T.DepositTemplate, "deposit", t2tParser],
   [T2T.RedeemTemplate, "redeem", t2tParser],

@@ -102,6 +102,7 @@ export function swapBuy(
   pk: PublicKey
 ): ErgoTree {
   const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(dexFeePerToken)
+  const dexFeePerTokenNumDiff = dexFeePerTokenDenom - dexFeePerTokenNum
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2T.SwapBuySample)
     .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
     .with_constant(11, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
@@ -112,13 +113,15 @@ export function swapBuy(
       RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(minQuoteAmount.toString()))
     )
     .with_constant(
-      12,
-      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFeePerTokenNum.toString()))
-    )
-    .with_constant(
       5,
       RustModule.SigmaRust.Constant.from_i64(
         RustModule.SigmaRust.I64.from_str(dexFeePerTokenDenom.toString())
+      )
+    )
+    .with_constant(
+      6,
+      RustModule.SigmaRust.Constant.from_i64(
+        RustModule.SigmaRust.I64.from_str(dexFeePerTokenNumDiff.toString())
       )
     )
     .to_base16_bytes()
