@@ -50,10 +50,6 @@ export function redeem(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree 
       12,
       RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFee.toString()))
     )
-    .with_constant(
-      13,
-      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFee.toString()))
-    )
     .to_base16_bytes()
 }
 
