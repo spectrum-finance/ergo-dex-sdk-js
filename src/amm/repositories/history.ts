@@ -115,7 +115,7 @@ export class NetworkHistory implements History {
 
     const poolOutput = () => tx.outputs.map(o => this.poolsParser.parse(o)).find(x => x)
 
-    if (inputOrder) {
+    if (inputOrder && confirmed) {
       const [summary, input] = inputOrder
       const pool = poolOutput()
       if (pool) {
