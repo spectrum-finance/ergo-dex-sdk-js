@@ -93,7 +93,7 @@ export class NetworkHistory implements History {
         const op = this.ordersParser.parse(o)
         return op ? ([op, o] as [AmmOrderInfo, AugErgoBox]) : undefined
       })
-      .find(x => x)
+      .find(x => !!x)
     if (outputOrder) {
       const [summary, output] = outputOrder
       if (!output.spentTransactionId)
@@ -111,9 +111,9 @@ export class NetworkHistory implements History {
         const op = this.ordersParser.parse(o)
         return op ? ([op, o] as [AmmOrderInfo, AugErgoBox]) : undefined
       })
-      .find(x => x)
+      .find(x => !!x)
 
-    const poolOutput = () => tx.outputs.map(o => this.poolsParser.parse(o)).find(x => x)
+    const poolOutput = () => tx.outputs.map(o => this.poolsParser.parse(o)).find(x => !!x)
 
     if (inputOrder && confirmed) {
       const [summary, input] = inputOrder
