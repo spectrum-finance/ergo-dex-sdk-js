@@ -1,4 +1,4 @@
-import {ErgoTx, isNative, Prover, TransactionContext, TxAssembler} from "ergo-sdk"
+import {ErgoTx, isNative, Prover, TransactionContext, TxAssembler} from "@ergolabs/ergo-sdk"
 import {AmmPool} from "../entities/ammPool"
 import {PoolSetupParams} from "../models/poolSetupParams"
 import {SwapParams} from "../models/swapParams"

@@ -1,4 +1,4 @@
-import {ErgoTree, HexString} from "ergo-sdk"
+import {ErgoTree, HexString} from "@ergolabs/ergo-sdk"
 
 export type PoolContracts = {
   poolTree: ErgoTree

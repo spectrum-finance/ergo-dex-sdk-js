@@ -1,4 +1,4 @@
-import {ErgoNetwork, Paging, TokenId} from "ergo-sdk"
+import {ErgoNetwork, Paging, TokenId} from "@ergolabs/ergo-sdk"
 import * as N2T from "../contracts/n2tPoolContracts"
 import {PoolContracts} from "../contracts/poolContracts"
 import * as T2T from "../contracts/t2tPoolContracts"

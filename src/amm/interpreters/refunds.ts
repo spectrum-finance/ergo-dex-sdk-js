@@ -6,7 +6,7 @@ import {
   Prover,
   treeTemplateFromErgoTree,
   TxAssembler, TxRequest
-} from "ergo-sdk"
+} from "@ergolabs/ergo-sdk"
 import {RefundParams} from "../../models/refundParams"
 import * as T2T from "../contracts/t2tTemplates"
 import * as N2T from "../contracts/n2tTemplates"

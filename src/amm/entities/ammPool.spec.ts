@@ -1,5 +1,5 @@
 import test from "ava"
-import {AssetAmount} from "ergo-sdk"
+import {AssetAmount} from "@ergolabs/ergo-sdk"
 import {AmmPool} from "./ammPool"
 import {sqrt} from "../../utils/sqrt"
 

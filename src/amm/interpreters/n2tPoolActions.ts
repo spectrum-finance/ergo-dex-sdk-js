@@ -8,8 +8,8 @@ import {
   Prover, RegisterId, registers,
   TransactionContext,
   TxAssembler, TxRequest
-} from "ergo-sdk"
-import {InsufficientInputs} from "ergo-sdk/build/main/errors/insufficientInputs"
+} from "@ergolabs/ergo-sdk"
+import {InsufficientInputs} from "@ergolabs/ergo-sdk/build/main/errors/insufficientInputs"
 import {PoolSetupParams} from "../models/poolSetupParams"
 import {SwapParams} from "../models/swapParams"
 import * as N2T from "../contracts/n2tPoolContracts"

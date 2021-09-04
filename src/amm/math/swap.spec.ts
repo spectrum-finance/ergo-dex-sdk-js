@@ -1,5 +1,5 @@
 import test from "ava"
-import {AssetAmount} from "ergo-sdk"
+import {AssetAmount} from "@ergolabs/ergo-sdk"
 import {swapVars} from "./swap"
 
 test("Swap math", t => {

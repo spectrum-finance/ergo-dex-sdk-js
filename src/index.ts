@@ -39,8 +39,6 @@ export {PoolId} from "./amm/types"
 export {SwapExtremums, swapVars} from "./amm/math/swap"
 export {Price} from "./entities/price"
 export {RefundParams} from "./models/refundParams"
-export type {SigmaRust} from "./utils/rustLoader"
-export {RustModule} from "./utils/rustLoader"
 export {decimalToFractional, evaluate} from "./utils/math"
 
 export * from "./constants"

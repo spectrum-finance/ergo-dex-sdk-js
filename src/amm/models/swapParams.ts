@@ -1,4 +1,4 @@
-import {AssetAmount, PublicKey, TokenId} from "ergo-sdk"
+import {AssetAmount, PublicKey, TokenId} from "@ergolabs/ergo-sdk"
 import {PoolId} from "../types"
 
 export type SwapParams = {

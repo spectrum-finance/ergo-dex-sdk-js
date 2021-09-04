@@ -1,9 +1,8 @@
-import {ErgoTree, HexString, PublicKey, TokenId} from "ergo-sdk"
+import {ErgoTree, HexString, PublicKey, RustModule, TokenId} from "@ergolabs/ergo-sdk"
 import {decimalToFractional} from "../../utils/math"
 import {PoolId} from "../types"
 import * as T2T from "./t2tTemplates"
 import {fromHex, toHex} from "../../utils/hex"
-import {RustModule} from "../../utils/rustLoader"
 import {SigmaPropConstPrefixHex} from "../constants"
 import * as crypto from "crypto-js"
 
