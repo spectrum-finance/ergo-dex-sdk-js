@@ -1,5 +1,5 @@
 import * as crypto from "crypto-js"
-import {ErgoTree, HexString, PublicKey, TokenId} from "../../ergo"
+import {ErgoTree, HexString, PublicKey, TokenId} from "ergo-sdk"
 import {fromHex, toHex} from "../../utils/hex"
 import {decimalToFractional} from "../../utils/math"
 import {RustModule} from "../../utils/rustLoader"

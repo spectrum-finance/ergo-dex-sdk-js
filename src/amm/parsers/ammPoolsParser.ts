@@ -1,7 +1,5 @@
-import {AssetAmount, ErgoBox, Int32Constant} from "../../ergo"
+import {AssetAmount, deserializeConstant, ErgoBox, Int32Constant, RegisterId} from "ergo-sdk"
 import {AmmPool} from "../entities/ammPool"
-import {RegisterId} from "../../ergo/entities/registers"
-import {deserializeConstant} from "../../ergo/entities/constant"
 
 export interface AmmPoolsParser {
   parsePool(box: ErgoBox): AmmPool | undefined

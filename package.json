@@ -47,6 +47,7 @@
         "crypto-js": "^4.0.0",
         "ergo-lib-wasm-browser": "0.14.0-alpha-01cd628",
         "ergo-lib-wasm-nodejs": "0.14.0-alpha-01cd628",
+        "ergo-sdk": "0.1.0",
         "json-bigint": "^1.0.0",
         "mathjs": "^9.4.4",
         "ramda": "0.27.1"
@@ -57,7 +58,7 @@
         "@types/bs58": "^4.0.1",
         "@types/crypto-js": "^4.0.1",
         "@types/json-bigint": "^1.0.1",
-        "@types/node": "^15.6.1",
+        "@types/node": "^15.14.9",
         "@types/ramda": "0.27.32",
         "@typescript-eslint/eslint-plugin": "^4.0.1",
         "@typescript-eslint/parser": "^4.0.1",

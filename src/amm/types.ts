@@ -1,3 +1,3 @@
-import {TokenId} from "../ergo"
+import {TokenId} from "ergo-sdk"
 
 export type PoolId = TokenId

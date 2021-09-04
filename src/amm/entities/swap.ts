@@ -1,5 +1,5 @@
 import type {Address, TokenId} from "ergo-lib-wasm-browser"
-import {AssetAmount, PublicKey} from "../../ergo"
+import {AssetAmount, PublicKey} from "ergo-sdk"
 
 export type Swap = {
   readonly pk: PublicKey

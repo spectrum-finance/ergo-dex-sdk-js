@@ -1,6 +1,6 @@
 import test from "ava"
+import {AssetAmount} from "ergo-sdk"
 import {swapVars} from "./swap"
-import {AssetAmount} from "../../ergo"
 
 test("Swap math", t => {
   const minDexFee = 10000000n

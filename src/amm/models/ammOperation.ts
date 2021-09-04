@@ -1,4 +1,4 @@
-import {BoxId, TxId} from "../../ergo"
+import {BoxId, TxId} from "ergo-sdk"
 import {OperationSummary} from "./operationSummary"
 
 export type OpStatus = "pending" | "submitted" | "executed" | "settled" | "refund"

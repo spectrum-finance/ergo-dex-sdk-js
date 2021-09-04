@@ -1,5 +1,5 @@
+import {AssetAmount, PublicKey} from "ergo-sdk"
 import {PoolId} from "../types"
-import {AssetAmount, PublicKey} from "../../ergo"
 
 export type RedeemParams = {
   readonly poolId: PoolId

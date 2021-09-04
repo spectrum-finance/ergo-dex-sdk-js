@@ -1,4 +1,4 @@
-import {TxId} from "../../ergo"
+import {TxId} from "ergo-sdk"
 import {RefundableAmmOperationType} from "./ammOperation"
 
 export type RefundStatus = "pending" | "executed" | "settled"

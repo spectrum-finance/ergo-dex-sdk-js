@@ -1,4 +1,4 @@
-import {AssetAmount, AssetInfo} from "../../ergo"
+import {AssetAmount, AssetInfo} from "ergo-sdk"
 import {PoolId} from "../types"
 import {AmmOperationType} from "./ammOperation"
 

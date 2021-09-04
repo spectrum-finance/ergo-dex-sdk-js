@@ -1,7 +1,6 @@
-import {AssetAmount, ErgoBox, ErgoTreeTemplate, NativeAssetInfo} from "../../ergo"
+import {AssetAmount, ErgoBox, ErgoTreeTemplate, NativeAssetInfo, treeTemplateFromErgoTree} from "ergo-sdk"
 import * as T2T from "../contracts/t2tTemplates"
 import * as N2T from "../contracts/n2tTemplates"
-import {treeTemplateFromErgoTree} from "../../ergo/entities/ergoTreeTemplate"
 import {AmmOrderType} from "../models/operations"
 import {RustModule} from "../../utils/rustLoader"
 import {toHex} from "../../utils/hex"

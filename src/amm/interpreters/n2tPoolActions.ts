@@ -1,27 +1,23 @@
-import {isNative} from "../../ergo"
+import {
+  BoxSelection,
+  ByteaConstant, EmptyRegisters,
+  ErgoBoxCandidate,
+  ergoTreeFromAddress,
+  ErgoTx, Int32Constant, isNative,
+  MinBoxValue,
+  Prover, RegisterId, registers,
+  TransactionContext,
+  TxAssembler, TxRequest
+} from "ergo-sdk"
+import {InsufficientInputs} from "ergo-sdk/build/main/errors/insufficientInputs"
 import {PoolSetupParams} from "../models/poolSetupParams"
 import {SwapParams} from "../models/swapParams"
 import * as N2T from "../contracts/n2tPoolContracts"
 import {BurnLP, EmissionLP, MinPoolBoxValue} from "../constants"
-import {InsufficientInputs} from "../../ergo/errors/insufficientInputs"
-import {MinBoxValue} from "../../ergo/constants"
-import {
-  ByteaConstant,
-  Int32Constant,
-  BoxSelection,
-  ErgoTx,
-  Prover,
-  ErgoBoxCandidate,
-  TransactionContext
-} from "../../ergo"
 import {DepositParams} from "../models/depositParams"
 import {RedeemParams} from "../models/redeemParams"
-import {ergoTreeFromAddress} from "../../ergo/entities/ergoTree"
 import {PoolActions} from "./poolActions"
-import {EmptyRegisters, RegisterId, registers} from "../../ergo/entities/registers"
 import {stringToBytea} from "../../utils/utf8"
-import {TxRequest} from "../../ergo/wallet/entities/txRequest"
-import {TxAssembler} from "../../ergo"
 
 export class N2tPoolActions implements PoolActions {
   constructor(public readonly prover: Prover, public readonly txAsm: TxAssembler) {}

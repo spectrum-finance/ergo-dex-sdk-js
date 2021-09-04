@@ -1,6 +1,6 @@
+import {AssetAmount, isNative} from "ergo-sdk"
 import {InvalidParams} from "../errors/invalidParams"
 import {PoolFeeMaxDecimals, PoolFeeScale} from "../constants"
-import {AssetAmount, isNative} from "../../ergo"
 import {sqrt} from "../../utils/sqrt"
 
 export type PoolSetupParams = {

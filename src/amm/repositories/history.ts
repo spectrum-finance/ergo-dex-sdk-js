@@ -1,8 +1,6 @@
-import {Address, AssetAmount} from "../../ergo"
+import {Address, AssetAmount, AugErgoBox, AugErgoTx, ErgoNetwork} from "ergo-sdk"
 import {AmmDexOperation} from "../models/operations"
-import {ErgoNetwork} from "../../services/ergoNetwork"
 import {AmmOrdersParser, DefaultAmmOrdersParser} from "../parsers/ammOrdersParser"
-import {AugErgoBox, AugErgoTx} from "../../network/models"
 import {AmmOrderInfo} from "../models/ammOrderInfo"
 import {AmmPoolsInfoParser, DefaultAmmPoolsInfoParser} from "../parsers/ammPoolsInfoParser"
 

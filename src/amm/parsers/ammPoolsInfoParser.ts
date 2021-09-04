@@ -1,6 +1,5 @@
-import {AssetAmount, ErgoBox} from "../../ergo"
+import {AssetAmount, ErgoBox, treeTemplateFromErgoTree} from "ergo-sdk"
 import {AmmPoolInfo} from "../models/ammPoolInfo"
-import {treeTemplateFromErgoTree} from "../../ergo/entities/ergoTreeTemplate"
 import * as T2T from "../contracts/t2tTemplates"
 import * as N2T from "../contracts/n2tTemplates"
 
