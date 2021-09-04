@@ -1,6 +1,6 @@
 import {PoolSetupParams} from "../models/poolSetupParams"
 import {SwapParams} from "../models/swapParams"
-import {T2tPoolContracts as scripts} from "../contracts/t2tPoolContracts"
+import * as T2T from "../contracts/t2tPoolContracts"
 import {BurnLP, EmissionLP, MinPoolBoxValue} from "../constants"
 import {InsufficientInputs} from "../../ergo/errors/insufficientInputs"
 import {MinBoxValue} from "../../ergo/constants"
@@ -16,13 +16,13 @@ import {
 import {DepositParams} from "../models/depositParams"
 import {RedeemParams} from "../models/redeemParams"
 import {ergoTreeFromAddress} from "../../ergo/entities/ergoTree"
-import {PoolOps} from "./poolOps"
+import {PoolActions} from "./poolActions"
 import {EmptyRegisters, RegisterId, registers} from "../../ergo/entities/registers"
 import {stringToBytea} from "../../utils/utf8"
 import {TxRequest} from "../../ergo/wallet/entities/txRequest"
 import {TxAssembler} from "../../ergo"
 
-export class T2tPoolOps implements PoolOps {
+export class T2tPoolActions implements PoolActions {
   constructor(public readonly prover: Prover, public readonly txAsm: TxAssembler) {}
 
   async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<ErgoTx[]> {
@@ -81,7 +81,7 @@ export class T2tPoolOps implements PoolOps {
     const poolLP = {tokenId: newTokenLP.tokenId, amount: poolAmountLP}
     const poolOut: ErgoBoxCandidate = {
       value: poolBootBox.value - lpOut.value - ctx.feeNErgs,
-      ergoTree: scripts.pool(),
+      ergoTree: T2T.pool(),
       creationHeight: height,
       assets: [newTokenNFT, poolLP, ...poolBootBox.assets.slice(1)],
       additionalRegisters: registers([[RegisterId.R4, new Int32Constant(params.feeNumerator)]])
@@ -100,11 +100,11 @@ export class T2tPoolOps implements PoolOps {
 
   deposit(params: DepositParams, ctx: TransactionContext): Promise<ErgoTx> {
     const [x, y] = [params.x, params.y]
-    const proxyScript = scripts.deposit(params.poolId, params.pk, params.dexFee)
+    const proxyScript = T2T.deposit(params.poolId, params.pk, params.dexFee)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const pairIn = [
-      outputGranted.assets.filter(t => t.tokenId === x.id),
-      outputGranted.assets.filter(t => t.tokenId === y.id)
+      outputGranted.assets.filter(t => t.tokenId === x.asset.id),
+      outputGranted.assets.filter(t => t.tokenId === y.asset.id)
     ].flat()
 
     const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
@@ -135,9 +135,9 @@ export class T2tPoolOps implements PoolOps {
   }
 
   redeem(params: RedeemParams, ctx: TransactionContext): Promise<ErgoTx> {
-    const proxyScript = scripts.redeem(params.poolId, params.pk, params.dexFee)
+    const proxyScript = T2T.redeem(params.poolId, params.pk, params.dexFee)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
-    const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.id)
+    const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.asset.id)
 
     const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
     if (outputGranted.nErgs < minNErgs)
@@ -167,7 +167,7 @@ export class T2tPoolOps implements PoolOps {
   }
 
   swap(params: SwapParams, ctx: TransactionContext): Promise<ErgoTx> {
-    const proxyScript = scripts.swap(
+    const proxyScript = T2T.swap(
       params.poolId,
       params.poolFeeNum,
       params.quoteAsset,
@@ -177,23 +177,21 @@ export class T2tPoolOps implements PoolOps {
     )
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const baseAssetId = params.baseInput.asset.id
-    const tokensIn = outputGranted.assets.filter(t => t.tokenId === baseAssetId)
+    const baseIn = outputGranted.assets.filter(t => t.tokenId === baseAssetId)[0]
 
     const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
       )
-    if (tokensIn.length != 1)
-      return Promise.reject(
-        new InsufficientInputs(`Wrong number of input tokens provided ${tokensIn.length}, required 1`)
-      )
+    if (!baseIn)
+      return Promise.reject(new InsufficientInputs(`Base asset ${params.baseInput.asset.name} not provided`))
 
     const out: ErgoBoxCandidate = {
       value: outputGranted.nErgs - ctx.feeNErgs,
       ergoTree: proxyScript,
       creationHeight: ctx.network.height,
-      assets: tokensIn,
+      assets: [baseIn],
       additionalRegisters: EmptyRegisters
     }
     const txr: TxRequest = {

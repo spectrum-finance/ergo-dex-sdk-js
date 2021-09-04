@@ -1,10 +1,10 @@
 import {PoolId} from "../types"
-import {AssetInfo, PublicKey} from "../../ergo"
+import {AssetAmount, PublicKey} from "../../ergo"
 
 export type DepositParams = {
   readonly poolId: PoolId
-  readonly x: AssetInfo
-  readonly y: AssetInfo
+  readonly x: AssetAmount
+  readonly y: AssetAmount
   readonly pk: PublicKey
   readonly dexFee: bigint
 }

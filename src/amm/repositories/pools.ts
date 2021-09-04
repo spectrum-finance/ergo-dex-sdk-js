@@ -1,10 +1,12 @@
+import * as N2T from "../contracts/n2tPoolContracts"
+import {PoolContracts} from "../contracts/poolContracts"
+import * as T2T from "../contracts/t2tPoolContracts"
 import {PoolId} from "../types"
 import {AmmPool} from "../entities/ammPool"
 import {ErgoNetwork} from "../../services/ergoNetwork"
 import {TokenId} from "../../ergo"
-import {T2tPoolContracts} from "../contracts/t2tPoolContracts"
 import {Paging} from "../../network/paging"
-import {AmmPoolsParser} from "../parsers/ammPoolsParser"
+import {AmmPoolsParser, N2TAmmPoolsParser, T2TAmmPoolsParser} from "../parsers/ammPoolsParser"
 
 export interface Pools {
   /** Get a pool by the given pool `id`.
@@ -24,21 +26,32 @@ export interface Pools {
   getByTokensUnion(tokens: TokenId[], paging: Paging): Promise<[AmmPool[], number]>
 }
 
+export function makeNativePools(network: ErgoNetwork): NetworkPools {
+  return new NetworkPools(network, new N2TAmmPoolsParser(), N2T.poolBundle())
+}
+
+export function makePools(network: ErgoNetwork): NetworkPools {
+  return new NetworkPools(network, new T2TAmmPoolsParser(), T2T.poolBundle())
+}
+
 export class NetworkPools implements Pools {
-  constructor(readonly network: ErgoNetwork, readonly parser: AmmPoolsParser) {}
+  constructor(
+    readonly network: ErgoNetwork,
+    readonly parser: AmmPoolsParser,
+    readonly contracts: PoolContracts
+  ) {}
 
   async get(id: PoolId): Promise<AmmPool | undefined> {
-    let boxes = await this.network.getUnspentByTokenId(id, {offset: 0, limit: 1})
-    console.log(boxes)
+    const boxes = await this.network.getUnspentByTokenId(id, {offset: 0, limit: 1})
     if (boxes.length > 0) {
-      let poolBox = boxes[0]
+      const poolBox = boxes[0]
       return this.parser.parsePool(poolBox)
     }
     return undefined
   }
 
   async getAll(paging: Paging): Promise<[AmmPool[], number]> {
-    const [boxes, totalBoxes] = await this.network.getUnspentByErgoTree(T2tPoolContracts.pool(), paging)
+    const [boxes, totalBoxes] = await this.network.getUnspentByErgoTree(this.contracts.poolTree, paging)
     const pools = this.parser.parseValidPools(boxes)
     const invalid = boxes.length - pools.length
     const total = totalBoxes - invalid
@@ -46,7 +59,7 @@ export class NetworkPools implements Pools {
   }
 
   async getByTokens(tokens: TokenId[], paging: Paging): Promise<[AmmPool[], number]> {
-    const req = {ergoTreeTemplateHash: T2tPoolContracts.poolTemplateHash(), assets: tokens}
+    const req = {ergoTreeTemplateHash: this.contracts.poolTemplateHash, assets: tokens}
     const [boxes, totalBoxes] = await this.network.searchUnspentBoxes(req, paging)
     const pools = this.parser.parseValidPools(boxes)
     const invalid = boxes.length - pools.length
@@ -55,7 +68,7 @@ export class NetworkPools implements Pools {
   }
 
   async getByTokensUnion(tokens: TokenId[], paging: Paging): Promise<[AmmPool[], number]> {
-    const req = {ergoTreeTemplateHash: T2tPoolContracts.poolTemplateHash(), assets: tokens}
+    const req = {ergoTreeTemplateHash: this.contracts.poolTemplateHash, assets: tokens}
     const [boxes, totalBoxes] = await this.network.searchUnspentBoxesByTokensUnion(req, paging)
     const pools = this.parser.parseValidPools(boxes)
     const invalid = boxes.length - pools.length

@@ -6,6 +6,8 @@ export type AmmOrderStatus = "pending" | "submitted" | "executed" | "settled" | 
 
 export type AmmOrderType = "swap" | "deposit" | "redeem"
 
+export type AmmDexKind = "n2t" | "t2t"
+
 export type AmmDexOperationType = "order" | "refund" | "setup"
 
 export type AmmOrder = {

@@ -12,7 +12,7 @@ export * as wasmInterop from "./ergoWasmInterop"
 export {Address, Network} from "./entities/address"
 export * as address from "./entities/address"
 export {AssetAmount} from "./entities/assetAmount"
-export {AssetInfo} from "./entities/assetInfo"
+export {AssetInfo, isNative, NativeAssetInfo} from "./entities/assetInfo"
 export {ContextExtension} from "./entities/contextExtension"
 export {
   ErgoBoxCandidate,

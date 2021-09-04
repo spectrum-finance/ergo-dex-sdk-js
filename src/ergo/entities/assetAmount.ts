@@ -1,4 +1,4 @@
-import {AssetInfo} from "./assetInfo"
+import {AssetInfo, NativeAssetInfo} from "./assetInfo"
 import {TokenAmount} from "./tokenAmount"
 
 export class AssetAmount {
@@ -13,6 +13,10 @@ export class AssetAmount {
       },
       token.amount
     )
+  }
+
+  static native(amount: bigint): AssetAmount {
+    return new this(NativeAssetInfo, amount)
   }
 
   withAmount(amount: bigint): AssetAmount {
