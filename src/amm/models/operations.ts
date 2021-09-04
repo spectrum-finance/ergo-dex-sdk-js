@@ -1,4 +1,4 @@
-import {AssetAmount, BoxId, TxId} from "../../ergo"
+import {AssetAmount, BoxId, TxId} from "@ergolabs/ergo-sdk"
 import {AmmOrderInfo} from "./ammOrderInfo"
 import {AmmPoolInfo} from "./ammPoolInfo"
 

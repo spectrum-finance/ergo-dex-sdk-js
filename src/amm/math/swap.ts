@@ -1,4 +1,4 @@
-import {AssetAmount} from "../../ergo"
+import {AssetAmount} from "@ergolabs/ergo-sdk"
 import {decimalToFractional} from "../../utils/math"
 import {I64Max} from "../constants"
 

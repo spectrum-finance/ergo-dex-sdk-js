@@ -1,12 +1,18 @@
-import {BoxSelection, ErgoTx, MinTransactionContext, Prover, TxAssembler} from "../../ergo"
+import {
+  BoxSelection,
+  EmptyRegisters,
+  ErgoNetwork,
+  ergoTreeFromAddress,
+  ErgoTx,
+  MinTransactionContext,
+  Prover,
+  treeTemplateFromErgoTree,
+  TxAssembler,
+  TxRequest
+} from "@ergolabs/ergo-sdk"
 import {RefundParams} from "../../models/refundParams"
-import {ErgoNetwork} from "../../services/ergoNetwork"
 import * as T2T from "../contracts/t2tTemplates"
 import * as N2T from "../contracts/n2tTemplates"
-import {treeTemplateFromErgoTree} from "../../ergo/entities/ergoTreeTemplate"
-import {TxRequest} from "../../ergo/wallet/entities/txRequest"
-import {EmptyRegisters} from "../../ergo/entities/registers"
-import {ergoTreeFromAddress} from "../../ergo/entities/ergoTree"
 
 export interface Refunds {
   /** Redeem assets from a proxy order box.

@@ -1,5 +1,4 @@
-import {isNative} from "../../ergo"
-import {ErgoNetwork} from "../../services/ergoNetwork"
+import {ErgoNetwork, isNative} from "@ergolabs/ergo-sdk"
 import {AmmPool} from "../entities/ammPool"
 import {BurnLP, EmissionLP} from "../constants"
 import {sqrt} from "../../utils/sqrt"

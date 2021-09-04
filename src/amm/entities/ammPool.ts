@@ -1,5 +1,5 @@
+import {AssetAmount, AssetInfo} from "@ergolabs/ergo-sdk"
 import {PoolId} from "../types"
-import {AssetInfo, AssetAmount} from "../../ergo"
 import {Price} from "../../entities/price"
 import {EmissionLP} from "../constants"
 
@@ -75,8 +75,8 @@ export class AmmPool {
   /** @return Input amount of one token for a given output amount of the other
    */
   inputAmount(output: AssetAmount, maxSlippage?: number): AssetAmount | undefined {
-    let slippage = BigInt((maxSlippage || 0) * 100)
-    let minimalOutput = this.outputAmount(output).amount
+    const slippage = BigInt((maxSlippage || 0) * 100)
+    const minimalOutput = this.outputAmount(output).amount
     if (output.asset.id === this.assetX.id && minimalOutput > 0 && output.amount <= this.x.amount) {
       return this.y.withAmount(
         (this.y.amount * output.amount * this.feeDenom) /
@@ -99,7 +99,7 @@ export class AmmPool {
    *  @return Output amount of one token for a given input amount of the other
    */
   outputAmount(input: AssetAmount, maxSlippage?: number): AssetAmount {
-    let slippage = BigInt((maxSlippage || 0) * 100)
+    const slippage = BigInt((maxSlippage || 0) * 100)
     if (input.asset.id === this.assetX.id)
       return this.y.withAmount(
         (this.y.amount * input.amount * this.feeNum) /

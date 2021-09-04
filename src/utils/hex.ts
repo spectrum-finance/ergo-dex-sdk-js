@@ -1,4 +1,4 @@
-import {HexString} from "../ergo/types"
+import {HexString} from "@ergolabs/ergo-sdk"
 
 export function fromHex(s: HexString): Uint8Array {
   return Uint8Array.from(Buffer.from(s, "hex"))

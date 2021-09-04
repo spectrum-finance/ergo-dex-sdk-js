@@ -1,4 +1,4 @@
-import {AssetAmount, AssetInfo} from "../../ergo"
+import {AssetAmount, AssetInfo} from "@ergolabs/ergo-sdk"
 import {PoolId} from "../types"
 
 export type AmmOrderInfo = {poolId: PoolId} & (Swap | Deposit | Redeem)

@@ -1,11 +1,9 @@
+import {ErgoNetwork, Paging, TokenId} from "@ergolabs/ergo-sdk"
 import * as N2T from "../contracts/n2tPoolContracts"
 import {PoolContracts} from "../contracts/poolContracts"
 import * as T2T from "../contracts/t2tPoolContracts"
 import {PoolId} from "../types"
 import {AmmPool} from "../entities/ammPool"
-import {ErgoNetwork} from "../../services/ergoNetwork"
-import {TokenId} from "../../ergo"
-import {Paging} from "../../network/paging"
 import {AmmPoolsParser, N2TAmmPoolsParser, T2TAmmPoolsParser} from "../parsers/ammPoolsParser"
 
 export interface Pools {
