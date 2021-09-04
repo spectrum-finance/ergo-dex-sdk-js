@@ -1,15 +1,21 @@
 import {
   BoxSelection,
-  ByteaConstant, EmptyRegisters,
+  ByteaConstant,
+  EmptyRegisters,
   ErgoBoxCandidate,
   ergoTreeFromAddress,
-  ErgoTx, Int32Constant, isNative,
+  ErgoTx,
+  Int32Constant,
+  isNative,
   MinBoxValue,
-  Prover, RegisterId, registers,
+  Prover,
+  RegisterId,
+  registers,
   TransactionContext,
-  TxAssembler, TxRequest
+  TxAssembler,
+  TxRequest
 } from "@ergolabs/ergo-sdk"
-import {InsufficientInputs} from "@ergolabs/ergo-sdk/build/main/errors/insufficientInputs"
+import {InsufficientInputs} from "@ergolabs/ergo-sdk"
 import {PoolSetupParams} from "../models/poolSetupParams"
 import {SwapParams} from "../models/swapParams"
 import * as N2T from "../contracts/n2tPoolContracts"

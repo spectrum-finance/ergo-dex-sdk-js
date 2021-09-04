@@ -37,8 +37,7 @@ export class NetworkPools implements Pools {
     readonly network: ErgoNetwork,
     readonly parser: AmmPoolsParser,
     readonly contracts: PoolContracts
-  ) {
-  }
+  ) {}
 
   async get(id: PoolId): Promise<AmmPool | undefined> {
     const boxes = await this.network.getUnspentByTokenId(id, {offset: 0, limit: 1})
