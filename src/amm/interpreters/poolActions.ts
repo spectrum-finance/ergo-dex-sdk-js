@@ -1,4 +1,4 @@
-import {ErgoTx, isNative, Prover, TransactionContext, TxAssembler} from "@ergolabs/ergo-sdk"
+import {Address, ErgoTx, isNative, Prover, TransactionContext, TxAssembler} from "@ergolabs/ergo-sdk"
 import {AmmPool} from "../entities/ammPool"
 import {PoolSetupParams} from "../models/poolSetupParams"
 import {SwapParams} from "../models/swapParams"
@@ -27,8 +27,12 @@ export interface PoolActions {
 
 export type PoolActionsSelector = (pool: AmmPool | PoolSetupParams) => PoolActions
 
-export function makeDefaultPoolActionsSelector(prover: Prover, txAsm: TxAssembler): PoolActionsSelector {
-  const n2t = new N2tPoolActions(prover, txAsm)
-  const t2t = new T2tPoolActions(prover, txAsm)
+export function makeDefaultPoolActionsSelector(
+  prover: Prover,
+  txAsm: TxAssembler,
+  uiRewardAddress: Address
+): PoolActionsSelector {
+  const n2t = new N2tPoolActions(prover, txAsm, uiRewardAddress)
+  const t2t = new T2tPoolActions(prover, txAsm, uiRewardAddress)
   return pool => (isNative(pool.x.asset) || isNative(pool.y.asset) ? n2t : t2t)
 }

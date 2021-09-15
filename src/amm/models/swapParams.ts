@@ -8,5 +8,6 @@ export type SwapParams = {
   readonly baseInput: AssetAmount
   readonly quoteAsset: TokenId
   readonly minQuoteOutput: bigint
-  readonly dexFeePerToken: number
+  readonly exFeePerToken: number
+  readonly uiFeeNErgs: bigint
 }

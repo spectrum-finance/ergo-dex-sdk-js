@@ -1,4 +1,5 @@
 import {
+  Address,
   BoxSelection,
   ByteaConstant,
   EmptyRegisters,
@@ -18,14 +19,19 @@ import {InsufficientInputs} from "@ergolabs/ergo-sdk"
 import {PoolSetupParams} from "../models/poolSetupParams"
 import {SwapParams} from "../models/swapParams"
 import * as T2T from "../contracts/t2tPoolContracts"
-import {BurnLP, EmissionLP, MinPoolBoxValue} from "../constants"
+import {BurnLP, EmissionLP} from "../constants"
 import {DepositParams} from "../models/depositParams"
 import {RedeemParams} from "../models/redeemParams"
+import {minAmountNErgsForOrder, minAmountNErgsForSetup} from "./mins"
 import {PoolActions} from "./poolActions"
 import {stringToBytea} from "../../utils/utf8"
 
 export class T2tPoolActions implements PoolActions {
-  constructor(public readonly prover: Prover, public readonly txAsm: TxAssembler) {}
+  constructor(
+    public readonly prover: Prover,
+    public readonly txAsm: TxAssembler,
+    public readonly uiRewardAddress: Address
+  ) {}
 
   async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<ErgoTx[]> {
     const [x, y] = [params.x.asset, params.y.asset]
@@ -37,7 +43,7 @@ export class T2tPoolActions implements PoolActions {
       outputGranted.assets.filter(t => t.tokenId === y.id)
     ].flat()
 
-    const minNErgs = ctx.feeNErgs * 2n + MinPoolBoxValue + MinBoxValue
+    const minNErgs = minAmountNErgsForSetup(ctx.feeNErgs, params.uiFeeNErgs)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
@@ -48,7 +54,7 @@ export class T2tPoolActions implements PoolActions {
     const [tickerX, tickerY] = [x.name || x.id.slice(0, 8), y.name || y.id.slice(0, 8)]
     const newTokenLP = {tokenId: inputs.newTokenId, amount: EmissionLP - BurnLP}
     const bootOut: ErgoBoxCandidate = {
-      value: outputGranted.nErgs - ctx.feeNErgs,
+      value: outputGranted.nErgs - ctx.feeNErgs - params.uiFeeNErgs,
       ergoTree: ergoTreeFromAddress(ctx.selfAddress),
       creationHeight: height,
       assets: [newTokenLP, ...pairIn],
@@ -56,10 +62,17 @@ export class T2tPoolActions implements PoolActions {
         [RegisterId.R4, new ByteaConstant(stringToBytea(`${tickerX}_${tickerY}_LP`))]
       ])
     }
+    const uiRewardOut: ErgoBoxCandidate = {
+      value: params.uiFeeNErgs,
+      ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
+      creationHeight: height,
+      assets: [],
+      additionalRegisters: EmptyRegisters
+    }
     const txr0: TxRequest = {
       inputs: inputs,
       dataInputs: [],
-      outputs: [bootOut],
+      outputs: [bootOut, uiRewardOut],
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
@@ -102,14 +115,14 @@ export class T2tPoolActions implements PoolActions {
 
   deposit(params: DepositParams, ctx: TransactionContext): Promise<ErgoTx> {
     const [x, y] = [params.x, params.y]
-    const proxyScript = T2T.deposit(params.poolId, params.pk, params.dexFee)
+    const proxyScript = T2T.deposit(params.poolId, params.pk, params.exFee)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const pairIn = [
       outputGranted.assets.filter(t => t.tokenId === x.asset.id),
       outputGranted.assets.filter(t => t.tokenId === y.asset.id)
     ].flat()
 
-    const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
+    const minNErgs = minAmountNErgsForOrder(ctx.feeNErgs, params.uiFeeNErgs)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
@@ -120,16 +133,23 @@ export class T2tPoolActions implements PoolActions {
       )
 
     const out: ErgoBoxCandidate = {
-      value: outputGranted.nErgs - ctx.feeNErgs,
+      value: outputGranted.nErgs - ctx.feeNErgs - params.uiFeeNErgs,
       ergoTree: proxyScript,
       creationHeight: ctx.network.height,
       assets: pairIn,
       additionalRegisters: EmptyRegisters
     }
+    const uiRewardOut: ErgoBoxCandidate = {
+      value: params.uiFeeNErgs,
+      ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
+      creationHeight: ctx.network.height,
+      assets: [],
+      additionalRegisters: EmptyRegisters
+    }
     const txr = {
       inputs: ctx.inputs,
       dataInputs: [],
-      outputs: [out],
+      outputs: [out, uiRewardOut],
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
@@ -137,11 +157,11 @@ export class T2tPoolActions implements PoolActions {
   }
 
   redeem(params: RedeemParams, ctx: TransactionContext): Promise<ErgoTx> {
-    const proxyScript = T2T.redeem(params.poolId, params.pk, params.dexFee)
+    const proxyScript = T2T.redeem(params.poolId, params.pk, params.exFee)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.asset.id)
 
-    const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
+    const minNErgs = minAmountNErgsForOrder(ctx.feeNErgs, params.uiFeeNErgs)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
@@ -152,16 +172,23 @@ export class T2tPoolActions implements PoolActions {
       )
 
     const out = {
-      value: outputGranted.nErgs - ctx.feeNErgs,
+      value: outputGranted.nErgs - ctx.feeNErgs - params.uiFeeNErgs,
       ergoTree: proxyScript,
       creationHeight: ctx.network.height,
       assets: tokensIn,
       additionalRegisters: EmptyRegisters
     }
+    const uiRewardOut: ErgoBoxCandidate = {
+      value: params.uiFeeNErgs,
+      ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
+      creationHeight: ctx.network.height,
+      assets: [],
+      additionalRegisters: EmptyRegisters
+    }
     const txr = {
       inputs: ctx.inputs,
       dataInputs: [],
-      outputs: [out],
+      outputs: [out, uiRewardOut],
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
@@ -174,14 +201,14 @@ export class T2tPoolActions implements PoolActions {
       params.poolFeeNum,
       params.quoteAsset,
       params.minQuoteOutput,
-      params.dexFeePerToken,
+      params.exFeePerToken,
       params.pk
     )
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const baseAssetId = params.baseInput.asset.id
     const baseIn = outputGranted.assets.filter(t => t.tokenId === baseAssetId)[0]
 
-    const minNErgs = ctx.feeNErgs * 2n + MinBoxValue * 2n
+    const minNErgs = minAmountNErgsForOrder(ctx.feeNErgs, params.uiFeeNErgs)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
@@ -190,16 +217,23 @@ export class T2tPoolActions implements PoolActions {
       return Promise.reject(new InsufficientInputs(`Base asset ${params.baseInput.asset.name} not provided`))
 
     const out: ErgoBoxCandidate = {
-      value: outputGranted.nErgs - ctx.feeNErgs,
+      value: outputGranted.nErgs - ctx.feeNErgs - params.uiFeeNErgs,
       ergoTree: proxyScript,
       creationHeight: ctx.network.height,
       assets: [baseIn],
       additionalRegisters: EmptyRegisters
     }
+    const uiRewardOut: ErgoBoxCandidate = {
+      value: params.uiFeeNErgs,
+      ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
+      creationHeight: ctx.network.height,
+      assets: [],
+      additionalRegisters: EmptyRegisters
+    }
     const txr: TxRequest = {
       inputs: ctx.inputs,
       dataInputs: [],
-      outputs: [out],
+      outputs: [out, uiRewardOut],
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
