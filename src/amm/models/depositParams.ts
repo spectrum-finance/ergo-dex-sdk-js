@@ -7,5 +7,5 @@ export type DepositParams = {
   readonly y: AssetAmount
   readonly pk: PublicKey
   readonly exFee: bigint
-  readonly uiFeeNErgs: bigint
+  readonly uiFee: bigint
 }

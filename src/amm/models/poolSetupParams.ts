@@ -8,7 +8,7 @@ export type PoolSetupParams = {
   readonly y: AssetAmount
   readonly feeNumerator: number
   readonly outputShare: bigint
-  readonly uiFeeNErgs: bigint
+  readonly uiFee: bigint
 }
 
 export function makePoolSetupParams(
@@ -34,8 +34,8 @@ export function makePoolSetupParams(
     const feeNumerator = (1 - fee) * PoolFeeScale
     const outputShare = sqrt(x.amount * y.amount)
     return isNative(y.asset)
-      ? {y, x, feeNumerator, outputShare, uiFeeNErgs: uiFee}
-      : {x, y, feeNumerator, outputShare, uiFeeNErgs: uiFee}
+      ? {y, x, feeNumerator, outputShare, uiFee: uiFee}
+      : {x, y, feeNumerator, outputShare, uiFee: uiFee}
   } else {
     return errors
   }

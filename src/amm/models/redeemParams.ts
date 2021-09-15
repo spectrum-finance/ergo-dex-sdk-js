@@ -6,5 +6,5 @@ export type RedeemParams = {
   readonly pk: PublicKey
   readonly lp: AssetAmount
   readonly exFee: bigint
-  readonly uiFeeNErgs: bigint
+  readonly uiFee: bigint
 }
