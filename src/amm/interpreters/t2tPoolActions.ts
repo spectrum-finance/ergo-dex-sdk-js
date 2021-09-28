@@ -16,7 +16,6 @@ import {
   TxRequest
 } from "@ergolabs/ergo-sdk"
 import {InsufficientInputs} from "@ergolabs/ergo-sdk"
-import {evaluate} from "../../utils/math"
 import {PoolSetupParams} from "../models/poolSetupParams"
 import {SwapParams} from "../models/swapParams"
 import * as T2T from "../contracts/t2tPoolContracts"
@@ -209,7 +208,7 @@ export class T2tPoolActions implements PoolActions {
     const baseAssetId = params.baseInput.asset.id
     const baseIn = outputGranted.assets.filter(t => t.tokenId === baseAssetId)[0]
 
-    const minExFee = BigInt(evaluate(`${params.minQuoteOutput} * ${params.exFeePerToken}`))
+    const minExFee = BigInt(Number(params.minQuoteOutput) * params.exFeePerToken)
     const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, minExFee)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
