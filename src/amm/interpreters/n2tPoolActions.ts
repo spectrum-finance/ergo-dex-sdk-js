@@ -217,7 +217,7 @@ export class N2tPoolActions implements PoolActions {
     )
     const outputGranted = ctx.inputs.totalOutputWithoutChange
 
-    const minExFee = BigInt(Number(params.minQuoteOutput) * params.exFeePerToken)
+    const minExFee = BigInt((Number(params.minQuoteOutput) * params.exFeePerToken).toFixed(0))
     const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, minExFee)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
@@ -245,7 +245,7 @@ export class N2tPoolActions implements PoolActions {
     const baseAssetId = params.baseInput.asset.id
     const baseIn = outputGranted.assets.filter(t => t.tokenId === baseAssetId)[0]
 
-    const minExFee = BigInt(Number(params.minQuoteOutput) * params.exFeePerToken)
+    const minExFee = BigInt((Number(params.minQuoteOutput) * params.exFeePerToken).toFixed(0))
     const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, minExFee)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
