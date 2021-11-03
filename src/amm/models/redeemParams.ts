@@ -5,5 +5,6 @@ export type RedeemParams = {
   readonly poolId: PoolId
   readonly pk: PublicKey
   readonly lp: AssetAmount
-  readonly dexFee: bigint
+  readonly exFee: bigint
+  readonly uiFee: bigint
 }

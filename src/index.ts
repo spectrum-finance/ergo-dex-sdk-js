@@ -40,5 +40,6 @@ export {SwapExtremums, swapVars} from "./amm/math/swap"
 export {Price} from "./entities/price"
 export {RefundParams} from "./models/refundParams"
 export {decimalToFractional, evaluate} from "./utils/math"
+export {minValueForOrder, minValueForSetup} from "./amm/interpreters/mins"
 
 export * from "./constants"

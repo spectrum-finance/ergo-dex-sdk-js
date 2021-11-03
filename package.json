@@ -1,15 +1,14 @@
 {
     "name": "@ergolabs/ergo-dex-sdk",
-    "version": "1.0.0",
+    "version": "1.1.7",
     "description": "ErgoDEX SDK",
-    "main": "build/module/index.js",
-    "typings": "build/module/index.d.ts",
-    "module": "build/module/index.js",
+    "main": "build/main/index.js",
+    "typings": "build/main/index.d.ts",
+    "module": "build/main/index.js",
     "keywords": [],
     "scripts": {
         "build": "run-p build:*",
         "build:main": "tsc -p tsconfig.json",
-        "build:module": "tsc -p tsconfig.module.json",
         "build+test:unit": "run-p build:* && nyc --silent ava",
         "fix": "run-s fix:*",
         "fix:prettier": "prettier \"src/**/*.ts\" --write",
@@ -47,13 +46,17 @@
         "crypto-js": "^4.0.0",
         "ergo-lib-wasm-browser": "0.14.0-alpha-01cd628",
         "ergo-lib-wasm-nodejs": "0.14.0-alpha-01cd628",
-        "@ergolabs/ergo-sdk": "0.1.2",
+        "@ergolabs/ergo-sdk": "0.1.7",
         "json-bigint": "^1.0.0",
         "mathjs": "^9.4.4",
         "ramda": "0.27.1"
     },
     "devDependencies": {
-        "@ava/typescript": "^1.1.1",
+      "@ava/babel": "^2.0.0",
+      "@ava/typescript": "^1.1.1",
+      "@babel/plugin-proposal-optional-chaining": "^7.14.5",
+      "@babel/polyfill": "^7.12.1",
+      "@babel/preset-env": "^7.15.6",
         "@istanbuljs/nyc-config-typescript": "^1.0.1",
         "@types/bs58": "^4.0.1",
         "@types/crypto-js": "^4.0.1",
@@ -79,29 +82,31 @@
         "standard-version": "^9.0.0",
         "ts-node": "^9.0.0",
         "typedoc": "^0.19.0",
-        "typescript": "^4.0.8"
+        "typescript": "^4.0.8",
+      "esm": "^3.2.25"
     },
     "files": [
         "build/main",
-        "build/module",
         "!**/*.spec.*",
         "!**/*.json",
         "CHANGELOG.md",
         "LICENSE",
         "README.md"
     ],
-    "ava": {
-        "failFast": true,
-        "timeout": "60s",
-        "typescript": {
-            "rewritePaths": {
-                "src/": "build/main/"
-            }
-        },
-        "files": [
-            "!build/module/**"
-        ]
+  "ava": {
+    "failFast": true,
+    "timeout": "60s",
+    "typescript": {
+      "rewritePaths": {
+        "src/": "build/main/"
+      }
     },
+    "require": [
+      "esm",
+      "@babel/polyfill"
+    ],
+    "babel": true
+  },
     "config": {
         "commitizen": {
             "path": "cz-conventional-changelog"
@@ -121,5 +126,15 @@
         "exclude": [
             "**/*.spec.js"
         ]
-    }
+    },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ergolabs/ergo-sdk-js.git"
+  },
+  "author": "Ilya Oskin <ilya.arcadich@gmail.com> (https://ergoplatfrom.org/)",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/ergolabs/ergo-sdk-js/issues"
+  },
+  "homepage": "https://github.com/ergolabs/ergo-sdk-js#readme"
 }

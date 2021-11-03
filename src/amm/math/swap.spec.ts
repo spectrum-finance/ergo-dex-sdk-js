@@ -9,9 +9,9 @@ test("Swap math", t => {
   t.deepEqual(swapVars(minDexFee, nitro, minOutput), [
     0.05,
     {
-      maxDexFee: 12000000n,
+      maxExFee: 12000000n,
       maxOutput: minOutput.withAmount(240000000n),
-      minDexFee: 10000000n,
+      minExFee: 10000000n,
       minOutput: minOutput
     }
   ])
@@ -24,9 +24,9 @@ test("Swap math (adjustment required)", t => {
   t.deepEqual(swapVars(minDexFee, nitro, minOutput), [
     0.000499815085362147,
     {
-      maxDexFee: 12000000n,
+      maxExFee: 12000000n,
       maxOutput: minOutput.withAmount(24008879186n),
-      minDexFee: 9999999n,
+      minExFee: 9999999n,
       minOutput: minOutput
     }
   ])
