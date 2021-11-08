@@ -192,7 +192,7 @@ export class N2tPoolActions implements PoolActions {
     ).then(out => {
       const uiRewardOut: ErgoBoxCandidate = {
         value: params.uiFee,
-        ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
+        ergoTree: ergoTreeFromAddress("9gCigPc9cZNRhKgbgdmTkVxo1ZKgw79G8DvLjCcYWAvEF3XRUKy"),
         creationHeight: ctx.network.height,
         assets: [],
         additionalRegisters: EmptyRegisters
