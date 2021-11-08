@@ -184,25 +184,28 @@ export class N2tPoolActions implements PoolActions {
     return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
   }
 
-  async swap(params: SwapParams, ctx: TransactionContext): Promise<ErgoTx> {
-    const out = await (isNative(params.baseInput.asset)
-      ? N2tPoolActions.mkSwapSell(params, ctx)
-      : N2tPoolActions.mkSwapBuy(params, ctx))
-    const uiRewardOut: ErgoBoxCandidate = {
-      value: params.uiFee,
-      ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
-      creationHeight: ctx.network.height,
-      assets: [],
-      additionalRegisters: EmptyRegisters
-    }
-    const txr: TxRequest = {
-      inputs: ctx.inputs,
-      dataInputs: [],
-      outputs: [out, uiRewardOut],
-      changeAddress: ctx.changeAddress,
-      feeNErgs: ctx.feeNErgs
-    }
-    return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
+  swap(params: SwapParams, ctx: TransactionContext): Promise<ErgoTx> {
+    return (
+      isNative(params.baseInput.asset)
+        ? N2tPoolActions.mkSwapSell(params, ctx)
+        : N2tPoolActions.mkSwapBuy(params, ctx)
+    ).then(out => {
+      const uiRewardOut: ErgoBoxCandidate = {
+        value: params.uiFee,
+        ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
+        creationHeight: ctx.network.height,
+        assets: [],
+        additionalRegisters: EmptyRegisters
+      }
+      const txr: TxRequest = {
+        inputs: ctx.inputs,
+        dataInputs: [],
+        outputs: [out, uiRewardOut],
+        changeAddress: ctx.changeAddress,
+        feeNErgs: ctx.feeNErgs
+      }
+      return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
+    })
   }
 
   private static mkSwapSell(params: SwapParams, ctx: TransactionContext): Promise<ErgoBoxCandidate> {
@@ -224,15 +227,13 @@ export class N2tPoolActions implements PoolActions {
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
       )
 
-    return Promise.resolve(
-      {
-        value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
-        ergoTree: proxyScript,
-        creationHeight: ctx.network.height,
-        assets: [],
-        additionalRegisters: EmptyRegisters
-      }
-    )
+    return Promise.resolve({
+      value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
+      ergoTree: proxyScript,
+      creationHeight: ctx.network.height,
+      assets: [],
+      additionalRegisters: EmptyRegisters
+    })
   }
 
   private static mkSwapBuy(params: SwapParams, ctx: TransactionContext): Promise<ErgoBoxCandidate> {
