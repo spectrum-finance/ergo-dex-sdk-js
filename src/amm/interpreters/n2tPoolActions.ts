@@ -186,8 +186,8 @@ export class N2tPoolActions implements PoolActions {
 
   async swap(params: SwapParams, ctx: TransactionContext): Promise<ErgoTx> {
     const out = await (isNative(params.baseInput.asset)
-      ? this.mkSwapSell(params, ctx)
-      : this.mkSwapBuy(params, ctx))
+      ? N2tPoolActions.mkSwapSell(params, ctx)
+      : N2tPoolActions.mkSwapBuy(params, ctx))
     const uiRewardOut: ErgoBoxCandidate = {
       value: params.uiFee,
       ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
@@ -205,7 +205,7 @@ export class N2tPoolActions implements PoolActions {
     return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
   }
 
-  private async mkSwapSell(params: SwapParams, ctx: TransactionContext): Promise<ErgoBoxCandidate> {
+  private static mkSwapSell(params: SwapParams, ctx: TransactionContext): Promise<ErgoBoxCandidate> {
     const proxyScript = N2T.swapSell(
       params.poolId,
       params.baseInput.amount,
@@ -224,16 +224,18 @@ export class N2tPoolActions implements PoolActions {
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
       )
 
-    return {
-      value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
-      ergoTree: proxyScript,
-      creationHeight: ctx.network.height,
-      assets: [],
-      additionalRegisters: EmptyRegisters
-    }
+    return Promise.resolve(
+      {
+        value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
+        ergoTree: proxyScript,
+        creationHeight: ctx.network.height,
+        assets: [],
+        additionalRegisters: EmptyRegisters
+      }
+    )
   }
 
-  private async mkSwapBuy(params: SwapParams, ctx: TransactionContext): Promise<ErgoBoxCandidate> {
+  private static mkSwapBuy(params: SwapParams, ctx: TransactionContext): Promise<ErgoBoxCandidate> {
     const proxyScript = N2T.swapBuy(
       params.poolId,
       params.poolFeeNum,
@@ -254,12 +256,12 @@ export class N2tPoolActions implements PoolActions {
     if (!baseIn)
       return Promise.reject(new InsufficientInputs(`Base asset ${params.baseInput.asset.name} not provided`))
 
-    return {
+    return Promise.resolve({
       value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
       ergoTree: proxyScript,
       creationHeight: ctx.network.height,
       assets: [baseIn],
       additionalRegisters: EmptyRegisters
-    }
+    })
   }
 }
