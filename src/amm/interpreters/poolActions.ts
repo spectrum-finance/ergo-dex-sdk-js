@@ -32,7 +32,8 @@ export function makeDefaultPoolActionsSelector(
   txAsm: TxAssembler,
   uiRewardAddress: Address
 ): PoolActionsSelector {
-  const n2t = new N2tPoolActions(prover, txAsm, uiRewardAddress)
-  const t2t = new T2tPoolActions(prover, txAsm, uiRewardAddress)
-  return pool => (isNative(pool.x.asset) || isNative(pool.y.asset) ? n2t : t2t)
+  return pool =>
+    isNative(pool.x.asset) || isNative(pool.y.asset)
+      ? new N2tPoolActions(prover, txAsm, uiRewardAddress)
+      : new T2tPoolActions(prover, txAsm, uiRewardAddress)
 }
