@@ -25,9 +25,9 @@ export function poolBundle() {
 export function deposit(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(T2T.DepositSample)
     .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
-    .with_constant(9, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
+    .with_constant(13, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
     .with_constant(
-      11,
+      15,
       RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFee.toString()))
     )
     .to_base16_bytes()

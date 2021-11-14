@@ -25,18 +25,22 @@ export function poolBundle() {
 export function deposit(poolId: PoolId, pk: PublicKey, selfX: bigint, dexFee: bigint): ErgoTree {
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2T.DepositSample)
     .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
-    .with_constant(9, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
+    .with_constant(12, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
     .with_constant(
-      10,
+      2,
+      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(selfX.toString()))
+    )
+    .with_constant(
+      16,
+      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(selfX.toString()))
+    )
+    .with_constant(
+      15,
       RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFee.toString()))
     )
     .with_constant(
-      11,
-      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(selfX.toString()))
-    )
-    .with_constant(
-      12,
-      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(selfX.toString()))
+      17,
+      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFee.toString()))
     )
     .to_base16_bytes()
 }
