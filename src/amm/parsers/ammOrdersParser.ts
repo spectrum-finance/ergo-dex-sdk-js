@@ -44,7 +44,7 @@ class T2TParserIn {
   parseDeposit(bx: ErgoBox): AmmOrderInfo | undefined {
     try {
       const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
-      const poolIdC = tree.get_constant(9)?.to_byte_array()
+      const poolIdC = tree.get_constant(13)?.to_byte_array()
       const poolId = poolIdC ? toHex(poolIdC) : undefined
       const inputX = bx.assets[0]
       const inputY = bx.assets[1]
@@ -102,7 +102,7 @@ class N2TParserIn {
   parseDeposit(bx: ErgoBox): AmmOrderInfo | undefined {
     try {
       const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
-      const poolIdC = tree.get_constant(9)?.to_byte_array()
+      const poolIdC = tree.get_constant(12)?.to_byte_array()
       const poolId = poolIdC ? toHex(poolIdC) : undefined
       const inputY = bx.assets[0]
       return poolId && inputY
