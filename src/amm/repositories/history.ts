@@ -97,6 +97,7 @@ export class NetworkHistory implements History {
       if (!output.spentTransactionId)
         return {
           type: "order",
+          timestamp: tx.timestamp,
           txId: tx.id,
           boxId: output.boxId,
           status: confirmed ? "submitted" : "pending",
@@ -119,6 +120,7 @@ export class NetworkHistory implements History {
       if (pool) {
         return {
           type: "order",
+          timestamp: tx.timestamp,
           txId: tx.id,
           boxId: input.boxId,
           status: "executed",
@@ -127,6 +129,7 @@ export class NetworkHistory implements History {
       } else {
         return {
           type: "refund",
+          timestamp: tx.timestamp,
           txId: tx.id,
           status: "executed",
           operation: summary.type
@@ -143,6 +146,7 @@ export class NetworkHistory implements History {
       if (rewardLP)
         return {
           type: "setup",
+          timestamp: tx.timestamp,
           txId: tx.id,
           status: "executed",
           pool: pool,
