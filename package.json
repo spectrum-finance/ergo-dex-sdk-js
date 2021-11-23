@@ -44,9 +44,9 @@
     "blakejs": "^1.1.0",
     "bs58": "^4.0.1",
     "crypto-js": "^4.0.0",
-    "ergo-lib-wasm-browser": "0.14.0-alpha-01cd628",
-    "ergo-lib-wasm-nodejs": "0.14.0-alpha-01cd628",
-    "@ergolabs/ergo-sdk": "0.1.14",
+    "ergo-lib-wasm-browser": "0.14.0",
+    "ergo-lib-wasm-nodejs": "0.14.0",
+    "@ergolabs/ergo-sdk": "0.1.15",
     "json-bigint": "^1.0.0",
     "mathjs": "^9.4.4",
     "ramda": "0.27.1"
