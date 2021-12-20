@@ -115,7 +115,7 @@ export class T2tPoolActions implements PoolActions {
 
   deposit(params: DepositParams, ctx: TransactionContext): Promise<ErgoTx> {
     const [x, y] = [params.x, params.y]
-    const proxyScript = T2T.deposit(params.poolId, params.pk, params.exFee)
+    const proxyScript = T2T.deposit(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const pairIn = [
       outputGranted.assets.filter(t => t.tokenId === x.asset.id),
@@ -157,7 +157,7 @@ export class T2tPoolActions implements PoolActions {
   }
 
   redeem(params: RedeemParams, ctx: TransactionContext): Promise<ErgoTx> {
-    const proxyScript = T2T.redeem(params.poolId, params.pk, params.exFee)
+    const proxyScript = T2T.redeem(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.asset.id)
 
@@ -202,6 +202,7 @@ export class T2tPoolActions implements PoolActions {
       params.quoteAsset,
       params.minQuoteOutput,
       params.exFeePerToken,
+      ctx.feeNErgs,
       params.pk
     )
     const outputGranted = ctx.inputs.totalOutputWithoutChange

@@ -6,11 +6,11 @@ import {
   RustModule,
   treeTemplateFromErgoTree
 } from "@ergolabs/ergo-sdk"
-import * as T2T from "../contracts/t2tTemplates"
-import * as N2T from "../contracts/n2tTemplates"
-import {AmmOrderType} from "../models/operations"
 import {toHex} from "../../utils/hex"
+import * as N2T from "../contracts/n2tTemplates"
+import * as T2T from "../contracts/t2tTemplates"
 import {AmmOrderInfo} from "../models/ammOrderInfo"
+import {AmmOrderType} from "../models/operations"
 
 export interface AmmOrdersParser {
   parse(box: ErgoBox): AmmOrderInfo | undefined

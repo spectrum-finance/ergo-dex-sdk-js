@@ -12,7 +12,7 @@ export type AmmDexOperationType = "order" | "refund" | "setup"
 
 export type AmmOrder = {
   type: "order"
-  timestamp: bigint
+  timestamp?: bigint
   txId: TxId
   boxId: BoxId
   status: AmmOrderStatus
@@ -23,7 +23,7 @@ export type TxStatus = "pending" | "executed" | "settled"
 
 export type PoolSetup = {
   type: "setup"
-  timestamp: bigint
+  timestamp?: bigint
   txId: TxId
   status: TxStatus
   pool: AmmPoolInfo
@@ -32,7 +32,7 @@ export type PoolSetup = {
 
 export type RefundOperation = {
   type: "refund"
-  timestamp: bigint
+  timestamp?: bigint
   txId: TxId
   status: TxStatus
   operation: AmmOrderType

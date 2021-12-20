@@ -1,10 +1,10 @@
 import {ErgoTree, HexString, PublicKey, RustModule, TokenId} from "@ergolabs/ergo-sdk"
+import * as crypto from "crypto-js"
+import {fromHex, toHex} from "../../utils/hex"
 import {decimalToFractional} from "../../utils/math"
+import {SigmaPropConstPrefixHex} from "../constants"
 import {PoolId} from "../types"
 import * as T2T from "./t2tTemplates"
-import {fromHex, toHex} from "../../utils/hex"
-import {SigmaPropConstPrefixHex} from "../constants"
-import * as crypto from "crypto-js"
 
 export function pool(): ErgoTree {
   return T2T.PoolSample
@@ -22,7 +22,7 @@ export function poolBundle() {
   }
 }
 
-export function deposit(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
+export function deposit(poolId: PoolId, pk: PublicKey, dexFee: bigint, maxMinerFee: bigint): ErgoTree {
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(T2T.DepositSample)
     .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
     .with_constant(13, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
@@ -30,16 +30,24 @@ export function deposit(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree
       15,
       RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFee.toString()))
     )
+    .with_constant(
+      25,
+      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(maxMinerFee.toString()))
+    )
     .to_base16_bytes()
 }
 
-export function redeem(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
+export function redeem(poolId: PoolId, pk: PublicKey, dexFee: bigint, maxMinerFee: bigint): ErgoTree {
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(T2T.RedeemSample)
     .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
     .with_constant(13, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
     .with_constant(
       15,
       RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFee.toString()))
+    )
+    .with_constant(
+      19,
+      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(maxMinerFee.toString()))
     )
     .to_base16_bytes()
 }
@@ -50,6 +58,7 @@ export function swap(
   quoteId: TokenId,
   minQuoteAmount: bigint,
   dexFeePerToken: number,
+  maxMinerFee: bigint,
   pk: PublicKey
 ): ErgoTree {
   const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(dexFeePerToken)
@@ -71,6 +80,10 @@ export function swap(
       RustModule.SigmaRust.Constant.from_i64(
         RustModule.SigmaRust.I64.from_str(dexFeePerTokenDenom.toString())
       )
+    )
+    .with_constant(
+      21,
+      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(maxMinerFee.toString()))
     )
     .to_base16_bytes()
 }

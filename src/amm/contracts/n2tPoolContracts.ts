@@ -22,7 +22,13 @@ export function poolBundle() {
   }
 }
 
-export function deposit(poolId: PoolId, pk: PublicKey, selfX: bigint, dexFee: bigint): ErgoTree {
+export function deposit(
+  poolId: PoolId,
+  pk: PublicKey,
+  selfX: bigint,
+  dexFee: bigint,
+  maxMinerFee: bigint
+): ErgoTree {
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2T.DepositSample)
     .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
     .with_constant(12, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
@@ -42,16 +48,24 @@ export function deposit(poolId: PoolId, pk: PublicKey, selfX: bigint, dexFee: bi
       17,
       RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFee.toString()))
     )
+    .with_constant(
+      22,
+      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(maxMinerFee.toString()))
+    )
     .to_base16_bytes()
 }
 
-export function redeem(poolId: PoolId, pk: PublicKey, dexFee: bigint): ErgoTree {
+export function redeem(poolId: PoolId, pk: PublicKey, dexFee: bigint, maxMinerFee: bigint): ErgoTree {
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2T.RedeemSample)
     .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
     .with_constant(11, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
     .with_constant(
       12,
       RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFee.toString()))
+    )
+    .with_constant(
+      16,
+      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(maxMinerFee.toString()))
     )
     .to_base16_bytes()
 }
@@ -63,6 +77,7 @@ export function swapSell(
   quoteId: TokenId,
   minQuoteAmount: bigint,
   dexFeePerToken: number,
+  maxMinerFee: bigint,
   pk: PublicKey
 ): ErgoTree {
   const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(dexFeePerToken)
@@ -94,6 +109,10 @@ export function swapSell(
       17,
       RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(baseAmount.toString()))
     )
+    .with_constant(
+      22,
+      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(maxMinerFee.toString()))
+    )
     .to_base16_bytes()
 }
 
@@ -102,6 +121,7 @@ export function swapBuy(
   poolFeeNum: number,
   minQuoteAmount: bigint,
   dexFeePerToken: number,
+  maxMinerFee: bigint,
   pk: PublicKey
 ): ErgoTree {
   const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(dexFeePerToken)
@@ -126,6 +146,10 @@ export function swapBuy(
       RustModule.SigmaRust.Constant.from_i64(
         RustModule.SigmaRust.I64.from_str(dexFeePerTokenNumDiff.toString())
       )
+    )
+    .with_constant(
+      19,
+      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(maxMinerFee.toString()))
     )
     .to_base16_bytes()
 }
