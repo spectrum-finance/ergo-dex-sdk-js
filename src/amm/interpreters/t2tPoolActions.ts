@@ -16,6 +16,7 @@ import {
   TxRequest
 } from "@ergolabs/ergo-sdk"
 import {InsufficientInputs} from "@ergolabs/ergo-sdk"
+import {prepend} from "ramda"
 import {PoolSetupParams} from "../models/poolSetupParams"
 import {SwapParams} from "../models/swapParams"
 import * as T2T from "../contracts/t2tPoolContracts"
@@ -62,17 +63,11 @@ export class T2tPoolActions implements PoolActions {
         [RegisterId.R4, new ByteaConstant(stringToBytea(`${tickerX}_${tickerY}_LP`))]
       ])
     }
-    const uiRewardOut: ErgoBoxCandidate = {
-      value: params.uiFee,
-      ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
-      creationHeight: height,
-      assets: [],
-      additionalRegisters: EmptyRegisters
-    }
+    const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
     const txr0: TxRequest = {
       inputs: inputs,
       dataInputs: [],
-      outputs: [bootOut, uiRewardOut],
+      outputs: prepend(bootOut, uiRewardOut),
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
@@ -132,24 +127,18 @@ export class T2tPoolActions implements PoolActions {
         new InsufficientInputs(`Wrong number of input tokens provided ${pairIn.length}, required 2`)
       )
 
-    const out: ErgoBoxCandidate = {
+    const orderOut: ErgoBoxCandidate = {
       value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
       ergoTree: proxyScript,
       creationHeight: ctx.network.height,
       assets: pairIn,
       additionalRegisters: EmptyRegisters
     }
-    const uiRewardOut: ErgoBoxCandidate = {
-      value: params.uiFee,
-      ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
-      creationHeight: ctx.network.height,
-      assets: [],
-      additionalRegisters: EmptyRegisters
-    }
+    const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
     const txr = {
       inputs: ctx.inputs,
       dataInputs: [],
-      outputs: [out, uiRewardOut],
+      outputs: prepend(orderOut, uiRewardOut),
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
@@ -171,24 +160,18 @@ export class T2tPoolActions implements PoolActions {
         new InsufficientInputs(`Wrong number of input tokens provided ${tokensIn.length}, required 1`)
       )
 
-    const out = {
+    const orderOut = {
       value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
       ergoTree: proxyScript,
       creationHeight: ctx.network.height,
       assets: tokensIn,
       additionalRegisters: EmptyRegisters
     }
-    const uiRewardOut: ErgoBoxCandidate = {
-      value: params.uiFee,
-      ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
-      creationHeight: ctx.network.height,
-      assets: [],
-      additionalRegisters: EmptyRegisters
-    }
+    const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
     const txr = {
       inputs: ctx.inputs,
       dataInputs: [],
-      outputs: [out, uiRewardOut],
+      outputs: prepend(orderOut, uiRewardOut),
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
@@ -218,27 +201,35 @@ export class T2tPoolActions implements PoolActions {
     if (!baseIn)
       return Promise.reject(new InsufficientInputs(`Base asset ${params.baseInput.asset.name} not provided`))
 
-    const out: ErgoBoxCandidate = {
+    const orderOut: ErgoBoxCandidate = {
       value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
       ergoTree: proxyScript,
       creationHeight: ctx.network.height,
       assets: [baseIn],
       additionalRegisters: EmptyRegisters
     }
-    const uiRewardOut: ErgoBoxCandidate = {
-      value: params.uiFee,
-      ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
-      creationHeight: ctx.network.height,
-      assets: [],
-      additionalRegisters: EmptyRegisters
-    }
+    const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
     const txr: TxRequest = {
       inputs: ctx.inputs,
       dataInputs: [],
-      outputs: [out, uiRewardOut],
+      outputs: prepend(orderOut, uiRewardOut),
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
     return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
+  }
+
+  private mkUiReward(height: number, uiFee: bigint): ErgoBoxCandidate[] {
+    return uiFee > 0
+      ? [
+          {
+            value: uiFee,
+            ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
+            creationHeight: height,
+            assets: [],
+            additionalRegisters: EmptyRegisters
+          }
+        ]
+      : []
   }
 }
