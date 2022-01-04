@@ -17,15 +17,16 @@ import {
   TxRequest
 } from "@ergolabs/ergo-sdk"
 import {InsufficientInputs} from "@ergolabs/ergo-sdk"
-import {PoolSetupParams} from "../models/poolSetupParams"
-import {SwapParams} from "../models/swapParams"
-import * as N2T from "../contracts/n2tPoolContracts"
+import {prepend} from "ramda"
+import {stringToBytea} from "../../utils/utf8"
 import {BurnLP, EmissionLP} from "../constants"
+import * as N2T from "../contracts/n2tPoolContracts"
 import {DepositParams} from "../models/depositParams"
+import {PoolSetupParams} from "../models/poolSetupParams"
 import {RedeemParams} from "../models/redeemParams"
+import {SwapParams} from "../models/swapParams"
 import {minValueForOrder, minValueForSetup} from "./mins"
 import {PoolActions} from "./poolActions"
-import {stringToBytea} from "../../utils/utf8"
 
 export class N2tPoolActions implements PoolActions {
   constructor(
@@ -59,17 +60,11 @@ export class N2tPoolActions implements PoolActions {
         [RegisterId.R4, new ByteaConstant(stringToBytea(`${tickerX}_${tickerY}_LP`))]
       ])
     }
-    const uiRewardOut: ErgoBoxCandidate = {
-      value: params.uiFee,
-      ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
-      creationHeight: height,
-      assets: [],
-      additionalRegisters: EmptyRegisters
-    }
+    const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
     const txr0: TxRequest = {
       inputs: inputs,
       dataInputs: [],
-      outputs: [bootOut, uiRewardOut],
+      outputs: prepend(bootOut, uiRewardOut),
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
@@ -123,24 +118,19 @@ export class N2tPoolActions implements PoolActions {
       )
     if (!inY) return Promise.reject(new InsufficientInputs(`Token ${y.asset.name} not provided`))
 
-    const out: ErgoBoxCandidate = {
+    const height = ctx.network.height
+    const orderOut: ErgoBoxCandidate = {
       value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
       ergoTree: proxyScript,
-      creationHeight: ctx.network.height,
+      creationHeight: height,
       assets: [inY],
       additionalRegisters: EmptyRegisters
     }
-    const uiRewardOut: ErgoBoxCandidate = {
-      value: params.uiFee,
-      ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
-      creationHeight: ctx.network.height,
-      assets: [],
-      additionalRegisters: EmptyRegisters
-    }
+    const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
     const txr = {
       inputs: ctx.inputs,
       dataInputs: [],
-      outputs: [out, uiRewardOut],
+      outputs: prepend(orderOut, uiRewardOut),
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
@@ -160,24 +150,19 @@ export class N2tPoolActions implements PoolActions {
     if (tokensIn.length != 1)
       return Promise.reject(new InsufficientInputs(`Token ${params.lp.asset.name ?? "LP"} not provided`))
 
-    const out = {
+    const height = ctx.network.height
+    const orderOut = {
       value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
       ergoTree: proxyScript,
-      creationHeight: ctx.network.height,
+      creationHeight: height,
       assets: tokensIn,
       additionalRegisters: EmptyRegisters
     }
-    const uiRewardOut: ErgoBoxCandidate = {
-      value: params.uiFee,
-      ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
-      creationHeight: ctx.network.height,
-      assets: [],
-      additionalRegisters: EmptyRegisters
-    }
+    const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
     const txr = {
       inputs: ctx.inputs,
       dataInputs: [],
-      outputs: [out, uiRewardOut],
+      outputs: prepend(orderOut, uiRewardOut),
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
@@ -188,17 +173,11 @@ export class N2tPoolActions implements PoolActions {
     const out = await (isNative(params.baseInput.asset)
       ? N2tPoolActions.mkSwapSell(params, ctx)
       : N2tPoolActions.mkSwapBuy(params, ctx))
-    const uiRewardOut: ErgoBoxCandidate = {
-      value: params.uiFee,
-      ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
-      creationHeight: ctx.network.height,
-      assets: [],
-      additionalRegisters: EmptyRegisters
-    }
+    const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
     const txr: TxRequest = {
       inputs: ctx.inputs,
       dataInputs: [],
-      outputs: [out, uiRewardOut],
+      outputs: prepend(out, uiRewardOut),
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
@@ -263,5 +242,19 @@ export class N2tPoolActions implements PoolActions {
       assets: [baseIn],
       additionalRegisters: EmptyRegisters
     }
+  }
+
+  private mkUiReward(height: number, uiFee: bigint): ErgoBoxCandidate[] {
+    return uiFee > 0
+      ? [
+          {
+            value: uiFee,
+            ergoTree: ergoTreeFromAddress(this.uiRewardAddress),
+            creationHeight: height,
+            assets: [],
+            additionalRegisters: EmptyRegisters
+          }
+        ]
+      : []
   }
 }
