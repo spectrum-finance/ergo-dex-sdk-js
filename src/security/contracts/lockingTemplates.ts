@@ -1,0 +1,3 @@
+export const TokenLockSample =
+  "19340208cd02217daf90deb73bdf8b6709bb42093fdfaff6573fd47b630e2d3fdd4a8193a74d0414ea027300d1909a8cc7a7017301a3"
+export const TokenLockTemplate = "ea027300d1909a8cc7a7017301a3"

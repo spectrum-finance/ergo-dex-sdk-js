@@ -17,15 +17,15 @@ import {
 } from "@ergolabs/ergo-sdk"
 import {InsufficientInputs} from "@ergolabs/ergo-sdk"
 import {prepend} from "ramda"
-import {PoolSetupParams} from "../models/poolSetupParams"
-import {SwapParams} from "../models/swapParams"
-import * as T2T from "../contracts/t2tPoolContracts"
+import {stringToBytea} from "../../utils/utf8"
 import {BurnLP, EmissionLP} from "../constants"
+import * as T2T from "../contracts/t2tPoolContracts"
 import {DepositParams} from "../models/depositParams"
+import {PoolSetupParams} from "../models/poolSetupParams"
 import {RedeemParams} from "../models/redeemParams"
+import {SwapParams} from "../models/swapParams"
 import {minValueForOrder, minValueForSetup} from "./mins"
 import {PoolActions} from "./poolActions"
-import {stringToBytea} from "../../utils/utf8"
 
 export class T2tPoolActions implements PoolActions {
   constructor(

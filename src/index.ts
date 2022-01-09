@@ -42,4 +42,7 @@ export {RefundParams} from "./models/refundParams"
 export {decimalToFractional, evaluate} from "./utils/math"
 export {minValueForOrder, minValueForSetup} from "./amm/interpreters/mins"
 
+export {mkLockActions, LockActions} from "./security/interpreters/lockActions"
+export {LockParams} from "./security/models/lockParams"
+
 export * from "./constants"
