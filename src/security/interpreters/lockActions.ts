@@ -1,4 +1,12 @@
-import {EmptyRegisters, ErgoTx, Prover, TransactionContext, TxAssembler} from "@ergolabs/ergo-sdk"
+import {
+  EmptyRegisters,
+  ErgoTx,
+  InsufficientInputs,
+  MinBoxValue,
+  Prover,
+  TransactionContext,
+  TxAssembler
+} from "@ergolabs/ergo-sdk"
 import {SigmaRust} from "@ergolabs/ergo-sdk/build/main/utils/rustLoader"
 import {tokenLock} from "../contracts/lockingContracts"
 import {LockParams} from "../models/lockParams"
@@ -35,6 +43,13 @@ class ErgoTokensLockActions implements LockActions {
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
-    return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
+
+    const minNErgs = ctx.feeNErgs + MinBoxValue
+    if (outputGranted.nErgs < minNErgs)
+      return Promise.reject(
+        new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
+      )
+    else
+      return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
   }
 }
