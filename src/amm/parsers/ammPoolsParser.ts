@@ -23,7 +23,7 @@ export class T2TAmmPoolsParser implements AmmPoolsParser {
 
   parseValidPools(boxes: ErgoBox[]): AmmPool[] {
     let pools = []
-    for (let box of boxes) {
+    for (const box of boxes) {
       const pool = this.parsePool(box)
       if (pool) pools.push(pool)
     }
@@ -47,7 +47,7 @@ export class N2TAmmPoolsParser implements AmmPoolsParser {
 
   parseValidPools(boxes: ErgoBox[]): AmmPool[] {
     let pools = []
-    for (let box of boxes) {
+    for (const box of boxes) {
       const pool = this.parsePool(box)
       if (pool) pools.push(pool)
     }

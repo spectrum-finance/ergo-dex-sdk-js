@@ -43,6 +43,7 @@ export {decimalToFractional, evaluate} from "./utils/math"
 export {minValueForOrder, minValueForSetup} from "./amm/interpreters/mins"
 
 export {mkLockActions, LockActions} from "./security/interpreters/lockActions"
-export {LockParams} from "./security/models/lockParams"
+export {LockParams, WithdrawalParams, RelockParams} from "./security/models"
+export {LockParser, mkLockParser} from "./security/parsers/lockParser"
 
 export * from "./constants"
