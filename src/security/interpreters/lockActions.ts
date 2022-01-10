@@ -1,9 +1,11 @@
 import {
-  EmptyRegisters,
   ErgoTx,
-  InsufficientInputs,
+  InsufficientInputs, Int32Constant,
   MinBoxValue,
   Prover,
+  RegisterId,
+  registers,
+  SigmaPropConstant,
   TransactionContext,
   TxAssembler
 } from "@ergolabs/ergo-sdk"
@@ -28,13 +30,16 @@ class ErgoTokensLockActions implements LockActions {
 
   lockTokens(params: LockParams, ctx: TransactionContext): Promise<ErgoTx> {
     const outputGranted = ctx.inputs.totalOutputWithoutChange
-    const lockScript = tokenLock(params.pk, params.duration, this.R)
+    const lockScript = tokenLock(this.R)
     const lockOutput = {
       value: outputGranted.nErgs - ctx.feeNErgs,
       ergoTree: lockScript,
       creationHeight: ctx.network.height,
       assets: outputGranted.assets,
-      additionalRegisters: EmptyRegisters
+      additionalRegisters: registers([
+        [RegisterId.R4, new Int32Constant(params.duration)],
+        [RegisterId.R5, new SigmaPropConstant(params.pk)]
+      ])
     }
     const txr = {
       inputs: ctx.inputs,
