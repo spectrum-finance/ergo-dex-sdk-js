@@ -5,4 +5,5 @@ export type TokenLock = {
   readonly lockedAsset: AssetAmount
   readonly deadline: number
   readonly redeemer: PublicKey
+  readonly active: boolean
 }

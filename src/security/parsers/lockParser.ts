@@ -1,7 +1,7 @@
 import {
   AssetAmount,
+  AugErgoBox,
   deserializeConstant,
-  ErgoBox,
   Int32Constant,
   RegisterId,
   SigmaPropConstant
@@ -9,7 +9,7 @@ import {
 import {TokenLock} from "../entities"
 
 export interface LockParser {
-  parseTokenLock(box: ErgoBox): TokenLock | undefined
+  parseTokenLock(box: AugErgoBox): TokenLock | undefined
 }
 
 export function mkLockParser(): LockParser {
@@ -17,7 +17,7 @@ export function mkLockParser(): LockParser {
 }
 
 class DefaultLockParser implements LockParser {
-  parseTokenLock(box: ErgoBox): TokenLock | undefined {
+  parseTokenLock(box: AugErgoBox): TokenLock | undefined {
     const r4 = box.additionalRegisters[RegisterId.R4]
     const r5 = box.additionalRegisters[RegisterId.R5]
     if (r4 && r5) {
@@ -31,7 +31,8 @@ class DefaultLockParser implements LockParser {
             boxId: box.boxId,
             lockedAsset: AssetAmount.fromToken(lockedAsset),
             deadline,
-            redeemer
+            redeemer,
+            active: !box.spentTransactionId
           }
         : undefined
     } else return undefined
