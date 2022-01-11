@@ -5,7 +5,6 @@ import {LockParser} from "../parsers/lockParser"
 export interface LocksHistory {
   /** Get locks by a given list of addresses.
    *  @address - address to fetch operations by
-   *  @displayLatest - number of latest operations to display
    */
   getAllByAddresses(addresses: Address[]): Promise<TokenLock[]>
 }
