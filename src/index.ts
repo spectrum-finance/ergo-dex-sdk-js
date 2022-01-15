@@ -6,8 +6,8 @@ export {
   makeDefaultPoolActionsSelector
 } from "./amm/interpreters/poolActions"
 export {Refunds, AmmOrderRefunds} from "./amm/interpreters/refunds"
-export {Pools, NetworkPools, makePools, makeNativePools} from "./amm/repositories/pools"
-export {History, NetworkHistory, makeHistory} from "./amm/repositories/history"
+export {Pools, NetworkPools, makePools, makeNativePools} from "./amm/services/pools"
+export {History, NetworkHistory, makeHistory} from "./amm/services/history"
 export {AmmOrderInfo} from "./amm/models/ammOrderInfo"
 export {AmmPoolInfo} from "./amm/models/ammPoolInfo"
 export {
@@ -41,5 +41,10 @@ export {Price} from "./entities/price"
 export {RefundParams} from "./models/refundParams"
 export {decimalToFractional, evaluate} from "./utils/math"
 export {minValueForOrder, minValueForSetup} from "./amm/interpreters/mins"
+
+export {mkLockActions, LockActions} from "./security/interpreters/lockActions"
+export {LockParams, WithdrawalParams, RelockParams} from "./security/models"
+export {LockParser, mkLockParser} from "./security/parsers/lockParser"
+export {LocksHistory, mkLocksHistory} from "./security/services/locksHistory"
 
 export * from "./constants"
