@@ -73,6 +73,10 @@ class ErgoTokensLockActions implements LockActions {
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
       )
+    else if (outputGranted.assets.length < 1)
+      return Promise.reject(
+        new InsufficientInputs(`No assets supplied for the lock`)
+      )
     else return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
   }
 
