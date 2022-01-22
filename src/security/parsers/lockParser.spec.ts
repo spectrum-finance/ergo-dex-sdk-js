@@ -16,32 +16,41 @@ test("parse valid lock", t => {
 
 const SampleOutputsJson = `[
   {
-      "boxId": "2508dca96860f8e18181e017c7ae93e19d0c9b36cbadd90f96a8947db42c0c37",
-      "transactionId": "cf0f776a93e0ddfa6c9e0bf80e5aff271092729ea5c61289578ecf6aafedf0a3",
-      "blockId": "72114b8879c3e2e0fa7c581c5b8761b92094cd5a734c5422c7b56c88f8befac6",
-      "value": 2060000,
-      "index": 0,
-      "globalIndex": 12245720,
-      "creationHeight": 506880,
-      "settlementHeight": 669182,
-      "ergoTree": "195e03040004000400d802d601b2a5730000d602e4c6a70404ea02e4c6a70508d19593c27201c2a7d802d603b2db63087201730100d604b2db6308a7730200eded92e4c6720104047202938c7203018c720401928c7203028c7204028f7202a3",
-      "address": "XqM6yyAmxNgCcRzvutWwtdSvKqqaEtd4cZRsVvJu1xeu4y5T9tZexJpPf1XMMWCZdv8zVK1XUbmM5gjB9KzWXQCMEWJcdNas6HYJFYf47m63kU3xZMHjUA3vNKRZWEj8AvQ75YBUx",
-      "assets": [],
-      "additionalRegisters": {
-          "R4": {
-              "serializedValue": "04a00b",
-              "sigmaType": "SInt",
-              "renderedValue": "720"
-          },
-          "R5": {
-              "serializedValue": "08cd03c6ad2949fb9f1a52c77abca7afa4d65fc46021b1f97c391c224f072e402b0a47",
-              "sigmaType": "SSigmaProp",
-              "renderedValue": "03c6ad2949fb9f1a52c77abca7afa4d65fc46021b1f97c391c224f072e402b0a47"
-          }
-      },
-      "spentTransactionId": null,
-      "mainChain": true
-  },
+    "boxId": "06b5b7763855b03d8cef6972353fd2edac9c223f5cdae632201131f15b0d2a67",
+    "transactionId": "8907b1b48abdbd42212d234fb96462c6786d5b38fb2b08bffcb623c940d0aaa7",
+    "blockId": "31ccc813216205c1edda191fd53bbb507a8b608c33e7874f9c362501170e029c",
+    "value": 2060000,
+    "index": 0,
+    "globalIndex": 12255797,
+    "creationHeight": 669397,
+    "settlementHeight": 669399,
+    "ergoTree": "195e03040004000400d802d601b2a5730000d602e4c6a70404ea02e4c6a70508d19593c27201c2a7d802d603b2db63087201730100d604b2db6308a7730200eded92e4c6720104047202938c7203018c720401928c7203028c7204028f7202a3",
+    "address": "XqM6yyAmxNgCcRzvutWwtdSvKqqaEtd4cZRsVvJu1xeu4y5T9tZexJpPf1XMMWCZdv8zVK1XUbmM5gjB9KzWXQCMEWJcdNas6HYJFYf47m63kU3xZMHjUA3vNKRZWEj8AvQ75YBUx",
+    "assets": [
+        {
+            "tokenId": "303f39026572bcb4060b51fafc93787a236bb243744babaa99fceb833d61e198",
+            "index": 0,
+            "amount": 5460202,
+            "name": null,
+            "decimals": null,
+            "type": null
+        }
+    ],
+    "additionalRegisters": {
+        "R4": {
+            "serializedValue": "04cae651",
+            "sigmaType": "SInt",
+            "renderedValue": "670117"
+        },
+        "R5": {
+            "serializedValue": "08cd03c6ad2949fb9f1a52c77abca7afa4d65fc46021b1f97c391c224f072e402b0a47",
+            "sigmaType": "SSigmaProp",
+            "renderedValue": "03c6ad2949fb9f1a52c77abca7afa4d65fc46021b1f97c391c224f072e402b0a47"
+        }
+    },
+    "spentTransactionId": null,
+    "mainChain": true
+},
   {
       "boxId": "33af2dde94337f4642b495ec59f0e6b16adf0d73b63e356010dc34eb9576399e",
       "transactionId": "cf0f776a93e0ddfa6c9e0bf80e5aff271092729ea5c61289578ecf6aafedf0a3",
