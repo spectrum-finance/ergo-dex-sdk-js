@@ -1,4 +1,5 @@
-import {Address, ErgoNetwork} from "@ergolabs/ergo-sdk"
+import {Address, ErgoNetwork, publicKeyFromAddress} from "@ergolabs/ergo-sdk"
+import {TokenLockTemplateHash} from "../contracts/lockingTemplates"
 import {TokenLock} from "../entities"
 import {LockParser} from "../parsers/lockParser"
 
@@ -17,18 +18,26 @@ class DefaultLocksHistory implements LocksHistory {
   constructor(public readonly network: ErgoNetwork, public readonly parser: LockParser) {}
   async getAllByAddresses(addresses: Address[]): Promise<TokenLock[]> {
     const ops: TokenLock[] = []
-    for (const addr of addresses) {
-      const limit = 100
-      let offset = 0
-      // eslint-disable-next-line no-constant-condition
-      while (true) {
-        const [txs, total] = await this.network.getTxsByAddress(addr, {offset, limit: 100}) // todo: Use direct UTxO search
-        for (const out of txs.flatMap(tx => tx.outputs)) {
-          const op = this.parser.parseTokenLock(out)
-          if (op) ops.push(op)
+    for (const pk of addresses.map(publicKeyFromAddress)) {
+      if (pk) {
+        const query = {
+          ergoTreeTemplateHash: TokenLockTemplateHash,
+          registers: {
+            R5: pk
+          }
         }
-        if (offset < total) offset += limit
-        else break
+        const limit = 100
+        let offset = 0
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
+          const [utxos, total] = await this.network.searchUnspentBoxes(query, {offset, limit})
+          for (const out of utxos) {
+            const op = this.parser.parseTokenLock(out)
+            if (op) ops.push(op)
+          }
+          if (offset < total) offset += limit
+          else break
+        }
       }
     }
     return ops
