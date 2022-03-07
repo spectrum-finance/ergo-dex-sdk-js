@@ -1,7 +1,7 @@
 import {AssetAmount, AssetInfo} from "@ergolabs/ergo-sdk"
-import {PoolId} from "../types"
 import {Price} from "../../entities/price"
 import {EmissionLP} from "../constants"
+import {PoolId} from "../types"
 
 export class AmmPool {
   constructor(
@@ -119,12 +119,7 @@ export class AmmPool {
    */
   pureOutputAmount(input: AssetAmount): AssetAmount {
     if (input.asset.id === this.assetX.id)
-      return this.y.withAmount(
-        (this.y.amount * input.amount) / (this.x.amount + input.amount)
-      )
-    else
-      return this.x.withAmount(
-        (this.x.amount * input.amount) / (this.y.amount  + input.amount)
-      )
+      return this.y.withAmount((this.y.amount * input.amount) / (this.x.amount + input.amount))
+    else return this.x.withAmount((this.x.amount * input.amount) / (this.y.amount + input.amount))
   }
 }
