@@ -96,7 +96,7 @@ export class AmmPool {
 
   /** @param input - swap input
    *  @param maxSlippage - max price slippage allowed % (0 - 100)
-   *  @return Output amount of one token for a given input amount of the other
+   *  @return Output amount of one token for a given input amount of the other includes fee
    */
   outputAmount(input: AssetAmount, maxSlippage?: number): AssetAmount {
     const slippage = BigInt((maxSlippage || 0) * 100)
@@ -111,6 +111,20 @@ export class AmmPool {
         (this.x.amount * input.amount * this.feeNum) /
           ((this.y.amount + (this.y.amount * slippage) / (100n * 100n)) * this.feeDenom +
             input.amount * this.feeNum)
+      )
+  }
+
+  /** @param input - swap input
+   *  @return Output amount of one token for a given input amount of the other without fee and slippage
+   */
+  pureOutputAmount(input: AssetAmount): AssetAmount {
+    if (input.asset.id === this.assetX.id)
+      return this.y.withAmount(
+        (this.y.amount * input.amount) / (this.x.amount + input.amount)
+      )
+    else
+      return this.x.withAmount(
+        (this.x.amount * input.amount) / (this.y.amount  + input.amount)
       )
   }
 }
