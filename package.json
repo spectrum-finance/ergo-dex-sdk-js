@@ -40,13 +40,14 @@
     "node": ">=10"
   },
   "dependencies": {
+    "@ergolabs/ergo-sdk": "0.1.28",
     "axios": "^0.21.1",
     "blakejs": "^1.1.0",
     "bs58": "^4.0.1",
     "crypto-js": "^4.0.0",
     "ergo-lib-wasm-browser": "0.14.0",
     "ergo-lib-wasm-nodejs": "0.14.0",
-    "@ergolabs/ergo-sdk": "0.1.28",
+    "esm-wallaby": "^3.2.25",
     "json-bigint": "^1.0.0",
     "mathjs": "^9.4.4",
     "ramda": "0.27.1"
@@ -74,6 +75,7 @@
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-functional": "^3.0.2",
     "eslint-plugin-import": "^2.22.0",
+    "esm": "^3.2.25",
     "gh-pages": "^3.1.0",
     "npm-run-all": "^4.1.5",
     "nyc": "^15.1.0",
@@ -82,8 +84,7 @@
     "standard-version": "^9.0.0",
     "ts-node": "^9.0.0",
     "typedoc": "^0.19.0",
-    "typescript": "^4.0.8",
-    "esm": "^3.2.25"
+    "typescript": "^4.0.8"
   },
   "files": [
     "build/main",
@@ -102,7 +103,7 @@
       }
     },
     "require": [
-      "esm",
+      "esm-wallaby",
       "@babel/polyfill"
     ],
     "babel": true
