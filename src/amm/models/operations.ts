@@ -2,7 +2,7 @@ import {AssetAmount, BoxId, TxId} from "@ergolabs/ergo-sdk"
 import {AmmOrderInfo} from "./ammOrderInfo"
 import {AmmPoolInfo} from "./ammPoolInfo"
 
-export type AmmOrderStatus = "pending" | "submitted" | "executed" | "settled" | "refund"
+export type AmmOrderStatus = "pending" | "submitted" | "executed" | "settled" | "refund" | "inProgress"
 
 export type AmmOrderType = "swap" | "deposit" | "redeem"
 
@@ -19,7 +19,7 @@ export type AmmOrder = {
   order: AmmOrderInfo
 }
 
-export type TxStatus = "pending" | "executed" | "settled"
+export type TxStatus = "pending" | "executed" | "settled";
 
 export type PoolSetup = {
   type: "setup"
