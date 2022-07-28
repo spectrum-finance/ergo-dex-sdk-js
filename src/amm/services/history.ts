@@ -122,6 +122,7 @@ export class NetworkHistory implements History {
         timestamp: (tx as any).creationTimestamp,
         txId: tx.id,
         boxId: input.boxId,
+        orderInput: input,
         status: 'inProgress',
         order: summary
       }

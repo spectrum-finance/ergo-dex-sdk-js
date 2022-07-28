@@ -1,4 +1,4 @@
-import {AssetAmount, BoxId, TxId} from "@ergolabs/ergo-sdk"
+import {AssetAmount, AugErgoBox, BoxId, TxId} from "@ergolabs/ergo-sdk"
 import {AmmOrderInfo} from "./ammOrderInfo"
 import {AmmPoolInfo} from "./ammPoolInfo"
 
@@ -17,6 +17,7 @@ export type AmmOrder = {
   boxId: BoxId
   status: AmmOrderStatus
   order: AmmOrderInfo
+  orderInput?: AugErgoBox
 }
 
 export type TxStatus = "pending" | "executed" | "settled";
