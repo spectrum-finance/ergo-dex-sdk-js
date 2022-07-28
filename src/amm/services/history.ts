@@ -119,7 +119,7 @@ export class NetworkHistory implements History {
       const [summary, input] = inputOrder
       return {
         type: 'order',
-        timestamp: tx.timestamp,
+        timestamp: (tx as any).creationTimestamp,
         txId: tx.id,
         boxId: input.boxId,
         status: 'inProgress',
