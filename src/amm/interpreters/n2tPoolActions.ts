@@ -5,15 +5,13 @@ import {
   EmptyRegisters,
   ErgoBoxCandidate,
   ergoTreeFromAddress,
-  ErgoTx,
+  extractOutputsFromTxRequest,
   Int32Constant,
   isNative,
   MinBoxValue,
-  Prover,
   RegisterId,
   registers,
   TransactionContext,
-  TxAssembler,
   TxRequest
 } from "@ergolabs/ergo-sdk"
 import {InsufficientInputs} from "@ergolabs/ergo-sdk"
@@ -28,14 +26,10 @@ import {SwapParams} from "../models/swapParams"
 import {minValueForOrder, minValueForSetup} from "./mins"
 import {PoolActions} from "./poolActions"
 
-export class N2tPoolActions implements PoolActions {
-  constructor(
-    public readonly prover: Prover,
-    public readonly txAsm: TxAssembler,
-    public readonly uiRewardAddress: Address
-  ) {}
+export class N2tPoolActions implements PoolActions<TxRequest> {
+  constructor(public readonly uiRewardAddress: Address) {}
 
-  async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<ErgoTx[]> {
+  setup(params: PoolSetupParams, ctx: TransactionContext): Promise<TxRequest[]> {
     const [x, y] = [params.x.asset, params.y.asset]
     const height = ctx.network.height
     const inputs = ctx.inputs
@@ -68,7 +62,6 @@ export class N2tPoolActions implements PoolActions {
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
-    const tx0 = await this.prover.sign(this.txAsm.assemble(txr0, ctx.network))
 
     const lpP2Pk = ergoTreeFromAddress(ctx.changeAddress)
     const lpShares = {tokenId: newTokenLP.tokenId, amount: params.outputShare}
@@ -80,7 +73,7 @@ export class N2tPoolActions implements PoolActions {
       additionalRegisters: EmptyRegisters
     }
 
-    const poolBootBox = tx0.outputs[0]
+    const poolBootBox = extractOutputsFromTxRequest(txr0, ctx.network)[0]
     const tx1Inputs = BoxSelection.safe(poolBootBox)
 
     const newTokenNFT = {tokenId: tx1Inputs.newTokenId, amount: 1n}
@@ -100,12 +93,10 @@ export class N2tPoolActions implements PoolActions {
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
-    const tx1 = await this.prover.sign(this.txAsm.assemble(txr1, ctx.network))
-
-    return Promise.resolve([tx0, tx1])
+    return Promise.resolve([txr0, txr1])
   }
 
-  deposit(params: DepositParams, ctx: TransactionContext): Promise<ErgoTx> {
+  deposit(params: DepositParams, ctx: TransactionContext): Promise<TxRequest> {
     const [x, y] = [params.x, params.y]
     const proxyScript = N2T.deposit(params.poolId, params.pk, x.amount, params.exFee, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
@@ -127,17 +118,16 @@ export class N2tPoolActions implements PoolActions {
       additionalRegisters: EmptyRegisters
     }
     const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
-    const txr = {
+    return Promise.resolve({
       inputs: ctx.inputs,
       dataInputs: [],
       outputs: prepend(orderOut, uiRewardOut),
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
-    }
-    return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
+    })
   }
 
-  redeem(params: RedeemParams, ctx: TransactionContext): Promise<ErgoTx> {
+  redeem(params: RedeemParams, ctx: TransactionContext): Promise<TxRequest> {
     const proxyScript = N2T.redeem(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.asset.id)
@@ -159,29 +149,27 @@ export class N2tPoolActions implements PoolActions {
       additionalRegisters: EmptyRegisters
     }
     const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
-    const txr = {
+    return Promise.resolve({
       inputs: ctx.inputs,
       dataInputs: [],
       outputs: prepend(orderOut, uiRewardOut),
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
-    }
-    return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
+    })
   }
 
-  async swap(params: SwapParams, ctx: TransactionContext): Promise<ErgoTx> {
+  async swap(params: SwapParams, ctx: TransactionContext): Promise<TxRequest> {
     const out = await (isNative(params.baseInput.asset)
       ? N2tPoolActions.mkSwapSell(params, ctx)
       : N2tPoolActions.mkSwapBuy(params, ctx))
     const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
-    const txr: TxRequest = {
+    return {
       inputs: ctx.inputs,
       dataInputs: [],
       outputs: prepend(out, uiRewardOut),
       changeAddress: ctx.changeAddress,
       feeNErgs: ctx.feeNErgs
     }
-    return this.prover.sign(this.txAsm.assemble(txr, ctx.network))
   }
 
   private static async mkSwapSell(params: SwapParams, ctx: TransactionContext): Promise<ErgoBoxCandidate> {

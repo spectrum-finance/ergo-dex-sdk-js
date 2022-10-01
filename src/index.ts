@@ -3,7 +3,8 @@ export {N2tPoolActions} from "./amm/interpreters/n2tPoolActions"
 export {
   PoolActions,
   PoolActionsSelector,
-  makeDefaultPoolActionsSelector
+  makePoolActionsSelector,
+  makeWrappedPoolActionsSelector
 } from "./amm/interpreters/poolActions"
 export {Refunds, AmmOrderRefunds} from "./amm/interpreters/refunds"
 export {Pools, NetworkPools, makePools, makeNativePools} from "./amm/services/pools"
