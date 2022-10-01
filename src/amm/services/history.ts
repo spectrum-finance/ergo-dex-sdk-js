@@ -91,7 +91,7 @@ export class NetworkHistory implements History {
         const op = this.ordersParser.parse(o)
         return op ? ([op, o] as [AmmOrderInfo, AugErgoBox]) : undefined
       })
-      .find(x => !!x);
+      .find(x => !!x)
 
     if (outputOrder) {
       const [summary, output] = outputOrder
@@ -118,12 +118,12 @@ export class NetworkHistory implements History {
     if (inputOrder && !confirmed) {
       const [summary, input] = inputOrder
       return {
-        type: 'order',
+        type: "order",
         timestamp: (tx as any).creationTimestamp,
         txId: tx.id,
         boxId: input.boxId,
         orderInput: input,
-        status: 'inProgress',
+        status: "inProgress",
         order: summary
       }
     }
