@@ -57,7 +57,7 @@ export function makeWrappedPoolActionsSelector(
     )
 }
 
-function wrapPoolActions(
+export function wrapPoolActions(
   actions: PoolActions<TxRequest>,
   prover: Prover,
   txAsm: TxAssembler

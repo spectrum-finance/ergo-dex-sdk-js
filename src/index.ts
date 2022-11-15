@@ -49,4 +49,10 @@ export {LockParams, WithdrawalParams, RelockParams} from "./security/models"
 export {LockParser, mkLockParser} from "./security/parsers/lockParser"
 export {LocksHistory, mkLocksHistory} from "./security/services/locksHistory"
 
+export {
+  mkPoolActions, mkWrappedPoolActions, wrapPoolActions, PoolActions as LmPoolActions
+} from "./lqmining/interpreters/poolActions"
+export {ActionContext} from "./lqmining/models/actionContext"
+export {PoolSetupConf, LqDepositConf, LqRedeemConf} from "./lqmining/models/poolOpParams"
+
 export * from "./constants"
