@@ -20,7 +20,7 @@ export type AmmOrder = {
   orderInput?: AugErgoBox
 }
 
-export type TxStatus = "pending" | "executed" | "settled";
+export type TxStatus = "pending" | "executed" | "settled"
 
 export type PoolSetup = {
   type: "setup"
