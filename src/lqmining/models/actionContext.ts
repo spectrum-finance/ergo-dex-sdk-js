@@ -4,7 +4,7 @@ import {NetworkContext} from "@ergolabs/ergo-sdk/build/main/entities/networkCont
 export type ActionContext = {
   readonly selfAddress: Address
   readonly changeAddress: Address
-  readonly minBoxValue: bigint,
+  readonly minBoxValue: bigint
   readonly minerFee: bigint
   readonly uiFee: bigint
   readonly network: NetworkContext
