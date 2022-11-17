@@ -1,7 +1,7 @@
 import {AssetAmount, deserializeConstant, ErgoBox, Int64Constant, RegisterId} from "@ergolabs/ergo-sdk"
 import {Int32ArrayConstant} from "@ergolabs/ergo-sdk/build/main/entities/constant"
-import {FromBox} from "../fromBox"
-import {LmPool} from "./entities/lmPool"
+import {FromBox} from "../../fromBox"
+import {LmPool} from "../entities/lmPool"
 
 export class LmPoolFromBox implements FromBox<LmPool> {
   from(box: ErgoBox): LmPool | undefined {

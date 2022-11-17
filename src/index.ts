@@ -7,7 +7,7 @@ export {
   makeWrappedPoolActionsSelector
 } from "./amm/interpreters/poolActions"
 export {Refunds, AmmOrderRefunds} from "./amm/interpreters/refunds"
-export {Pools, NetworkPools, makePools, makeNativePools} from "./amm/services/pools"
+export {makeTokenPools, makeNativePools} from "./amm/services/pools"
 export {History, NetworkHistory, makeHistory} from "./amm/services/history"
 export {AmmOrderInfo} from "./amm/models/ammOrderInfo"
 export {AmmPoolInfo} from "./amm/models/ammPoolInfo"
@@ -21,7 +21,7 @@ export {
   TxStatus
 } from "./amm/models/operations"
 export {AmmOrdersParser, DefaultAmmOrdersParser} from "./amm/parsers/ammOrdersParser"
-export {AmmPoolsParser, T2TAmmPoolsParser, N2TAmmPoolsParser} from "./amm/parsers/ammPoolsParser"
+export {T2TAmmPoolsParser, N2TAmmPoolsParser} from "./amm/parsers/ammPoolsParser"
 export {AmmPoolsInfoParser, DefaultAmmPoolsInfoParser} from "./amm/parsers/ammPoolsInfoParser"
 export {
   AmmPoolValidation,
@@ -48,6 +48,9 @@ export {mkLockActions, LockActions} from "./security/interpreters/lockActions"
 export {LockParams, WithdrawalParams, RelockParams} from "./security/models"
 export {LockParser, mkLockParser} from "./security/parsers/lockParser"
 export {LocksHistory, mkLocksHistory} from "./security/services/locksHistory"
+
+export {PoolContracts} from "./contracts/poolContracts"
+export {Pools, makePools} from "./services/pools"
 
 export {
   mkPoolActions,
