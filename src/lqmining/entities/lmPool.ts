@@ -24,6 +24,6 @@ export class LmPool {
   }
 
   epochsLeft(currentHeight: number): number {
-    return Math.floor(this.conf.epochNum - ((currentHeight - this.conf.programStart) / this.conf.epochLen))
+    return Math.floor(this.conf.epochNum - (currentHeight - this.conf.programStart) / this.conf.epochLen)
   }
 }
