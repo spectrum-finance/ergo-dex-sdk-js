@@ -1,8 +1,10 @@
-import * as crypto from "crypto-js"
 import {ErgoTree, HexString, PublicKey, RustModule, TokenId} from "@ergolabs/ergo-sdk"
+import * as crypto from "crypto-js"
+import {PoolContracts} from "../../contracts/poolContracts"
 import {fromHex, toHex} from "../../utils/hex"
 import {decimalToFractional} from "../../utils/math"
 import {SigmaPropConstPrefixHex} from "../constants"
+import {AmmPool} from "../entities/ammPool"
 import {PoolId} from "../types"
 import * as N2T from "./n2tTemplates"
 
@@ -15,7 +17,7 @@ export function poolTemplateHash(): HexString {
   return crypto.SHA256(crypto.enc.Hex.parse(toHex(template))).toString(crypto.enc.Hex)
 }
 
-export function poolBundle() {
+export function poolBundle(): PoolContracts<AmmPool> {
   return {
     poolTree: pool(),
     poolTemplateHash: poolTemplateHash()
