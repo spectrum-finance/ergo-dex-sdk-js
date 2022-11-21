@@ -60,5 +60,6 @@ export {
 } from "./lqmining/interpreters/poolActions"
 export {ActionContext} from "./lqmining/models/actionContext"
 export {PoolSetupConf, LqDepositConf, LqRedeemConf} from "./lqmining/models/poolOpParams"
+export {LmPool, LmPoolConfig} from "./lqmining/entities/lmPool"
 
 export * from "./constants"
