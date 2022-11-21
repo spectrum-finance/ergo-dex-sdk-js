@@ -6,7 +6,7 @@ export {
   makePoolActionsSelector,
   makeWrappedPoolActionsSelector
 } from "./amm/interpreters/poolActions"
-export {Refunds, AmmOrderRefunds} from "./amm/interpreters/refunds"
+export {Refunds, AmmOrderRefundsWrapper} from "./amm/interpreters/refunds"
 export {makeTokenPools, makeNativePools} from "./amm/services/pools"
 export {History, NetworkHistory, makeHistory} from "./amm/services/history"
 export {AmmOrderInfo} from "./amm/models/ammOrderInfo"
