@@ -1,14 +1,9 @@
 import {AssetAmount, deserializeConstant, ErgoBox, Int32Constant, RegisterId} from "@ergolabs/ergo-sdk"
+import {FromBox} from "../../fromBox"
 import {AmmPool} from "../entities/ammPool"
 
-export interface AmmPoolsParser {
-  parsePool(box: ErgoBox): AmmPool | undefined
-
-  parseValidPools(boxes: ErgoBox[]): AmmPool[]
-}
-
-export class T2TAmmPoolsParser implements AmmPoolsParser {
-  parsePool(box: ErgoBox): AmmPool | undefined {
+export class T2TAmmPoolsParser implements FromBox<AmmPool> {
+  from(box: ErgoBox): AmmPool | undefined {
     const r4 = box.additionalRegisters[RegisterId.R4]
     if (box.assets.length == 4 && r4) {
       const nft = box.assets[0].tokenId
@@ -21,18 +16,18 @@ export class T2TAmmPoolsParser implements AmmPoolsParser {
     return undefined
   }
 
-  parseValidPools(boxes: ErgoBox[]): AmmPool[] {
+  fromMany(boxes: ErgoBox[]): AmmPool[] {
     const pools = []
     for (const box of boxes) {
-      const pool = this.parsePool(box)
+      const pool = this.from(box)
       if (pool) pools.push(pool)
     }
     return pools
   }
 }
 
-export class N2TAmmPoolsParser implements AmmPoolsParser {
-  parsePool(box: ErgoBox): AmmPool | undefined {
+export class N2TAmmPoolsParser implements FromBox<AmmPool> {
+  from(box: ErgoBox): AmmPool | undefined {
     const r4 = box.additionalRegisters[RegisterId.R4]
     if (box.assets.length == 3 && r4) {
       const nft = box.assets[0].tokenId
@@ -45,10 +40,10 @@ export class N2TAmmPoolsParser implements AmmPoolsParser {
     return undefined
   }
 
-  parseValidPools(boxes: ErgoBox[]): AmmPool[] {
-    let pools = []
+  fromMany(boxes: ErgoBox[]): AmmPool[] {
+    const pools = []
     for (const box of boxes) {
-      const pool = this.parsePool(box)
+      const pool = this.from(box)
       if (pool) pools.push(pool)
     }
     return pools
