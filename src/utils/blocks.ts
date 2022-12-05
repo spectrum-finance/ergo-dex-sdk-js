@@ -29,6 +29,10 @@ export function daysCountToBlocks (daysCount: number): number {
   return millisToBlocks(BigInt(daysCount * DAY_MILLIS));
 }
 
+export function blocksToDaysCount(block: number): number {
+  return Math.ceil(Number(blocksToMillis(block)) / DAY_MILLIS);
+}
+
 export function weeksCountToBlocks (weeksCount: number): number {
   return millisToBlocks(BigInt(weeksCount * WEEK_MILLIS));
 }
