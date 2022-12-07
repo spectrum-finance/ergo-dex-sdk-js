@@ -6,14 +6,14 @@ test("Epochs left (unit epoch)", t => {
   const startedAt = 1000
   const pool = initPool(1, 10, startedAt)
   const diff = 5
-  t.deepEqual(pool.epochsLeft(startedAt + diff), diff)
+  t.deepEqual(pool.numEpochsRemain(startedAt + diff), diff)
 })
 
 test("Epochs left", t => {
   const startedAt = 1000
   const pool = initPool(4, 10, startedAt)
   const diff = 5
-  t.deepEqual(pool.epochsLeft(startedAt + diff), 8)
+  t.deepEqual(pool.numEpochsRemain(startedAt + diff), 8)
 })
 
 function initPool(epochLen: number, epochNum: number, programStart: number): LmPool {

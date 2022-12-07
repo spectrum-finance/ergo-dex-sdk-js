@@ -6,14 +6,13 @@ export type LmPoolConfig = {
   epochNum: number
   programStart: number
   programBudget: bigint
-  execBudget: bigint
 }
 
 export class LmPool {
   constructor(
     public readonly id: PoolId,
     public readonly conf: LmPoolConfig,
-    public readonly reward: AssetAmount,
+    public readonly budget: AssetAmount,
     public readonly lq: AssetAmount,
     public readonly vlq: AssetAmount,
     public readonly tt: AssetAmount
@@ -23,7 +22,18 @@ export class LmPool {
     return this.conf.programBudget / BigInt(this.conf.epochNum)
   }
 
-  epochsLeft(currentHeight: number): number {
-    return Math.floor(this.conf.epochNum - (currentHeight - this.conf.programStart) / this.conf.epochLen)
+  numEpochsRemain(height: number): number {
+    return this.conf.epochNum - this.currentEpoch(height)
+  }
+
+  currentEpoch(height: number): number {
+    const curBlockIx = height - this.conf.programStart + 1
+    const curEpochIxRem = curBlockIx % this.conf.epochLen
+    const curEpochIxR = curBlockIx / this.conf.epochLen
+    if (curEpochIxRem > 0) {
+      return curEpochIxR + 1
+    } else {
+      return curEpochIxR
+    }
   }
 }

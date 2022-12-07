@@ -1,21 +1,10 @@
 import {ErgoNetwork, isNative} from "@ergolabs/ergo-sdk"
-import {AmmPool} from "../entities/ammPool"
-import {BurnLP, EmissionLP} from "../constants"
 import {sqrt} from "../../utils/sqrt"
+import {OK, PoolValidation, ValidationResult} from "../../validation/poolValidation"
+import {BurnLP, EmissionLP} from "../constants"
+import {AmmPool} from "../entities/ammPool"
 
-export const OK = "OK"
-
-export type OK = typeof OK
-export type ValidationErrors = string[]
-export type ValidationResult = OK | ValidationErrors
-
-export interface AmmPoolValidation {
-  /** Check whether the given pool is properly initialized.
-   */
-  validate(pool: AmmPool): Promise<ValidationResult>
-}
-
-class T2TAmmPoolValidation implements AmmPoolValidation {
+class T2TAmmPoolValidation implements PoolValidation<AmmPool> {
   constructor(public readonly network: ErgoNetwork) {}
 
   async validate(pool: AmmPool): Promise<ValidationResult> {
@@ -52,7 +41,7 @@ class T2TAmmPoolValidation implements AmmPoolValidation {
   }
 }
 
-class N2TAmmPoolValidation implements AmmPoolValidation {
+class N2TAmmPoolValidation implements PoolValidation<AmmPool> {
   constructor(public readonly network: ErgoNetwork) {}
 
   async validate(pool: AmmPool): Promise<ValidationResult> {
@@ -89,7 +78,7 @@ class N2TAmmPoolValidation implements AmmPoolValidation {
   }
 }
 
-export class DefaultAmmPoolValidation implements AmmPoolValidation {
+export class DefaultAmmPoolValidation implements PoolValidation<AmmPool> {
   private n2tValidation: N2TAmmPoolValidation
   private t2tValidation: T2TAmmPoolValidation
 

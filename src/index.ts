@@ -23,13 +23,8 @@ export {
 export {AmmOrdersParser, DefaultAmmOrdersParser} from "./amm/parsers/ammOrdersParser"
 export {T2TAmmPoolsParser, N2TAmmPoolsParser} from "./amm/parsers/ammPoolsParser"
 export {AmmPoolsInfoParser, DefaultAmmPoolsInfoParser} from "./amm/parsers/ammPoolsInfoParser"
-export {
-  AmmPoolValidation,
-  DefaultAmmPoolValidation,
-  ValidationResult,
-  ValidationErrors,
-  OK
-} from "./amm/validation/ammPoolValidation"
+export {DefaultAmmPoolValidation} from "./amm/validation/ammPoolValidation"
+export {PoolValidation, ValidationResult, ValidationErrors, OK} from "./validation/poolValidation"
 export {AmmPool} from "./amm/entities/ammPool"
 export {Swap} from "./amm/entities/swap"
 export {PoolSetupParams, makePoolSetupParams} from "./amm/models/poolSetupParams"

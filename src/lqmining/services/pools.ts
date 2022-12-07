@@ -5,5 +5,5 @@ import {LmPool} from "../entities/lmPool"
 import {LmPoolFromBox} from "../parsers/lmPoolFromBox"
 
 export function makeLmPools(network: ErgoNetwork): Pools<LmPool> {
-  return makePools(network, new LmPoolFromBox(), PV.poolBundle())
+  return makePools(network, new LmPoolFromBox(), PV.managedPoolBundle())
 }
