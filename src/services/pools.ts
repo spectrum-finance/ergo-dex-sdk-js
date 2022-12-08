@@ -1,6 +1,6 @@
 import {ErgoNetwork, Paging, TokenId} from "@ergolabs/ergo-sdk"
-import {FromBox} from "../fromBox"
 import {PoolContracts} from "../contracts/poolContracts"
+import {FromBox} from "../fromBox"
 import {PoolId} from "../lqmining/types"
 
 export interface Pools<TPool> {
