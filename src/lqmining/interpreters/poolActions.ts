@@ -100,7 +100,7 @@ class LmPoolActions implements PoolActions<TxRequest> {
       additionalRegisters: EmptyRegisters
     }
     const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, ctx.uiFee)
-    const inputs = await this.selector.select({nErgs: ctx.minBoxValue + ctx.uiFee, assets: [redeemerKey]})
+    const inputs = await this.selector.select({nErgs: ctx.minBoxValue + ctx.uiFee + ctx.minerFee, assets: [redeemerKey]})
     if (inputs instanceof BoxSelection) {
       return {
         inputs: inputs,
