@@ -6,7 +6,7 @@ test("Epochs left (unit epoch)", t => {
   const startedAt = 1000
   const pool = initPool(1, 10, startedAt)
   const diff = 5
-  t.deepEqual(pool.numEpochsRemain(startedAt + diff), diff)
+  t.deepEqual(pool.numEpochsRemain(startedAt + diff), diff - 1)
 })
 
 test("Epochs left", t => {

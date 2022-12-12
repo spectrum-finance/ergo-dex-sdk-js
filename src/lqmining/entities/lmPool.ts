@@ -29,7 +29,7 @@ export class LmPool {
   currentEpoch(height: number): number {
     const curBlockIx = height - this.conf.programStart + 1
     const curEpochIxRem = curBlockIx % this.conf.epochLen
-    const curEpochIxR = curBlockIx / this.conf.epochLen
+    const curEpochIxR = Math.floor(curBlockIx / this.conf.epochLen)
     if (curEpochIxRem > 0) {
       return curEpochIxR + 1
     } else {
