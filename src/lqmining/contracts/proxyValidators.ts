@@ -15,6 +15,17 @@ const depositSample =
   "7206040e720493e4c67206050e72059386028cb27202730a00017207b2db63087206730b009386" +
   "028cb27202730c00019c7207730db2db63087206730e00"
 
+const redeemSample =
+  "19a70206040208cd03d36d7e86b0fe7d8aec204f0ae6c2be6563fc7a443d69501d73dfe9c2" +
+  "adddb15a0e69aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+  "0e69bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" +
+  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" +
+  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb05fe887a" +
+  "0400d801d601b2a5730000eb027301d1ed93c27201730293860273037304b2db6308720173" +
+  "0500"
+
 export function deposit(poolId: PoolId, redeemerPk: PublicKey, expectedNumEpochs: number): ErgoTree {
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(depositSample)
     .with_constant(
@@ -30,7 +41,7 @@ export function deposit(poolId: PoolId, redeemerPk: PublicKey, expectedNumEpochs
 }
 
 export function redeem(redeemerPk: PublicKey, lqId: TokenId, expectedLqAmount: bigint): ErgoTree {
-  return RustModule.SigmaRust.ErgoTree.from_base16_bytes(depositSample)
+  return RustModule.SigmaRust.ErgoTree.from_base16_bytes(redeemSample)
     .with_constant(1, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + redeemerPk))
     .with_constant(
       2,

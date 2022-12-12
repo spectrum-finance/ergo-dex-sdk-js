@@ -55,6 +55,7 @@ export {
 } from "./lqmining/interpreters/poolActions"
 export {ActionContext} from "./lqmining/models/actionContext"
 export {makeLmPools} from "./lqmining/services/pools"
+export {makeStakes, Stakes} from "./lqmining/services/stakes"
 export {PoolSetupConf, LqDepositConf, LqRedeemConf} from "./lqmining/models/poolOpParams"
 export {LmPool, LmPoolConfig} from "./lqmining/entities/lmPool"
 
