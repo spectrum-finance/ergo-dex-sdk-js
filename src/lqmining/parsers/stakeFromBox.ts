@@ -5,11 +5,11 @@ import {Stake} from "../models/stake"
 
 export class StakeFromBox implements FromBox<Stake> {
   from(box: ErgoBox): Stake | undefined {
+    const r4 = box.additionalRegisters[RegisterId.R4]
     const r5 = box.additionalRegisters[RegisterId.R5]
-    const r6 = box.additionalRegisters[RegisterId.R4]
-    if (box.assets.length == 3 && r5 && r6) {
-      const stakingKeyId = deserializeConstant(r5)
-      const poolId = deserializeConstant(r6)
+    if (box.assets.length == 3 && r5 && r4) {
+      const stakingKeyId = deserializeConstant(r4)
+      const poolId = deserializeConstant(r5)
       if (stakingKeyId instanceof ByteaConstant && poolId instanceof ByteaConstant) {
         return {
           poolId: toHex(poolId.value),
