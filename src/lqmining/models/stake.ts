@@ -5,4 +5,5 @@ export type Stake = {
   readonly poolId: PoolId
   readonly redeemerKeyId: TokenId
   readonly lockedLq: AssetAmount
+  readonly bundleKeyAsset: AssetAmount;
 }
