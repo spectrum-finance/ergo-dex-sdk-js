@@ -1,6 +1,6 @@
 {
   "name": "@ergolabs/ergo-dex-sdk",
-  "version": "1.8.8",
+  "version": "1.8.9",
   "description": "ErgoDEX SDK",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
