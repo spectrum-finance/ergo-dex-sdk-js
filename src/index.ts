@@ -1,5 +1,5 @@
-export {T2tPoolActions} from "./amm/interpreters/t2tPoolActions"
-export {N2tPoolActions} from "./amm/interpreters/n2tPoolActions"
+export {T2tPoolActionsNative} from "./amm/interpreters/t2tPoolActionsNative"
+export {N2tPoolActionsNative} from "./amm/interpreters/n2tPoolActionsNative"
 export {
   PoolActions,
   PoolActionsSelector,
@@ -36,7 +36,17 @@ export {SwapExtremums, swapVars} from "./amm/math/swap"
 export {Price} from "./entities/price"
 export {RefundParams} from "./models/refundParams"
 export {decimalToFractional, evaluate} from "./utils/math"
-export {blocksToMillis, millisToBlocks, daysCountToBlocks, hoursCountToBlocks, monthCountToBlocks, weeksCountToBlocks, blocksToTimestamp, timestampToBlocks, blocksToDaysCount} from "./utils/blocks"
+export {
+  blocksToMillis,
+  millisToBlocks,
+  daysCountToBlocks,
+  hoursCountToBlocks,
+  monthCountToBlocks,
+  weeksCountToBlocks,
+  blocksToTimestamp,
+  timestampToBlocks,
+  blocksToDaysCount
+} from "./utils/blocks"
 export {minValueForOrder, minValueForSetup} from "./amm/interpreters/mins"
 
 export {mkLockActions, LockActions} from "./security/interpreters/lockActions"

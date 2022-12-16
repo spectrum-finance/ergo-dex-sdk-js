@@ -16,6 +16,7 @@ import {
 } from "@ergolabs/ergo-sdk"
 import {InsufficientInputs} from "@ergolabs/ergo-sdk"
 import {prepend} from "ramda"
+import {NativeExFee, NativeExFeePerToken} from "../../types"
 import {stringToBytea} from "../../utils/utf8"
 import {BurnLP, EmissionLP} from "../constants"
 import * as N2T from "../contracts/n2tPoolContracts"
@@ -26,7 +27,7 @@ import {SwapParams} from "../models/swapParams"
 import {minValueForOrder, minValueForSetup} from "./mins"
 import {PoolActions} from "./poolActions"
 
-export class N2tPoolActions implements PoolActions<TxRequest> {
+export class N2tPoolActionsNative implements PoolActions<TxRequest, NativeExFee, NativeExFeePerToken> {
   constructor(public readonly uiRewardAddress: Address) {}
 
   setup(params: PoolSetupParams, ctx: TransactionContext): Promise<TxRequest[]> {
@@ -96,9 +97,9 @@ export class N2tPoolActions implements PoolActions<TxRequest> {
     return Promise.resolve([txr0, txr1])
   }
 
-  deposit(params: DepositParams, ctx: TransactionContext): Promise<TxRequest> {
+  deposit(params: DepositParams<NativeExFee>, ctx: TransactionContext): Promise<TxRequest> {
     const [x, y] = [params.x, params.y]
-    const proxyScript = N2T.deposit(params.poolId, params.pk, x.amount, params.exFee, ctx.feeNErgs)
+    const proxyScript = N2T.depositNative(params.poolId, params.pk, x.amount, params.exFee, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const inY = outputGranted.assets.filter(t => t.tokenId === y.asset.id)[0]
 
@@ -127,8 +128,8 @@ export class N2tPoolActions implements PoolActions<TxRequest> {
     })
   }
 
-  redeem(params: RedeemParams, ctx: TransactionContext): Promise<TxRequest> {
-    const proxyScript = N2T.redeem(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
+  redeem(params: RedeemParams<NativeExFee>, ctx: TransactionContext): Promise<TxRequest> {
+    const proxyScript = N2T.redeemNative(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.asset.id)
 
@@ -158,10 +159,10 @@ export class N2tPoolActions implements PoolActions<TxRequest> {
     })
   }
 
-  async swap(params: SwapParams, ctx: TransactionContext): Promise<TxRequest> {
+  async swap(params: SwapParams<NativeExFeePerToken>, ctx: TransactionContext): Promise<TxRequest> {
     const out = await (isNative(params.baseInput.asset)
-      ? N2tPoolActions.mkSwapSell(params, ctx)
-      : N2tPoolActions.mkSwapBuy(params, ctx))
+      ? N2tPoolActionsNative.mkSwapSell(params, ctx)
+      : N2tPoolActionsNative.mkSwapBuy(params, ctx))
     const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
     return {
       inputs: ctx.inputs,
@@ -172,8 +173,11 @@ export class N2tPoolActions implements PoolActions<TxRequest> {
     }
   }
 
-  private static async mkSwapSell(params: SwapParams, ctx: TransactionContext): Promise<ErgoBoxCandidate> {
-    const proxyScript = N2T.swapSell(
+  private static async mkSwapSell(
+    params: SwapParams<NativeExFeePerToken>,
+    ctx: TransactionContext
+  ): Promise<ErgoBoxCandidate> {
+    const proxyScript = N2T.swapSellNative(
       params.poolId,
       params.baseInput.amount,
       params.poolFeeNum,
@@ -201,8 +205,11 @@ export class N2tPoolActions implements PoolActions<TxRequest> {
     }
   }
 
-  private static async mkSwapBuy(params: SwapParams, ctx: TransactionContext): Promise<ErgoBoxCandidate> {
-    const proxyScript = N2T.swapBuy(
+  private static async mkSwapBuy(
+    params: SwapParams<NativeExFeePerToken>,
+    ctx: TransactionContext
+  ): Promise<ErgoBoxCandidate> {
+    const proxyScript = N2T.swapBuyNative(
       params.poolId,
       params.poolFeeNum,
       params.minQuoteOutput,

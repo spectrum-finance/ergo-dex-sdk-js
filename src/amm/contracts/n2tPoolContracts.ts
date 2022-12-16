@@ -24,7 +24,7 @@ export function poolBundle(): PoolContracts<AmmPool> {
   }
 }
 
-export function deposit(
+export function depositNative(
   poolId: PoolId,
   pk: PublicKey,
   selfX: bigint,
@@ -57,7 +57,7 @@ export function deposit(
     .to_base16_bytes()
 }
 
-export function redeem(poolId: PoolId, pk: PublicKey, dexFee: bigint, maxMinerFee: bigint): ErgoTree {
+export function redeemNative(poolId: PoolId, pk: PublicKey, dexFee: bigint, maxMinerFee: bigint): ErgoTree {
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2T.RedeemSample)
     .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
     .with_constant(11, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
@@ -72,7 +72,7 @@ export function redeem(poolId: PoolId, pk: PublicKey, dexFee: bigint, maxMinerFe
     .to_base16_bytes()
 }
 
-export function swapSell(
+export function swapSellNative(
   poolId: PoolId,
   baseAmount: bigint,
   poolFeeNum: number,
@@ -118,7 +118,7 @@ export function swapSell(
     .to_base16_bytes()
 }
 
-export function swapBuy(
+export function swapBuyNative(
   poolId: PoolId,
   poolFeeNum: number,
   minQuoteAmount: bigint,

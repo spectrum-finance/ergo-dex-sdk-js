@@ -15,6 +15,7 @@ import {
 } from "@ergolabs/ergo-sdk"
 import {InsufficientInputs} from "@ergolabs/ergo-sdk"
 import {prepend} from "ramda"
+import {NativeExFee, NativeExFeePerToken} from "../../types"
 import {stringToBytea} from "../../utils/utf8"
 import {BurnLP, EmissionLP} from "../constants"
 import * as T2T from "../contracts/t2tPoolContracts"
@@ -25,7 +26,7 @@ import {SwapParams} from "../models/swapParams"
 import {minValueForOrder, minValueForSetup} from "./mins"
 import {PoolActions} from "./poolActions"
 
-export class T2tPoolActions implements PoolActions<TxRequest> {
+export class T2tPoolActionsNative implements PoolActions<TxRequest, NativeExFee, NativeExFeePerToken> {
   constructor(public readonly uiRewardAddress: Address) {}
 
   async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<TxRequest[]> {
@@ -100,9 +101,9 @@ export class T2tPoolActions implements PoolActions<TxRequest> {
     return Promise.resolve([txr0, txr1])
   }
 
-  deposit(params: DepositParams, ctx: TransactionContext): Promise<TxRequest> {
+  deposit(params: DepositParams<NativeExFee>, ctx: TransactionContext): Promise<TxRequest> {
     const [x, y] = [params.x, params.y]
-    const proxyScript = T2T.deposit(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
+    const proxyScript = T2T.depositNative(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const pairIn = [
       outputGranted.assets.filter(t => t.tokenId === x.asset.id),
@@ -136,8 +137,8 @@ export class T2tPoolActions implements PoolActions<TxRequest> {
     })
   }
 
-  redeem(params: RedeemParams, ctx: TransactionContext): Promise<TxRequest> {
-    const proxyScript = T2T.redeem(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
+  redeem(params: RedeemParams<NativeExFee>, ctx: TransactionContext): Promise<TxRequest> {
+    const proxyScript = T2T.redeemNative(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.asset.id)
 
@@ -168,8 +169,8 @@ export class T2tPoolActions implements PoolActions<TxRequest> {
     })
   }
 
-  swap(params: SwapParams, ctx: TransactionContext): Promise<TxRequest> {
-    const proxyScript = T2T.swap(
+  swap(params: SwapParams<NativeExFeePerToken>, ctx: TransactionContext): Promise<TxRequest> {
+    const proxyScript = T2T.swapNative(
       params.poolId,
       params.poolFeeNum,
       params.quoteAsset,

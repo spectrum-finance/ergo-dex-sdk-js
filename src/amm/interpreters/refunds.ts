@@ -31,10 +31,7 @@ const RefundableTemplates = [
 ]
 
 export class AmmOrderRefunds implements Refunds<TxRequest> {
-  constructor(
-    public readonly network: ErgoNetwork
-  ) {
-  }
+  constructor(public readonly network: ErgoNetwork) {}
 
   async refund(params: RefundParams, ctx: MinTransactionContext): Promise<TxRequest> {
     const tx = await this.network.getTx(params.txId)
@@ -45,19 +42,19 @@ export class AmmOrderRefunds implements Refunds<TxRequest> {
     if (outputToRefund) {
       const inputs = BoxSelection.safe(outputToRefund)
       const refundOut = {
-        value:               outputToRefund.value - ctx.feeNErgs,
-        ergoTree:            ergoTreeFromAddress(params.recipientAddress),
-        creationHeight:      ctx.network.height,
-        assets:              outputToRefund.assets,
+        value: outputToRefund.value - ctx.feeNErgs,
+        ergoTree: ergoTreeFromAddress(params.recipientAddress),
+        creationHeight: ctx.network.height,
+        assets: outputToRefund.assets,
         additionalRegisters: EmptyRegisters
       }
 
       return Promise.resolve({
-        inputs:        inputs,
-        dataInputs:    [],
-        outputs:       [refundOut],
+        inputs: inputs,
+        dataInputs: [],
+        outputs: [refundOut],
         changeAddress: params.recipientAddress,
-        feeNErgs:      ctx.feeNErgs
+        feeNErgs: ctx.feeNErgs
       })
     } else {
       return Promise.reject(`No AMM orders found in the given Tx{id=${params.txId}`)
@@ -70,12 +67,10 @@ export class AmmOrderRefundsWrapper implements Refunds<ErgoTx> {
     public readonly refunds: Refunds<TxRequest>,
     public readonly prover: Prover,
     public readonly txAsm: TxAssembler
-  ) {
-  }
+  ) {}
 
   async refund(params: RefundParams, ctx: MinTransactionContext): Promise<ErgoTx> {
-    return  this
-      .refunds
+    return this.refunds
       .refund(params, ctx)
       .then(txRequest => this.prover.sign(this.txAsm.assemble(txRequest, ctx.network)))
   }
