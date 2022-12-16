@@ -36,7 +36,7 @@ export function deposit(poolId: PoolId, redeemerPk: PublicKey, expectedNumEpochs
     )
     .with_constant(5, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + redeemerPk))
     .with_constant(7, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
-    .with_constant(13, RustModule.SigmaRust.Constant.from_i32(Math.floor(expectedNumEpochs)))
+    .with_constant(13, RustModule.SigmaRust.Constant.from_i32(expectedNumEpochs))
     .to_base16_bytes()
 }
 
