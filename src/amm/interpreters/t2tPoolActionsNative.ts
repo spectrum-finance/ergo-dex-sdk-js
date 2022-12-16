@@ -15,7 +15,7 @@ import {
 } from "@ergolabs/ergo-sdk"
 import {InsufficientInputs} from "@ergolabs/ergo-sdk"
 import {prepend} from "ramda"
-import {NativeExFee, NativeExFeePerToken} from "../../types"
+import {NativeExFeeType} from "../../types"
 import {stringToBytea} from "../../utils/utf8"
 import {BurnLP, EmissionLP} from "../constants"
 import * as T2T from "../contracts/t2tPoolContracts"
@@ -26,7 +26,7 @@ import {SwapParams} from "../models/swapParams"
 import {minValueForOrder, minValueForSetup} from "./mins"
 import {PoolActions} from "./poolActions"
 
-export class T2tPoolActionsNative implements PoolActions<TxRequest, NativeExFee, NativeExFeePerToken> {
+export class T2tPoolActionsNative implements PoolActions<TxRequest, NativeExFeeType> {
   constructor(public readonly uiRewardAddress: Address) {}
 
   async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<TxRequest[]> {
@@ -101,7 +101,7 @@ export class T2tPoolActionsNative implements PoolActions<TxRequest, NativeExFee,
     return Promise.resolve([txr0, txr1])
   }
 
-  deposit(params: DepositParams<NativeExFee>, ctx: TransactionContext): Promise<TxRequest> {
+  deposit(params: DepositParams<NativeExFeeType>, ctx: TransactionContext): Promise<TxRequest> {
     const [x, y] = [params.x, params.y]
     const proxyScript = T2T.depositNative(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
@@ -137,7 +137,7 @@ export class T2tPoolActionsNative implements PoolActions<TxRequest, NativeExFee,
     })
   }
 
-  redeem(params: RedeemParams<NativeExFee>, ctx: TransactionContext): Promise<TxRequest> {
+  redeem(params: RedeemParams<NativeExFeeType>, ctx: TransactionContext): Promise<TxRequest> {
     const proxyScript = T2T.redeemNative(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.asset.id)
@@ -169,7 +169,7 @@ export class T2tPoolActionsNative implements PoolActions<TxRequest, NativeExFee,
     })
   }
 
-  swap(params: SwapParams<NativeExFeePerToken>, ctx: TransactionContext): Promise<TxRequest> {
+  swap(params: SwapParams<NativeExFeeType>, ctx: TransactionContext): Promise<TxRequest> {
     const proxyScript = T2T.swapNative(
       params.poolId,
       params.poolFeeNum,

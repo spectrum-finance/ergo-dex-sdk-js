@@ -7,7 +7,7 @@ import {
   TxAssembler,
   TxRequest
 } from "@ergolabs/ergo-sdk"
-import {NativeExFee, NativeExFeePerToken} from "../../types"
+import {ExFeeType, NativeExFeeType} from "../../types"
 import {AmmPool} from "../entities/ammPool"
 import {DepositParams} from "../models/depositParams"
 import {PoolSetupParams} from "../models/poolSetupParams"
@@ -16,31 +16,31 @@ import {SwapParams} from "../models/swapParams"
 import {N2tPoolActionsNative} from "./n2tPoolActionsNative"
 import {T2tPoolActionsNative} from "./t2tPoolActionsNative"
 
-export interface PoolActions<Tx, ExFee, ExFeePerToken> {
+export interface PoolActions<Tx, F extends ExFeeType> {
   /** Interpret `setup` operation on a pool to a chain of transactions.
    */
   setup(params: PoolSetupParams, ctx: TransactionContext): Promise<Tx[]>
 
   /** Interpret `deposit` operation on a pool to a transaction.
    */
-  deposit(params: DepositParams<ExFee>, ctx: TransactionContext): Promise<Tx>
+  deposit(params: DepositParams<F>, ctx: TransactionContext): Promise<Tx>
 
   /** Interpret `redeem` operation on a pool to a transaction.
    */
-  redeem(params: RedeemParams<ExFee>, ctx: TransactionContext): Promise<Tx>
+  redeem(params: RedeemParams<F>, ctx: TransactionContext): Promise<Tx>
 
   /** Interpret `swap` operation on a pool to a transaction.
    */
-  swap(params: SwapParams<ExFeePerToken>, ctx: TransactionContext): Promise<Tx>
+  swap(params: SwapParams<F>, ctx: TransactionContext): Promise<Tx>
 }
 
-export type PoolActionsSelector<Tx, ExFee, ExFeePerToken> = (
+export type PoolActionsSelector<Tx, F extends ExFeeType> = (
   pool: AmmPool | PoolSetupParams
-) => PoolActions<Tx, ExFee, ExFeePerToken>
+) => PoolActions<Tx, F>
 
 export function makePoolActionsSelector(
   uiRewardAddress: Address
-): PoolActionsSelector<TxRequest, NativeExFee, NativeExFeePerToken> {
+): PoolActionsSelector<TxRequest, NativeExFeeType> {
   return pool =>
     isNative(pool.x.asset) || isNative(pool.y.asset)
       ? new N2tPoolActionsNative(uiRewardAddress)
@@ -51,7 +51,7 @@ export function makeWrappedPoolActionsSelector(
   uiRewardAddress: Address,
   prover: Prover,
   txAsm: TxAssembler
-): PoolActionsSelector<ErgoTx, NativeExFee, NativeExFeePerToken> {
+): PoolActionsSelector<ErgoTx, NativeExFeeType> {
   return pool =>
     wrapPoolActions(
       isNative(pool.x.asset) || isNative(pool.y.asset)
@@ -63,16 +63,16 @@ export function makeWrappedPoolActionsSelector(
 }
 
 export function wrapPoolActions(
-  actions: PoolActions<TxRequest, NativeExFee, NativeExFeePerToken>,
+  actions: PoolActions<TxRequest, NativeExFeeType>,
   prover: Prover,
   txAsm: TxAssembler
-): PoolActions<ErgoTx, NativeExFee, NativeExFeePerToken> {
+): PoolActions<ErgoTx, NativeExFeeType> {
   return new PoolActionsWrapper(actions, prover, txAsm)
 }
 
-class PoolActionsWrapper implements PoolActions<ErgoTx, NativeExFee, NativeExFeePerToken> {
+class PoolActionsWrapper implements PoolActions<ErgoTx, NativeExFeeType> {
   constructor(
-    public readonly impl: PoolActions<TxRequest, NativeExFee, NativeExFeePerToken>,
+    public readonly impl: PoolActions<TxRequest, NativeExFeeType>,
     public readonly prover: Prover,
     public readonly txAsm: TxAssembler
   ) {}
@@ -84,15 +84,15 @@ class PoolActionsWrapper implements PoolActions<ErgoTx, NativeExFee, NativeExFee
     return [tx0, tx1]
   }
 
-  async deposit(params: DepositParams<NativeExFee>, ctx: TransactionContext): Promise<ErgoTx> {
+  async deposit(params: DepositParams<NativeExFeeType>, ctx: TransactionContext): Promise<ErgoTx> {
     return this.prover.sign(this.txAsm.assemble(await this.impl.deposit(params, ctx), ctx.network))
   }
 
-  async redeem(params: RedeemParams<NativeExFee>, ctx: TransactionContext): Promise<ErgoTx> {
+  async redeem(params: RedeemParams<NativeExFeeType>, ctx: TransactionContext): Promise<ErgoTx> {
     return this.prover.sign(this.txAsm.assemble(await this.impl.redeem(params, ctx), ctx.network))
   }
 
-  async swap(params: SwapParams<NativeExFeePerToken>, ctx: TransactionContext): Promise<ErgoTx> {
+  async swap(params: SwapParams<NativeExFeeType>, ctx: TransactionContext): Promise<ErgoTx> {
     return this.prover.sign(this.txAsm.assemble(await this.impl.swap(params, ctx), ctx.network))
   }
 }
