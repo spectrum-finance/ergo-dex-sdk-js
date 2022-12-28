@@ -29,14 +29,14 @@ const redeemSample =
 
 export function deposit(poolId: PoolId, redeemerPk: PublicKey, expectedNumEpochs: number): ErgoTree {
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(depositSample)
+    .with_constant(1, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
     .with_constant(
-      2,
+      3,
       RustModule.SigmaRust.Constant.from_byte_array(
         fromHex(ErgoTreePrefixHex + SigmaPropConstPrefixHex + redeemerPk)
       )
     )
-    .with_constant(5, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + redeemerPk))
-    .with_constant(7, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
+    .with_constant(6, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + redeemerPk))
     .with_constant(13, RustModule.SigmaRust.Constant.from_i32(expectedNumEpochs))
     .to_base16_bytes()
 }
