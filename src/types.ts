@@ -3,20 +3,22 @@ import {TokenAmount, TokenId} from "@ergolabs/ergo-sdk"
 export type NativeExFee = bigint
 export type NativeExFeePerToken = number
 
-export type TokenExFee = TokenAmount
-export type TokenExFeePerToken = {tokenId: TokenId; amount: number}
+export type SpecExFee = TokenAmount
+export type SpecExFeePerToken = {tokenId: TokenId; amount: number}
 
-export type ExFee<T extends NativeExFeeType | TokenExFeeType> = T extends NativeExFeeType ? NativeExFee : TokenExFee
-export type ExFeePerToken<T extends NativeExFeeType | TokenExFeeType> = T extends NativeExFeeType
+export type ExFee<T extends NativeExFeeType | SpecExFeeType> = T extends NativeExFeeType
+  ? NativeExFee
+  : SpecExFee
+export type ExFeePerToken<T extends NativeExFeeType | SpecExFeeType> = T extends NativeExFeeType
   ? NativeExFeePerToken
-  : TokenExFeePerToken
+  : SpecExFeePerToken
 
 export interface NativeExFeeType {
   _N: unknown
 }
 
-export interface TokenExFeeType {
+export interface SpecExFeeType {
   _T: unknown
 }
 
-export type ExFeeType = NativeExFeeType | TokenExFeeType
+export type ExFeeType = NativeExFeeType | SpecExFeeType
