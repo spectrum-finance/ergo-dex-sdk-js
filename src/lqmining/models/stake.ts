@@ -6,4 +6,5 @@ export type Stake = {
   readonly redeemerKeyId: TokenId
   readonly lockedLq: AssetAmount
   readonly bundleKeyAsset: AssetAmount;
+  readonly creationHeight: number;
 }
