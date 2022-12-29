@@ -4,16 +4,17 @@ import {fromHex} from "../../utils/hex"
 import {PoolId} from "../types"
 
 const depositSample =
-  "19f3020f040004020e69aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+  "198e031104000e2000000000000000000000000000000000000000000000000000000000000000" +
+  "0004020e69aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
   "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa0404" +
-  "040008cd03d36d7e86b0fe7d8aec204f0ae6c2be6563fc7a443d69501d73dfe9c2adddb15a0400" +
-  "0e20000000000000000000000000000000000000000000000000000000000000000005feffffff" +
-  "ffffffffff01040004060400040805f00d0402d807d601b2a4730000d602db63087201d603b2a5" +
-  "730100d6047302d605c57201d606b2a5730300d6078cb2db6308a773040002eb027305d1eded93" +
-  "8cb27202730600017307ed93c27203720493860272057308b2db63087203730900ededed93e4c6" +
-  "7206040e720493e4c67206050e72059386028cb27202730a00017207b2db63087206730b009386" +
-  "028cb27202730c00019c7207730db2db63087206730e00"
+  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa0404040008cd03" +
+  "d36d7e86b0fe7d8aec204f0ae6c2be6563fc7a443d69501d73dfe9c2adddb15a040005fcffffff" +
+  "ffffffffff01040004060400040804f00d040205020404d808d601b2a4730000d602db63087201" +
+  "d6037301d604b2a5730200d6057303d606c57201d607b2a5730400d6088cb2db6308a773050002" +
+  "eb027306d1eded938cb27202730700017203ed93c27204720593860272067308b2db6308720473" +
+  "0900edededed93e4c67207040e720593e4c67207050e72039386028cb27202730a00017208b2db" +
+  "63087207730b009386028cb27202730c00019c72087e730d05b2db63087207730e009386027206" +
+  "730fb2db63087207731000"
 
 const redeemSample =
   "19a70206040208cd03d36d7e86b0fe7d8aec204f0ae6c2be6563fc7a443d69501d73dfe9c2" +
@@ -28,14 +29,14 @@ const redeemSample =
 
 export function deposit(poolId: PoolId, redeemerPk: PublicKey, expectedNumEpochs: number): ErgoTree {
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(depositSample)
+    .with_constant(1, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
     .with_constant(
-      2,
+      3,
       RustModule.SigmaRust.Constant.from_byte_array(
         fromHex(ErgoTreePrefixHex + SigmaPropConstPrefixHex + redeemerPk)
       )
     )
-    .with_constant(5, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + redeemerPk))
-    .with_constant(7, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
+    .with_constant(6, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + redeemerPk))
     .with_constant(13, RustModule.SigmaRust.Constant.from_i32(expectedNumEpochs))
     .to_base16_bytes()
 }
