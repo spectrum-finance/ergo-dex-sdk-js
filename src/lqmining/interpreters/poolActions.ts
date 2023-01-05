@@ -64,7 +64,7 @@ class LmPoolActions implements PoolActions<TxRequest> {
     const orderValidator = validators.deposit(conf.poolId, conf.redeemerPk, conf.fullEpochsRemain)
     const depositInput = conf.depositAmount.toToken()
     const orderOut: ErgoBoxCandidate = {
-      value: ctx.minBoxValue,
+      value: ctx.minBoxValue + ctx.minBoxValue + conf.executionFee,
       ergoTree: orderValidator,
       creationHeight: ctx.network.height,
       assets: [depositInput],
@@ -72,7 +72,7 @@ class LmPoolActions implements PoolActions<TxRequest> {
     }
     const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, ctx.uiFee)
     const inputs = await this.selector.select({
-      nErgs: ctx.minBoxValue + ctx.minBoxValue + conf.executionFee + ctx.uiFee + ctx.minerFee,
+      nErgs: orderOut.value + ctx.uiFee + ctx.minerFee,
       assets: [depositInput]
     })
     if (inputs instanceof BoxSelection) {
@@ -96,7 +96,7 @@ class LmPoolActions implements PoolActions<TxRequest> {
     )
     const redeemerKey = conf.redeemerKey.toToken()
     const orderOut: ErgoBoxCandidate = {
-      value: ctx.minBoxValue,
+      value: ctx.minBoxValue + conf.executionFee,
       ergoTree: orderValidator,
       creationHeight: ctx.network.height,
       assets: [redeemerKey],
@@ -104,7 +104,7 @@ class LmPoolActions implements PoolActions<TxRequest> {
     }
     const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, ctx.uiFee)
     const inputs = await this.selector.select({
-      nErgs: ctx.minBoxValue + conf.executionFee + ctx.uiFee + ctx.minerFee,
+      nErgs: orderOut.value + ctx.uiFee + ctx.minerFee,
       assets: [redeemerKey]
     })
     if (inputs instanceof BoxSelection) {
