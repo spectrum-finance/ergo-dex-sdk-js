@@ -2,19 +2,19 @@ import {ErgoTree, PublicKey, RustModule, TokenId} from "@ergolabs/ergo-sdk"
 import {ErgoTreePrefixHex, SigmaPropConstPrefixHex} from "../../amm/constants"
 import {fromHex} from "../../utils/hex"
 import {PoolId} from "../types"
+import {StakingBundleTreeBlake2b256} from "./templates"
 
 const depositSample =
-  "198e031104000e2000000000000000000000000000000000000000000000000000000000000000" +
-  "0004020e69aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa0404040008cd03" +
-  "d36d7e86b0fe7d8aec204f0ae6c2be6563fc7a443d69501d73dfe9c2adddb15a040005fcffffff" +
-  "ffffffffff01040004060400040804f00d040205020404d808d601b2a4730000d602db63087201" +
-  "d6037301d604b2a5730200d6057303d606c57201d607b2a5730400d6088cb2db6308a773050002" +
-  "eb027306d1eded938cb27202730700017203ed93c27204720593860272067308b2db6308720473" +
-  "0900edededed93e4c67207040e720593e4c67207050e72039386028cb27202730a00017208b2db" +
-  "63087207730b009386028cb27202730c00019c72087e730d05b2db63087207730e009386027206" +
-  "730fb2db63087207731000"
+  "19ee021204000e200202020202020202020202020202020202020202020202020202020202" +
+  "02020204020e20000000000000000000000000000000000000000000000000000000000000" +
+  "00000404040008cd02217daf90deb73bdf8b6709bb42093fdfaff6573fd47b630e2d3fdd4a" +
+  "8193a74d040005fcffffffffffffffff0104000e2001010101010101010101010101010101" +
+  "010101010101010101010101010101010406040004080414040205020404d808d601b2a473" +
+  "0000d602db63087201d6037301d604b2a5730200d6057303d606c57201d607b2a5730400d6" +
+  "088cb2db6308a773050002eb027306d1eded938cb27202730700017203ed93c27204720593" +
+  "860272067308b2db63087204730900ededededed93cbc27207730a93e4c67207040e720593" +
+  "e4c67207050e72039386028cb27202730b00017208b2db63087207730c009386028cb27202" +
+  "730d00019c72087e730e05b2db63087207730f0093860272067310b2db63087207731100"
 
 const redeemSample =
   "19a70206040208cd03d36d7e86b0fe7d8aec204f0ae6c2be6563fc7a443d69501d73dfe9c2" +
@@ -37,7 +37,8 @@ export function deposit(poolId: PoolId, redeemerPk: PublicKey, expectedNumEpochs
       )
     )
     .with_constant(6, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + redeemerPk))
-    .with_constant(13, RustModule.SigmaRust.Constant.from_i32(expectedNumEpochs))
+    .with_constant(10, RustModule.SigmaRust.Constant.decode_from_base16(StakingBundleTreeBlake2b256))
+    .with_constant(14, RustModule.SigmaRust.Constant.from_i32(expectedNumEpochs))
     .to_base16_bytes()
 }
 
