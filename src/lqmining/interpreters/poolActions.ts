@@ -61,7 +61,12 @@ class LmPoolActions implements PoolActions<TxRequest> {
   }
 
   async deposit(conf: LqDepositConf, ctx: ActionContext): Promise<TxRequest> {
-    const orderValidator = validators.deposit(conf.poolId, conf.redeemerPk, conf.fullEpochsRemain)
+    const orderValidator = validators.deposit(
+      conf.poolId,
+      conf.redeemerPk,
+      conf.fullEpochsRemain,
+      ctx.minerFee
+    )
     const depositInput = conf.depositAmount.toToken()
     const orderOut: ErgoBoxCandidate = {
       value: ctx.minBoxValue + ctx.minBoxValue + conf.executionFee,
@@ -92,7 +97,8 @@ class LmPoolActions implements PoolActions<TxRequest> {
     const orderValidator = validators.redeem(
       conf.redeemerPk,
       conf.expectedLqAmount.asset.id,
-      conf.expectedLqAmount.amount
+      conf.expectedLqAmount.amount,
+      ctx.minerFee
     )
     const redeemerKey = conf.redeemerKey.toToken()
     const orderOut: ErgoBoxCandidate = {
