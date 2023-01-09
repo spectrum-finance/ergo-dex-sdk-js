@@ -1,5 +1,5 @@
 import {AssetAmount} from "@ergolabs/ergo-sdk"
-import math from "mathjs"
+import {max} from "mathjs"
 import {PoolId} from "../types"
 
 export type LmPoolConfig = {
@@ -24,7 +24,7 @@ export class LmPool {
   }
 
   numEpochsRemain(height: number): number {
-    return math.max(this.conf.epochNum - this.currentEpoch(height), 0)
+    return max(this.conf.epochNum - this.currentEpoch(height), 0)
   }
 
   currentEpoch(height: number): number {
