@@ -24,7 +24,7 @@ export class LmPool {
   }
 
   numEpochsRemain(height: number): number {
-    return max(this.conf.epochNum - this.currentEpoch(height), 0)
+    return this.conf.epochNum - max(this.currentEpoch(height), 0)
   }
 
   currentEpoch(height: number): number {
