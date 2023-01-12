@@ -65,7 +65,7 @@ export function depositSpec(
   exFee: SpecExFee,
   maxMinerFee: bigint
 ): ErgoTree {
-  return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2T.DepositSample)
+  return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2T.DepositSpecSample)
     .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
     .with_constant(12, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
     .with_constant(
