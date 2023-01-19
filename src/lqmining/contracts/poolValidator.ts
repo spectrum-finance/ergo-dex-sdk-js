@@ -55,7 +55,7 @@ export function managedPool(): ErgoTree {
 }
 
 export function managedPoolTemplateHash(): HexString {
-  return "885ed15f24442f1e75c05c84469b6bc90a0e8533da760506edc59088833adaca"
+  return "f9c2257908ba4f5894f78de8334108ae6dc26a97f2342f3913c650f8407e3d62"
 }
 
 export function managedPoolBundle(): PoolContracts<LmPool> {
