@@ -1,25 +1,7 @@
-import {ErgoTreeTemplate, HexString, RustModule} from "@ergolabs/ergo-sdk"
-import * as crypto from "crypto-js"
-import {toHex} from "../../utils/hex"
+import {HexString} from "@ergolabs/ergo-sdk"
 
 export const StakingBundleTreeBlake2b256: HexString =
-  "599e30a83bc971f75582f2581f0633eebfe936b95d956ed103cbec520d804386"
+  "74aeba0675c10c7fff46d3aa5e5a8efc55f0b0d87393dcb2f4b0a04be213cecb"
 
-export const StakingBundleSample: ErgoTreeTemplate =
-  "19b20315040004000404040404040402040004000500040204020400050204040400040205" +
-  "000404040005fcffffffffffffffff010100d80ed601b2a5730000d602db63087201d603e4" +
-  "c6a7050ed604b2a4730100d605db63087204d6068cb2720573020002d607998cb272027303" +
-  "00027206d608e4c6a7040ed609db6308a7d60a8cb2720973040001d60bb27209730500d60c" +
-  "b27209730600d60d8c720c02d60e8c720b02d1ed938cb27202730700017203959372077308" +
-  "d808d60fb2a5e4e3000400d610b2a5e4e3010400d611db63087210d612b27211730900d613" +
-  "b2e4c672040410730a00d614c672010804d6157e99721395e67214e47214e4c67201070405" +
-  "d616b2db6308720f730b00eded93c2720f7208edededededed93e4c67210040e720893e4c6" +
-  "7210050e720393c27210c2a7938602720a730cb27211730d00938c7212018c720b01939972" +
-  "0e8c72120299720e9c7215720d93b27211730e00720ced938c7216018cb27205730f000192" +
-  "7e8c721602069d9c9c7e9de4c6720405057e721305067e720d067e999d720e720d7215067e" +
-  "720606958f7207731093b2db6308b2a47311007312008602720a73137314"
-
-export function stakingBundleTemplateHash(): HexString {
-  const template = RustModule.SigmaRust.ErgoTree.from_base16_bytes(StakingBundleSample).template_bytes()
-  return crypto.SHA256(crypto.enc.Hex.parse(toHex(template))).toString(crypto.enc.Hex)
-}
+export const StakingBundleTemplateHash: HexString =
+  "37ab20acdf61ba72d66579caacc9d4d8f3cae667ca136c5fe3c199cc8e669d90"
