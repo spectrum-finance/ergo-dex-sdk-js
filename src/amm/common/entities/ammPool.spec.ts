@@ -1,7 +1,7 @@
 import test from "ava"
 import {AssetAmount} from "@ergolabs/ergo-sdk"
 import {AmmPool} from "./ammPool"
-import {sqrt} from "../../utils/sqrt"
+import {sqrt} from "../../../utils/sqrt"
 
 export class PoolEmulation {
   constructor(public readonly pool: AmmPool) {}

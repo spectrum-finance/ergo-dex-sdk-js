@@ -1,7 +1,7 @@
 import {AssetAmount, ErgoBox, treeTemplateFromErgoTree} from "@ergolabs/ergo-sdk"
 import {AmmPoolInfo} from "../models/ammPoolInfo"
-import * as T2T from "../contracts/t2tTemplates"
-import * as N2T from "../contracts/n2tTemplates"
+import * as T2T from "../../contracts/t2tTemplates"
+import * as N2T from "../../contracts/n2tTemplates"
 
 export interface AmmPoolsInfoParser {
   /** Parse AMM pool info from a given box.

@@ -1,5 +1,5 @@
 import {AssetAmount, deserializeConstant, ErgoBox, Int32Constant, RegisterId} from "@ergolabs/ergo-sdk"
-import {FromBox} from "../../fromBox"
+import {FromBox} from "../../../fromBox"
 import {AmmPool} from "../entities/ammPool"
 
 export class T2TAmmPoolsParser implements FromBox<AmmPool> {

@@ -1,6 +1,6 @@
 import {ErgoNetwork, isNative} from "@ergolabs/ergo-sdk"
-import {sqrt} from "../../utils/sqrt"
-import {OK, PoolValidation, ValidationResult} from "../../validation/poolValidation"
+import {sqrt} from "../../../utils/sqrt"
+import {OK, PoolValidation, ValidationResult} from "../../../validation/poolValidation"
 import {BurnLP, EmissionLP} from "../constants"
 import {AmmPool} from "../entities/ammPool"
 

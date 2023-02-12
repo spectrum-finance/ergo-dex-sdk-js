@@ -6,9 +6,9 @@ import {
   RustModule,
   treeTemplateFromErgoTree
 } from "@ergolabs/ergo-sdk"
-import {toHex} from "../../utils/hex"
-import * as N2T from "../contracts/n2tTemplates"
-import * as T2T from "../contracts/t2tTemplates"
+import {toHex} from "../../../utils/hex"
+import * as N2T from "../../contracts/n2tTemplates"
+import * as T2T from "../../contracts/t2tTemplates"
 import {AmmOrderInfo} from "../models/ammOrderInfo"
 import {AmmOrderType} from "../models/operations"
 

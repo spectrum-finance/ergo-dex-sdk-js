@@ -4,9 +4,9 @@ import {PoolContracts} from "../../contracts/poolContracts"
 import {NativeExFee, NativeExFeePerToken, SpecExFee, SpecExFeePerToken} from "../../types"
 import {fromHex, toHex} from "../../utils/hex"
 import {decimalToFractional} from "../../utils/math"
-import {SigmaPropConstPrefixHex} from "../constants"
-import {AmmPool} from "../entities/ammPool"
-import {PoolId} from "../types"
+import {SigmaPropConstPrefixHex} from "../common/constants"
+import {AmmPool} from "../common/entities/ammPool"
+import {PoolId} from "../common/types"
 import * as N2T from "./n2tTemplates"
 
 export function pool(): ErgoTree {

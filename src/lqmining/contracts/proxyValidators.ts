@@ -1,5 +1,5 @@
 import {ErgoTree, PublicKey, RustModule, TokenId} from "@ergolabs/ergo-sdk"
-import {ErgoTreePrefixHex, SigmaPropConstPrefixHex} from "../../amm/constants"
+import {ErgoTreePrefixHex, SigmaPropConstPrefixHex} from "../../amm/common/constants"
 import {fromHex} from "../../utils/hex"
 import {PoolId} from "../types"
 import {StakingBundleTreeBlake2b256} from "./templates"

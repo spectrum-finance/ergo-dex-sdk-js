@@ -1,5 +1,5 @@
 import {AssetAmount, PublicKey, TokenId} from "@ergolabs/ergo-sdk"
-import {ExFeePerToken, ExFeeType} from "../../types"
+import {ExFeePerToken, ExFeeType} from "../../../types"
 import {PoolId} from "../types"
 
 export type SwapParams<F extends ExFeeType> = {

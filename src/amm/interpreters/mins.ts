@@ -1,5 +1,5 @@
 import {MinBoxValue} from "@ergolabs/ergo-sdk"
-import {MinPoolBoxValue} from "../constants"
+import {MinPoolBoxValue} from "../common/constants"
 
 export function minValueForOrder(minerFee: bigint, uiFee: bigint, exFee: bigint): bigint {
   return minerFee + uiFee + exFee + MinBoxValue

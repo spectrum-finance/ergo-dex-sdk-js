@@ -1,5 +1,5 @@
 import {AssetAmount, AssetInfo} from "@ergolabs/ergo-sdk"
-import {Price} from "../../entities/price"
+import {Price} from "../../../entities/price"
 import {EmissionLP} from "../constants"
 import {PoolId} from "../types"
 

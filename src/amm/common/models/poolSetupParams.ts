@@ -1,7 +1,7 @@
 import {AssetAmount, isNative} from "@ergolabs/ergo-sdk"
 import {InvalidParams} from "../errors/invalidParams"
 import {PoolFeeMaxDecimals, PoolFeeScale} from "../constants"
-import {sqrt} from "../../utils/sqrt"
+import {sqrt} from "../../../utils/sqrt"
 
 export type PoolSetupParams = {
   readonly x: AssetAmount

@@ -8,11 +8,11 @@ import {
   TxRequest
 } from "@ergolabs/ergo-sdk"
 import {ExFeeType, NativeExFeeType} from "../../types"
-import {AmmPool} from "../entities/ammPool"
-import {DepositParams} from "../models/depositParams"
-import {PoolSetupParams} from "../models/poolSetupParams"
-import {RedeemParams} from "../models/redeemParams"
-import {SwapParams} from "../models/swapParams"
+import {AmmPool} from "../common/entities/ammPool"
+import {DepositParams} from "../common/models/depositParams"
+import {PoolSetupParams} from "../common/models/poolSetupParams"
+import {RedeemParams} from "../common/models/redeemParams"
+import {SwapParams} from "../common/models/swapParams"
 import {N2tPoolActionsNative} from "./n2tPoolActionsNative"
 import {T2tPoolActionsNative} from "./t2tPoolActionsNative"
 
