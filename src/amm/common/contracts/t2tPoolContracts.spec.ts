@@ -1,6 +1,6 @@
 import {RustModule} from "@ergolabs/ergo-sdk"
 import test from "ava"
-import {decimalToFractional} from "../../utils/math"
+import {decimalToFractional} from "../../../utils/math"
 import * as T2T from "./t2tPoolContracts"
 
 test.before(async () => {

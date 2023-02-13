@@ -1,109 +1,46 @@
 import {
   Address,
-  BoxSelection,
-  ByteaConstant,
   EmptyRegisters,
   ErgoBoxCandidate,
   ergoTreeFromAddress,
-  extractOutputsFromTxRequest,
-  Int32Constant,
+  InsufficientInputs,
   isNative,
-  MinBoxValue,
-  RegisterId,
-  registers,
   TransactionContext,
   TxRequest
 } from "@ergolabs/ergo-sdk"
-import {InsufficientInputs} from "@ergolabs/ergo-sdk"
 import {prepend} from "ramda"
-import {NativeExFeeType} from "../../types"
-import {stringToBytea} from "../../utils/utf8"
-import {BurnLP, EmissionLP} from "../common/constants"
+import {SpecAssetId} from "../../../constants"
+import {SpecExFeeType} from "../../../types"
+import {minValueForOrder} from "../../common/interpreters/mins"
+import {PoolActions} from "../../common/interpreters/poolActions"
+import {PoolSetupAction} from "../../common/interpreters/poolSetupAction"
+import {DepositParams} from "../../common/models/depositParams"
+import {PoolSetupParams} from "../../common/models/poolSetupParams"
+import {RedeemParams} from "../../common/models/redeemParams"
+import {SwapParams} from "../../common/models/swapParams"
 import * as N2T from "../contracts/n2tPoolContracts"
-import {DepositParams} from "../common/models/depositParams"
-import {PoolSetupParams} from "../common/models/poolSetupParams"
-import {RedeemParams} from "../common/models/redeemParams"
-import {SwapParams} from "../common/models/swapParams"
-import {minValueForOrder, minValueForSetup} from "./mins"
-import {PoolActions} from "./poolActions"
 
-export class N2tPoolActionsNative implements PoolActions<TxRequest, NativeExFeeType> {
-  constructor(public readonly uiRewardAddress: Address) {}
+export class N2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
+  constructor(public readonly uiRewardAddress: Address, private readonly setupImpl: PoolSetupAction) {}
 
   setup(params: PoolSetupParams, ctx: TransactionContext): Promise<TxRequest[]> {
-    const [x, y] = [params.x.asset, params.y.asset]
-    const height = ctx.network.height
-    const inputs = ctx.inputs
-    const outputGranted = inputs.totalOutputWithoutChange
-    const inY = outputGranted.assets.filter(t => t.tokenId === y.id)[0]
-
-    const minNErgs = minValueForSetup(ctx.feeNErgs, params.uiFee)
-    if (outputGranted.nErgs < minNErgs)
-      return Promise.reject(
-        new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
-      )
-    if (!inY) return Promise.reject(new InsufficientInputs(`Token ${y.name} not provided`))
-
-    const [tickerX, tickerY] = [x.name || x.id.slice(0, 8), y.name || y.id.slice(0, 8)]
-    const newTokenLP = {tokenId: inputs.newTokenId, amount: EmissionLP - BurnLP}
-    const bootOut: ErgoBoxCandidate = {
-      value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
-      ergoTree: ergoTreeFromAddress(ctx.selfAddress),
-      creationHeight: height,
-      assets: [newTokenLP, inY],
-      additionalRegisters: registers([
-        [RegisterId.R4, new ByteaConstant(stringToBytea(`${tickerX}_${tickerY}_LP`))]
-      ])
-    }
-    const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
-    const txr0: TxRequest = {
-      inputs: inputs,
-      dataInputs: [],
-      outputs: prepend(bootOut, uiRewardOut),
-      changeAddress: ctx.changeAddress,
-      feeNErgs: ctx.feeNErgs
-    }
-
-    const lpP2Pk = ergoTreeFromAddress(ctx.changeAddress)
-    const lpShares = {tokenId: newTokenLP.tokenId, amount: params.outputShare}
-    const lpOut: ErgoBoxCandidate = {
-      value: MinBoxValue,
-      ergoTree: lpP2Pk,
-      creationHeight: height,
-      assets: [lpShares],
-      additionalRegisters: EmptyRegisters
-    }
-
-    const poolBootBox = extractOutputsFromTxRequest(txr0, ctx.network)[0]
-    const tx1Inputs = BoxSelection.safe(poolBootBox)
-
-    const newTokenNFT = {tokenId: tx1Inputs.newTokenId, amount: 1n}
-    const poolAmountLP = newTokenLP.amount - lpShares.amount
-    const poolLP = {tokenId: newTokenLP.tokenId, amount: poolAmountLP}
-    const poolOut: ErgoBoxCandidate = {
-      value: poolBootBox.value - lpOut.value - ctx.feeNErgs,
-      ergoTree: N2T.pool(),
-      creationHeight: height,
-      assets: [newTokenNFT, poolLP, ...poolBootBox.assets.slice(1)],
-      additionalRegisters: registers([[RegisterId.R4, new Int32Constant(params.feeNumerator)]])
-    }
-    const txr1: TxRequest = {
-      inputs: tx1Inputs,
-      dataInputs: [],
-      outputs: [poolOut, lpOut],
-      changeAddress: ctx.changeAddress,
-      feeNErgs: ctx.feeNErgs
-    }
-    return Promise.resolve([txr0, txr1])
+    return this.setupImpl.setup(params, ctx, this.mkUiReward(ctx.network.height, params.uiFee));
   }
 
-  deposit(params: DepositParams<NativeExFeeType>, ctx: TransactionContext): Promise<TxRequest> {
+  deposit(params: DepositParams<SpecExFeeType>, ctx: TransactionContext): Promise<TxRequest> {
     const [x, y] = [params.x, params.y]
-    const proxyScript = N2T.depositNative(params.poolId, params.pk, x.amount, params.exFee, ctx.feeNErgs)
+    const proxyScript = N2T.deposit(
+      params.poolId,
+      params.pk,
+      x.amount,
+      params.exFee,
+      ctx.feeNErgs,
+      y.asset.id === SpecAssetId
+    );
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const inY = outputGranted.assets.filter(t => t.tokenId === y.asset.id)[0]
 
-    const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, params.exFee)
+    const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, params.exFee.amount)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
@@ -128,12 +65,12 @@ export class N2tPoolActionsNative implements PoolActions<TxRequest, NativeExFeeT
     })
   }
 
-  redeem(params: RedeemParams<NativeExFeeType>, ctx: TransactionContext): Promise<TxRequest> {
-    const proxyScript = N2T.redeemNative(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
+  redeem(params: RedeemParams<SpecExFeeType>, ctx: TransactionContext): Promise<TxRequest> {
+    const proxyScript = N2T.redeem(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.asset.id)
 
-    const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, params.exFee)
+    const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, params.exFee.amount)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
@@ -159,10 +96,10 @@ export class N2tPoolActionsNative implements PoolActions<TxRequest, NativeExFeeT
     })
   }
 
-  async swap(params: SwapParams<NativeExFeeType>, ctx: TransactionContext): Promise<TxRequest> {
+  async swap(params: SwapParams<SpecExFeeType>, ctx: TransactionContext): Promise<TxRequest> {
     const out = await (isNative(params.baseInput.asset)
-      ? N2tPoolActionsNative.mkSwapSell(params, ctx)
-      : N2tPoolActionsNative.mkSwapBuy(params, ctx))
+      ? N2tPoolActions.mkSwapSell(params, ctx)
+      : N2tPoolActions.mkSwapBuy(params, ctx))
     const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
     return {
       inputs: ctx.inputs,
@@ -174,10 +111,10 @@ export class N2tPoolActionsNative implements PoolActions<TxRequest, NativeExFeeT
   }
 
   private static async mkSwapSell(
-    params: SwapParams<NativeExFeeType>,
+    params: SwapParams<SpecExFeeType>,
     ctx: TransactionContext
   ): Promise<ErgoBoxCandidate> {
-    const proxyScript = N2T.swapSellNative(
+    const proxyScript = N2T.swapSell(
       params.poolId,
       params.baseInput.amount,
       params.poolFeeNum,
@@ -185,11 +122,13 @@ export class N2tPoolActionsNative implements PoolActions<TxRequest, NativeExFeeT
       params.minQuoteOutput,
       params.exFeePerToken,
       ctx.feeNErgs,
+      params.maxExFee.amount,
+      params.quoteAsset === SpecAssetId,
       params.pk
     )
     const outputGranted = ctx.inputs.totalOutputWithoutChange
 
-    const minExFee = BigInt((Number(params.minQuoteOutput) * params.exFeePerToken).toFixed(0))
+    const minExFee = BigInt((Number(params.minQuoteOutput) * params.exFeePerToken.amount).toFixed(0))
     const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, minExFee)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
@@ -206,22 +145,24 @@ export class N2tPoolActionsNative implements PoolActions<TxRequest, NativeExFeeT
   }
 
   private static async mkSwapBuy(
-    params: SwapParams<NativeExFeeType>,
+    params: SwapParams<SpecExFeeType>,
     ctx: TransactionContext
   ): Promise<ErgoBoxCandidate> {
-    const proxyScript = N2T.swapBuyNative(
+    const proxyScript = N2T.swapBuy(
       params.poolId,
+      params.baseInput.amount,
       params.poolFeeNum,
       params.minQuoteOutput,
       params.exFeePerToken,
       ctx.feeNErgs,
+      params.maxExFee.amount,
       params.pk
     )
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const baseAssetId = params.baseInput.asset.id
     const baseIn = outputGranted.assets.filter(t => t.tokenId === baseAssetId)[0]
 
-    const minExFee = BigInt((Number(params.minQuoteOutput) * params.exFeePerToken).toFixed(0))
+    const minExFee = BigInt((Number(params.minQuoteOutput) * params.exFeePerToken.amount).toFixed(0))
     const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, minExFee)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(

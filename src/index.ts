@@ -1,12 +1,16 @@
-export {T2tPoolActionsNative} from "./amm/interpreters/t2tPoolActionsNative"
-export {N2tPoolActionsNative} from "./amm/interpreters/n2tPoolActionsNative"
 export {
   PoolActions,
   PoolActionsSelector,
-  makePoolActionsSelector,
-  makeWrappedPoolActionsSelector
-} from "./amm/interpreters/poolActions"
-export {Refunds, AmmOrderRefundsWrapper, AmmOrderRefunds} from "./amm/interpreters/refunds"
+} from "./amm/common/interpreters/poolActions"
+export {
+  makeSpfPoolActionsSelector,
+  makeWrappedSpfPoolActionsSelector
+} from './amm/spfFee/interpreters/poolActions'
+export {
+  makeNativePoolActionsSelector,
+  makeWrappedNativePoolActionsSelector
+} from './amm/nativeFee/interpreters/poolActions'
+export {Refunds, AmmOrderRefundsWrapper, AmmOrderRefunds} from "./amm/common/interpreters/refunds"
 export {makeTokenPools, makeNativePools} from "./amm/common/services/pools"
 export {History, NetworkHistory, makeHistory} from "./amm/common/services/history"
 export {AmmOrderInfo} from "./amm/common/models/ammOrderInfo"
@@ -47,7 +51,7 @@ export {
   timestampToBlocks,
   blocksToDaysCount
 } from "./utils/blocks"
-export {minValueForOrder, minValueForSetup} from "./amm/interpreters/mins"
+export {minValueForOrder, minValueForSetup} from "./amm/common/interpreters/mins"
 
 export {mkLockActions, LockActions} from "./security/interpreters/lockActions"
 export {LockParams, WithdrawalParams, RelockParams} from "./security/models"

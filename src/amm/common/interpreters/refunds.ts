@@ -10,9 +10,11 @@ import {
   TxAssembler,
   TxRequest
 } from "@ergolabs/ergo-sdk"
-import {RefundParams} from "../../models/refundParams"
-import * as N2T from "../contracts/n2tTemplates"
-import * as T2T from "../contracts/t2tTemplates"
+import {RefundParams} from "../../../models/refundParams"
+import * as N2T_NATIVE from "../../nativeFee/contracts/n2tTemplates"
+import * as T2T_NATIVE from "../../nativeFee/contracts/t2tTemplates"
+import * as N2T_SPF from "../../spfFee/contracts/n2tTemplates"
+import * as T2T_SPF from "../../spfFee/contracts/t2tTemplates"
 
 export interface Refunds<Tx> {
   /** Redeem assets from a proxy order box.
@@ -21,13 +23,21 @@ export interface Refunds<Tx> {
 }
 
 const RefundableTemplates = [
-  T2T.DepositTemplate,
-  T2T.RedeemTemplate,
-  T2T.SwapTemplate,
-  N2T.DepositTemplate,
-  N2T.RedeemTemplate,
-  N2T.SwapSellTemplate,
-  N2T.SwapBuyTemplate
+  T2T_NATIVE.DepositTemplate,
+  T2T_NATIVE.RedeemTemplate,
+  T2T_NATIVE.SwapTemplate,
+  N2T_NATIVE.DepositTemplate,
+  N2T_NATIVE.RedeemTemplate,
+  N2T_NATIVE.SwapSellTemplate,
+  N2T_NATIVE.SwapBuyTemplate,
+
+  T2T_SPF.DepositTemplate,
+  T2T_SPF.RedeemTemplate,
+  T2T_SPF.SwapTemplate,
+  N2T_SPF.DepositTemplate,
+  N2T_SPF.RedeemTemplate,
+  N2T_SPF.SwapSellTemplate,
+  N2T_SPF.SwapBuyTemplate
 ]
 
 export class AmmOrderRefunds implements Refunds<TxRequest> {
