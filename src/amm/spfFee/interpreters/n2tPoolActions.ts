@@ -128,8 +128,7 @@ export class N2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
     )
     const outputGranted = ctx.inputs.totalOutputWithoutChange
 
-    const minExFee = BigInt((Number(params.minQuoteOutput) * params.exFeePerToken.amount).toFixed(0))
-    const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, minExFee)
+    const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, 0n)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
@@ -161,9 +160,9 @@ export class N2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const baseAssetId = params.baseInput.asset.id
     const baseIn = outputGranted.assets.filter(t => t.tokenId === baseAssetId)[0]
+    const exFeeIn = outputGranted.assets.filter(t => t.tokenId === SpecAssetId)[0]
 
-    const minExFee = BigInt((Number(params.minQuoteOutput) * params.exFeePerToken.amount).toFixed(0))
-    const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, minExFee)
+    const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, 0n)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
@@ -175,7 +174,7 @@ export class N2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
       value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
       ergoTree: proxyScript,
       creationHeight: ctx.network.height,
-      assets: [baseIn],
+      assets: baseAssetId === SpecAssetId ? [baseIn] : [baseIn, exFeeIn],
       additionalRegisters: EmptyRegisters
     }
   }
