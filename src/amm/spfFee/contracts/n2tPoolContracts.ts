@@ -61,21 +61,21 @@ export function redeem(poolId: PoolId, pk: PublicKey, exFee: SpecExFee, maxMiner
     .to_base16_bytes()
 }
 
-// {1} -> BaseAmount[Long]
-// {2} -> FeeNum[Int]
-// {3} -> RefundProp[ProveDlog]
-// {8} -> SpectrumIsQuote[Boolean]
-// {9} -> MaxExFee[Long]
-// {10} -> ExFeePerTokenDenom[Long]
+// {1} -> MaxExFee[Long]
+// {2} -> ExFeePerTokenDenom[Long]
+// {3} -> BaseAmount[Long]
+// {4} -> FeeNum[Int]
+// {5} -> RefundProp[ProveDlog]
+// {10} -> SpectrumIsQuote[Boolean]
 // {13} -> PoolNFT[Coll[Byte]]
 // {14} -> RedeemerPropBytes[Coll[Byte]]
 // {15} -> QuoteId[Coll[Byte]]
 // {16} -> MinQuoteAmount[Long]
-// {20} -> ExFeePerTokenNum[Long]
-// {24} -> SpectrumId[Coll[Byte]]
-// {28} -> FeeDenom[Int]
-// {29} -> MinerPropBytes[Coll[Byte]]
-// {32} -> MaxMinerFee[Long]
+// {19} -> ExFeePerTokenNum[Long]
+// {22} -> SpectrumId[Coll[Byte]]
+// {26} -> FeeDenom[Int]
+// {27} -> MinerPropBytes[Coll[Byte]]
+// {30} -> MaxMinerFee[Long]
 export function swapSell(
   poolId: PoolId,
   baseAmount: bigint,
@@ -90,24 +90,24 @@ export function swapSell(
 ): ErgoTree {
   const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(exFeePerToken.amount);
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2T.SwapSellSample)
-    .with_constant(1, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(baseAmount.toString())))
-    .with_constant(2, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
-    .with_constant(3, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
-    .with_constant(8, RustModule.SigmaRust.Constant.decode_from_base16(specIsQuote ? SigmaTrueHex : SigmaFalseHex))
-    .with_constant(9, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(maxExFee.toString())))
-    .with_constant(10, RustModule.SigmaRust.Constant.from_i64(
+    .with_constant(1, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(maxExFee.toString())))
+    .with_constant(2, RustModule.SigmaRust.Constant.from_i64(
       RustModule.SigmaRust.I64.from_str(dexFeePerTokenDenom.toString())
     ))
+    .with_constant(3, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(baseAmount.toString())))
+    .with_constant(4, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))
+    .with_constant(5, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
+    .with_constant(10, RustModule.SigmaRust.Constant.decode_from_base16(specIsQuote ? SigmaTrueHex : SigmaFalseHex))
     .with_constant(13, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
     .with_constant(14, RustModule.SigmaRust.Constant.from_byte_array(
       fromHex(ErgoTreePrefixHex + SigmaPropConstPrefixHex + pk)
     ))
     .with_constant(15, RustModule.SigmaRust.Constant.from_byte_array(fromHex(quoteId)))
     .with_constant(16, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(minQuoteAmount.toString())))
-    .with_constant(20, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFeePerTokenNum.toString())))
-    .with_constant(24, RustModule.SigmaRust.Constant.from_byte_array(fromHex(exFeePerToken.tokenId)))
-    .with_constant(28, RustModule.SigmaRust.Constant.from_i32(1000))
-    .with_constant(32, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(maxMinerFee.toString())))
+    .with_constant(19, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(dexFeePerTokenNum.toString())))
+    .with_constant(22, RustModule.SigmaRust.Constant.from_byte_array(fromHex(exFeePerToken.tokenId)))
+    .with_constant(26, RustModule.SigmaRust.Constant.from_i32(1000))
+    .with_constant(30, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(maxMinerFee.toString())))
     .to_base16_bytes()
 }
 

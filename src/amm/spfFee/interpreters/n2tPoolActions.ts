@@ -127,6 +127,7 @@ export class N2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
       params.pk
     )
     const outputGranted = ctx.inputs.totalOutputWithoutChange
+    const exFeeIn = outputGranted.assets.filter(t => t.tokenId === SpecAssetId)[0];
 
     const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, 0n)
     if (outputGranted.nErgs < minNErgs)
@@ -138,7 +139,7 @@ export class N2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
       value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
       ergoTree: proxyScript,
       creationHeight: ctx.network.height,
-      assets: [],
+      assets: [exFeeIn],
       additionalRegisters: EmptyRegisters
     }
   }
