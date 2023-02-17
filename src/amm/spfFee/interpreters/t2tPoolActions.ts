@@ -54,7 +54,6 @@ export class T2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
     const proxyScript = T2T.deposit(
       params.poolId,
       params.pk,
-      params.exFee,
       ctx.feeNErgs,
       pairIn[0].amount,
       pairIn[1].amount
@@ -78,7 +77,7 @@ export class T2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
   }
 
   redeem(params: RedeemParams<SpecExFeeType>, ctx: TransactionContext): Promise<TxRequest> {
-    const proxyScript = T2T.redeem(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
+    const proxyScript = T2T.redeem(params.poolId, params.pk, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const tokensIn = outputGranted.assets
       .filter(t => t.tokenId === params.lp.asset.id)
