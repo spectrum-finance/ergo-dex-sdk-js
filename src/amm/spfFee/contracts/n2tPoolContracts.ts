@@ -1,44 +1,29 @@
 import {ErgoTree, PublicKey, RustModule, TokenId} from "@ergolabs/ergo-sdk"
-import {SpecExFee, SpecExFeePerToken} from "../../../types"
+import {SpecExFeePerToken} from "../../../types"
+import {Bytes, Long, ProveDlog, RedeemerBytes} from "../../../utils/contract"
 import {fromHex} from "../../../utils/hex"
 import {decimalToFractional} from "../../../utils/math"
 import {ErgoTreePrefixHex, SigmaFalseHex, SigmaPropConstPrefixHex, SigmaTrueHex} from "../../common/constants"
 import {PoolId} from "../../common/types"
+import {DepositContract, RedeemContract} from "./n2tTemplates"
 import * as N2T from "./n2tTemplates"
 
-// {1}  -> SelfXAmount[Long]
-// {2}  -> RefundProp[ProveDlog]
-// {10} -> SpectrumIsY[Boolean]
-// {11} -> ExFee[Long]
-// {14} -> PoolNFT[Coll[Byte]]
-// {15} -> RedeemerPropBytes[Coll[Byte]]
-// {20} -> MinerPropBytes[Coll[Byte]]
-// {23} -> MaxMinerFee[Long]
 export function deposit(
   poolId: PoolId,
   pk: PublicKey,
   selfX: bigint,
-  exFee: SpecExFee,
-  maxMinerFee: bigint,
-  specIsY: boolean,
+  selfY: bigint,
+  maxMinerFee: bigint
 ): ErgoTree {
-  return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2T.DepositSample)
-    .with_constant(
-      1,
-      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(selfX.toString()))
-    )
-    .with_constant(2, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
-    .with_constant(10, RustModule.SigmaRust.Constant.from_js(specIsY))
-    .with_constant(11, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(exFee.amount.toString())))
-    .with_constant(14, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
-    .with_constant(15, RustModule.SigmaRust.Constant.from_byte_array(
-      fromHex(ErgoTreePrefixHex + SigmaPropConstPrefixHex + pk)
-    ))
-    .with_constant(
-      23,
-      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(maxMinerFee.toString()))
-    )
-    .to_base16_bytes()
+  return DepositContract
+    .build({
+      refundProp:        ProveDlog(pk),
+      selfXAmount:       Long(selfX),
+      selfYAmount:       Long(selfY),
+      poolNFT:           Bytes(poolId),
+      redeemerPropBytes: RedeemerBytes(pk),
+      maxMinerFee:       Long(maxMinerFee)
+    })
 }
 
 // {1}  -> RefundProp[ProveDlog]
@@ -46,19 +31,14 @@ export function deposit(
 // {12} -> RedeemerPropBytes[Coll[Byte]]
 // {13} -> MinerPropBytes[Coll[Byte]]
 // {16} -> MaxMinerFee[Long]
-export function redeem(poolId: PoolId, pk: PublicKey, exFee: SpecExFee, maxMinerFee: bigint): ErgoTree {
-  console.log(exFee);
-  return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2T.RedeemSample)
-    .with_constant(1, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
-    .with_constant(11, RustModule.SigmaRust.Constant.from_byte_array(fromHex(poolId)))
-    .with_constant(12, RustModule.SigmaRust.Constant.from_byte_array(
-      fromHex(ErgoTreePrefixHex + SigmaPropConstPrefixHex + pk)
-    ))
-    .with_constant(
-      16,
-      RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(maxMinerFee.toString()))
-    )
-    .to_base16_bytes()
+export function redeem(poolId: PoolId, pk: PublicKey, maxMinerFee: bigint): ErgoTree {
+  return RedeemContract
+    .build({
+      poolNFT:           Bytes(poolId),
+      maxMinerFee:       Long(maxMinerFee),
+      redeemerPropBytes: RedeemerBytes(pk),
+      refundProp:        ProveDlog(pk)
+    })
 }
 
 // {1} -> ExFeePerTokenDenom[Long]
@@ -87,7 +67,7 @@ export function swapSell(
   specIsQuote: boolean,
   pk: PublicKey
 ): ErgoTree {
-  const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(exFeePerToken.amount);
+  const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(exFeePerToken.amount)
 
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2T.SwapSellSample)
     .with_constant(1, RustModule.SigmaRust.Constant.from_i64(
@@ -133,7 +113,7 @@ export function swapBuy(
   maxExFee: bigint,
   pk: PublicKey
 ): ErgoTree {
-  const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(exFeePerToken.amount);
+  const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(exFeePerToken.amount)
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2T.SwapBuySample)
     .with_constant(1, RustModule.SigmaRust.Constant.from_i64(RustModule.SigmaRust.I64.from_str(baseAmount.toString())))
     .with_constant(2, RustModule.SigmaRust.Constant.from_i32(poolFeeNum))

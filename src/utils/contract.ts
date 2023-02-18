@@ -119,7 +119,8 @@ export class _Contract<T extends ConstantDictionary> {
           try {
             return ergoTree.with_constant(this.mapping[constantName][0], constantValue.serialize())
           } catch (e) {
-            console.error(`problem with constant ${constantName}`)
+            console.error(`problem with constant ${constantName}`);
+            console.log(e);
             throw e
           }
         }, RustModule.SigmaRust.ErgoTree.from_base16_bytes(this.ergoTreeSample)

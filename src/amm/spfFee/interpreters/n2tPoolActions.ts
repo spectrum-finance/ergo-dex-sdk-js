@@ -33,14 +33,16 @@ export class N2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
       params.poolId,
       params.pk,
       x.amount,
-      params.exFee,
+      y.amount,
       ctx.feeNErgs,
-      y.asset.id === SpecAssetId
     );
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const inY = outputGranted.assets.filter(t => t.tokenId === y.asset.id)[0]
+    const inSpf =  inY.tokenId !== SpecAssetId ?
+      outputGranted.assets.filter(t => t.tokenId === SpecAssetId)[0] :
+      undefined;
 
-    const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, params.exFee.amount)
+    const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, 0n)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
@@ -52,7 +54,7 @@ export class N2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
       value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
       ergoTree: proxyScript,
       creationHeight: height,
-      assets: [inY],
+      assets: inSpf ? [inY, inSpf] : [inY],
       additionalRegisters: EmptyRegisters
     }
     const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, params.uiFee)
@@ -66,16 +68,18 @@ export class N2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
   }
 
   redeem(params: RedeemParams<SpecExFeeType>, ctx: TransactionContext): Promise<TxRequest> {
-    const proxyScript = N2T.redeem(params.poolId, params.pk, params.exFee, ctx.feeNErgs)
+    const proxyScript = N2T.redeem(params.poolId, params.pk, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
-    const tokensIn = outputGranted.assets.filter(t => t.tokenId === params.lp.asset.id)
+    const tokensIn = outputGranted.assets
+      .filter(t => t.tokenId === params.lp.asset.id)
+      .concat(outputGranted.assets.filter(t => t.tokenId === SpecAssetId))
 
-    const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, params.exFee.amount)
+    const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, 0n)
     if (outputGranted.nErgs < minNErgs)
       return Promise.reject(
         new InsufficientInputs(`Minimal amount of nERG required ${minNErgs}, given ${outputGranted.nErgs}`)
       )
-    if (tokensIn.length != 1)
+    if (tokensIn.length != 2)
       return Promise.reject(new InsufficientInputs(`Token ${params.lp.asset.name ?? "LP"} not provided`))
 
     const height = ctx.network.height

@@ -55,8 +55,8 @@ export class T2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
       params.poolId,
       params.pk,
       ctx.feeNErgs,
-      pairIn[0].amount,
-      pairIn[1].amount
+      x.amount,
+      y.amount
     )
 
     const orderOut: ErgoBoxCandidate = {
