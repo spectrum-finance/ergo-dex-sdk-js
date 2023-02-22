@@ -10,10 +10,12 @@ export type LqDepositConf = {
   readonly fullEpochsRemain: number
   readonly depositAmount: AssetAmount
   readonly redeemerPk: PublicKey
+  readonly executionFee: bigint
 }
 
 export type LqRedeemConf = {
   readonly expectedLqAmount: AssetAmount
   readonly redeemerKey: AssetAmount
   readonly redeemerPk: PublicKey
+  readonly executionFee: bigint
 }

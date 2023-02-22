@@ -61,17 +61,25 @@ class LmPoolActions implements PoolActions<TxRequest> {
   }
 
   async deposit(conf: LqDepositConf, ctx: ActionContext): Promise<TxRequest> {
-    const orderValidator = validators.deposit(conf.poolId, conf.redeemerPk, conf.fullEpochsRemain)
+    const orderValidator = validators.deposit(
+      conf.poolId,
+      conf.redeemerPk,
+      conf.fullEpochsRemain,
+      ctx.minerFee
+    )
     const depositInput = conf.depositAmount.toToken()
     const orderOut: ErgoBoxCandidate = {
-      value: ctx.minBoxValue,
+      value: ctx.minBoxValue + ctx.minBoxValue + conf.executionFee,
       ergoTree: orderValidator,
       creationHeight: ctx.network.height,
       assets: [depositInput],
       additionalRegisters: EmptyRegisters
     }
     const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, ctx.uiFee)
-    const inputs = await this.selector.select({nErgs: ctx.minBoxValue + ctx.uiFee + ctx.minerFee, assets: [depositInput]})
+    const inputs = await this.selector.select({
+      nErgs: orderOut.value + ctx.uiFee + ctx.minerFee,
+      assets: [depositInput]
+    })
     if (inputs instanceof BoxSelection) {
       return {
         inputs: inputs,
@@ -89,18 +97,22 @@ class LmPoolActions implements PoolActions<TxRequest> {
     const orderValidator = validators.redeem(
       conf.redeemerPk,
       conf.expectedLqAmount.asset.id,
-      conf.expectedLqAmount.amount
+      conf.expectedLqAmount.amount,
+      ctx.minerFee
     )
     const redeemerKey = conf.redeemerKey.toToken()
     const orderOut: ErgoBoxCandidate = {
-      value: ctx.minBoxValue,
+      value: ctx.minBoxValue + conf.executionFee,
       ergoTree: orderValidator,
       creationHeight: ctx.network.height,
       assets: [redeemerKey],
       additionalRegisters: EmptyRegisters
     }
     const uiRewardOut: ErgoBoxCandidate[] = this.mkUiReward(ctx.network.height, ctx.uiFee)
-    const inputs = await this.selector.select({nErgs: ctx.minBoxValue + ctx.uiFee + ctx.minerFee, assets: [redeemerKey]})
+    const inputs = await this.selector.select({
+      nErgs: orderOut.value + ctx.uiFee + ctx.minerFee,
+      assets: [redeemerKey]
+    })
     if (inputs instanceof BoxSelection) {
       return {
         inputs: inputs,

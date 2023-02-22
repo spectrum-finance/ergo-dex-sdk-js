@@ -36,7 +36,17 @@ export {SwapExtremums, swapVars} from "./amm/math/swap"
 export {Price} from "./entities/price"
 export {RefundParams} from "./models/refundParams"
 export {decimalToFractional, evaluate} from "./utils/math"
-export {blocksToMillis, millisToBlocks, daysCountToBlocks, hoursCountToBlocks, monthCountToBlocks, weeksCountToBlocks, blocksToTimestamp, timestampToBlocks, blocksToDaysCount} from "./utils/blocks"
+export {
+  blocksToMillis,
+  millisToBlocks,
+  daysCountToBlocks,
+  hoursCountToBlocks,
+  monthCountToBlocks,
+  weeksCountToBlocks,
+  blocksToTimestamp,
+  timestampToBlocks,
+  blocksToDaysCount
+} from "./utils/blocks"
 export {minValueForOrder, minValueForSetup} from "./amm/interpreters/mins"
 
 export {mkLockActions, LockActions} from "./security/interpreters/lockActions"
