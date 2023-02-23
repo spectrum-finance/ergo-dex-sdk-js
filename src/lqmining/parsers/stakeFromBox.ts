@@ -27,7 +27,7 @@ export class StakeFromBox implements FromBox<Stake> {
       return {
         poolId: toHex(poolId.value),
         lockedLq: AssetAmount.fromToken(box.assets[0]),
-        bundleKeyAsset: AssetAmount.fromToken(box.assets[2])
+        bundleKeyAsset: AssetAmount.fromToken(box.assets[1])
       }
     }
     return undefined
