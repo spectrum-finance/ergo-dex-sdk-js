@@ -3,4 +3,4 @@ export const NativeAssetTicker = "ERG"
 export const NativeAssetDecimals = 9
 export const BlocktimeMillis = BigInt(2 * 60 * 1000)
 
-export const SpecAssetId = "003bd19d0187117f130b62e1bcab0939929ff5c7709f843c5c4dd158949285d0"
+export const SpecAssetId = "9a06d9e545a41fd51eeffc5e20d818073bf820c635e2a9d922269913e0de369d"
