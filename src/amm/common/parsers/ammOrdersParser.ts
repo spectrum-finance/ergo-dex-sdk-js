@@ -7,8 +7,10 @@ import {
   treeTemplateFromErgoTree
 } from "@ergolabs/ergo-sdk"
 import {toHex} from "../../../utils/hex"
-import * as N2T from "../../nativeFee/contracts/n2tTemplates"
-import * as T2T from "../../nativeFee/contracts/t2tTemplates"
+import * as NativeFeeN2T from "../../nativeFee/contracts/n2tTemplates"
+import * as NativeFeeT2T from "../../nativeFee/contracts/t2tTemplates"
+import * as SpfFeeN2T from "../../spfFee/contracts/n2tTemplates"
+import * as SpfFeeT2T from "../../spfFee/contracts/t2tTemplates"
 import {AmmOrderInfo} from "../models/ammOrderInfo"
 import {AmmOrderType} from "../models/operations"
 
@@ -130,13 +132,21 @@ const t2tParser = new T2TParserIn()
 const n2tParser = new N2TParserIn()
 
 const AmmTemplates: [ErgoTreeTemplate, AmmOrderType, ParserIn][] = [
-  [T2T.SwapTemplate, "swap", t2tParser],
-  [T2T.DepositTemplate, "deposit", t2tParser],
-  [T2T.RedeemTemplate, "redeem", t2tParser],
-  [N2T.SwapSellTemplate, "swap", n2tParser],
-  [N2T.SwapBuyTemplate, "swap", n2tParser],
-  [N2T.DepositTemplate, "deposit", n2tParser],
-  [N2T.RedeemTemplate, "redeem", n2tParser]
+  [NativeFeeT2T.SwapTemplate, "swap", t2tParser],
+  [NativeFeeT2T.DepositTemplate, "deposit", t2tParser],
+  [NativeFeeT2T.RedeemTemplate, "redeem", t2tParser],
+  [NativeFeeN2T.SwapSellTemplate, "swap", n2tParser],
+  [NativeFeeN2T.SwapBuyTemplate, "swap", n2tParser],
+  [NativeFeeN2T.DepositTemplate, "deposit", n2tParser],
+  [NativeFeeN2T.RedeemTemplate, "redeem", n2tParser],
+
+  [SpfFeeT2T.SwapTemplate, "swap", t2tParser],
+  [SpfFeeT2T.DepositTemplate, "deposit", t2tParser],
+  [SpfFeeT2T.RedeemTemplate, "redeem", t2tParser],
+  [SpfFeeN2T.SwapSellTemplate, "swap", n2tParser],
+  [SpfFeeN2T.SwapBuyTemplate, "swap", n2tParser],
+  [SpfFeeN2T.DepositTemplate, "deposit", n2tParser],
+  [SpfFeeN2T.RedeemTemplate, "redeem", n2tParser]
 ]
 
 export class DefaultAmmOrdersParser implements AmmOrdersParser {
