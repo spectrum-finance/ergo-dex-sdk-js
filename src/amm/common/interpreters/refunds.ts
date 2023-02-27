@@ -1,9 +1,7 @@
 import {
-  BoxSelection,
-  EmptyRegisters,
-  ErgoNetwork,
-  ergoTreeFromAddress,
-  ErgoTx,
+  BoxSelection, DefaultBoxSelector, EmptyRegisters,
+  ErgoNetwork, ergoTreeFromAddress,
+  ErgoTx, InsufficientInputs,
   MinTransactionContext,
   Prover,
   treeTemplateFromErgoTree,
@@ -49,26 +47,42 @@ export class AmmOrderRefunds implements Refunds<TxRequest> {
       const template = treeTemplateFromErgoTree(o.ergoTree)
       return RefundableTemplates.includes(template)
     })
-    if (outputToRefund) {
-      const inputs = BoxSelection.safe(outputToRefund)
-      const refundOut = {
-        value: outputToRefund.value - ctx.feeNErgs,
-        ergoTree: ergoTreeFromAddress(params.recipientAddress),
-        creationHeight: ctx.network.height,
-        assets: outputToRefund.assets,
-        additionalRegisters: EmptyRegisters
-      }
-
-      return Promise.resolve({
-        inputs: inputs,
-        dataInputs: [],
-        outputs: [refundOut],
-        changeAddress: params.recipientAddress,
-        feeNErgs: ctx.feeNErgs
-      })
-    } else {
-      return Promise.reject(`No AMM orders found in the given Tx{id=${params.txId}`)
+    if (!outputToRefund) {
+      return Promise.reject(`No AMM orders found in the given Tx{id=${params.txId}`);
     }
+    let outputNErg: bigint;
+    let inputs: BoxSelection;
+
+    if (outputToRefund.value - ctx.feeNErgs >= 0) {
+      outputNErg = outputToRefund.value - ctx.feeNErgs;
+      inputs = BoxSelection.safe(outputToRefund)
+    } else {
+      if (!params.utxos?.length) {
+        return Promise.reject('Insufficient Inputs for refund')
+      }
+      outputNErg = outputToRefund.value;
+      const userInputs = DefaultBoxSelector.select(params.utxos, { assets: [], nErgs: ctx.feeNErgs });
+      if (userInputs instanceof InsufficientInputs) {
+        return Promise.reject('Insufficient Inputs for refund')
+      }
+      inputs = BoxSelection.safe(outputToRefund, userInputs.inputs, userInputs.change);
+    }
+
+    const refundOut = {
+      value: outputNErg,
+      ergoTree: ergoTreeFromAddress(params.recipientAddress),
+      creationHeight: ctx.network.height,
+      assets: outputToRefund.assets,
+      additionalRegisters: EmptyRegisters
+    }
+
+    return Promise.resolve({
+      inputs: inputs,
+      dataInputs: [],
+      outputs: [refundOut],
+      changeAddress: params.recipientAddress,
+      feeNErgs: ctx.feeNErgs
+    })
   }
 }
 
