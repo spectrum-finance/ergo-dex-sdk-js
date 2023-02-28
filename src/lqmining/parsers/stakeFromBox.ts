@@ -5,13 +5,13 @@ import {Stake} from "../models/stake"
 
 export class StakeFromBox implements FromBox<Stake> {
   from(box: ErgoBox): Stake | undefined {
-    const r5 = box.additionalRegisters[RegisterId.R5]
+    const r7 = box.additionalRegisters[RegisterId.R7]
 
-    if (!r5) {
+    if (!r7) {
       return undefined;
     }
 
-    const poolId = deserializeConstant(r5);
+    const poolId = deserializeConstant(r7);
     if (!(poolId instanceof ByteaConstant)) {
       return undefined;
     }
