@@ -8,6 +8,7 @@ import {
   TxAssembler,
   TxRequest
 } from "@ergolabs/ergo-sdk"
+import * as LQ_MINING_CONTRACTS from "../../../lqmining/contracts/proxyValidators";
 import {RefundParams} from "../../../models/refundParams"
 import * as N2T_NATIVE from "../../nativeFee/contracts/n2tTemplates"
 import * as T2T_NATIVE from "../../nativeFee/contracts/t2tTemplates"
@@ -35,7 +36,10 @@ const RefundableTemplates = [
   N2T_SPF.DepositTemplate,
   N2T_SPF.RedeemTemplate,
   N2T_SPF.SwapSellTemplate,
-  N2T_SPF.SwapBuyTemplate
+  N2T_SPF.SwapBuyTemplate,
+
+  LQ_MINING_CONTRACTS.depositSample,
+  LQ_MINING_CONTRACTS.redeemSample
 ]
 
 export class AmmOrderRefunds implements Refunds<TxRequest> {
