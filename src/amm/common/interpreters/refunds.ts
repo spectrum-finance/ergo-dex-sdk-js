@@ -38,8 +38,8 @@ const RefundableTemplates = [
   N2T_SPF.SwapSellTemplate,
   N2T_SPF.SwapBuyTemplate,
 
-  LQ_MINING_CONTRACTS.depositSample,
-  LQ_MINING_CONTRACTS.redeemSample
+  LQ_MINING_CONTRACTS.depositTemplate,
+  LQ_MINING_CONTRACTS.redeemTemplate
 ]
 
 export class AmmOrderRefunds implements Refunds<TxRequest> {
