@@ -1,14 +1,18 @@
 import {
-  BoxSelection, DefaultBoxSelector, EmptyRegisters,
-  ErgoNetwork, ergoTreeFromAddress,
-  ErgoTx, InsufficientInputs,
+  BoxSelection,
+  DefaultBoxSelector,
+  EmptyRegisters,
+  ErgoNetwork,
+  ergoTreeFromAddress,
+  ErgoTx,
+  InsufficientInputs,
   MinTransactionContext,
   Prover,
   treeTemplateFromErgoTree,
   TxAssembler,
   TxRequest
 } from "@ergolabs/ergo-sdk"
-import * as LQ_MINING_CONTRACTS from "../../../lqmining/contracts/proxyValidators";
+import * as LQ_MINING_CONTRACTS from "../../../lqmining/contracts/proxyValidators"
 import {RefundParams} from "../../../models/refundParams"
 import * as N2T_NATIVE from "../../nativeFee/contracts/n2tTemplates"
 import * as T2T_NATIVE from "../../nativeFee/contracts/t2tTemplates"
@@ -52,24 +56,24 @@ export class AmmOrderRefunds implements Refunds<TxRequest> {
       return RefundableTemplates.includes(template)
     })
     if (!outputToRefund) {
-      return Promise.reject(`No AMM orders found in the given Tx{id=${params.txId}`);
+      return Promise.reject(`No AMM orders found in the given Tx{id=${params.txId}`)
     }
-    let outputNErg: bigint;
-    let inputs: BoxSelection;
+    let outputNErg: bigint
+    let inputs: BoxSelection
 
     if (outputToRefund.value - ctx.feeNErgs >= 0) {
-      outputNErg = outputToRefund.value - ctx.feeNErgs;
+      outputNErg = outputToRefund.value - ctx.feeNErgs
       inputs = BoxSelection.safe(outputToRefund)
     } else {
       if (!params.utxos?.length) {
-        return Promise.reject('Insufficient Inputs for refund')
+        return Promise.reject("Insufficient Inputs for refund")
       }
-      outputNErg = outputToRefund.value;
-      const userInputs = DefaultBoxSelector.select(params.utxos, { assets: [], nErgs: ctx.feeNErgs });
+      outputNErg = outputToRefund.value
+      const userInputs = DefaultBoxSelector.select(params.utxos, {assets: [], nErgs: ctx.feeNErgs})
       if (userInputs instanceof InsufficientInputs) {
-        return Promise.reject('Insufficient Inputs for refund')
+        return Promise.reject("Insufficient Inputs for refund")
       }
-      inputs = BoxSelection.safe(outputToRefund, userInputs.inputs, userInputs.change);
+      inputs = BoxSelection.safe(outputToRefund, userInputs.inputs, userInputs.change)
     }
 
     const refundOut = {

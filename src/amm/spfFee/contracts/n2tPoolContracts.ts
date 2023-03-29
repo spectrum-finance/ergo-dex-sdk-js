@@ -12,25 +12,23 @@ export function deposit(
   selfY: bigint,
   maxMinerFee: bigint
 ): ErgoTree {
-  return DepositContract
-    .build({
-      refundProp:        ProveDlog(pk),
-      selfXAmount:       Long(selfX),
-      selfYAmount:       Long(selfY),
-      poolNFT:           Bytes(poolId),
-      redeemerPropBytes: RedeemerBytes(pk),
-      maxMinerFee:       Long(maxMinerFee)
-    })
+  return DepositContract.build({
+    refundProp: ProveDlog(pk),
+    selfXAmount: Long(selfX),
+    selfYAmount: Long(selfY),
+    poolNFT: Bytes(poolId),
+    redeemerPropBytes: RedeemerBytes(pk),
+    maxMinerFee: Long(maxMinerFee)
+  })
 }
 
 export function redeem(poolId: PoolId, pk: PublicKey, maxMinerFee: bigint): ErgoTree {
-  return RedeemContract
-    .build({
-      poolNFT:           Bytes(poolId),
-      maxMinerFee:       Long(maxMinerFee),
-      redeemerPropBytes: RedeemerBytes(pk),
-      refundProp:        ProveDlog(pk)
-    })
+  return RedeemContract.build({
+    poolNFT: Bytes(poolId),
+    maxMinerFee: Long(maxMinerFee),
+    redeemerPropBytes: RedeemerBytes(pk),
+    refundProp: ProveDlog(pk)
+  })
 }
 
 export function swapSell(
@@ -47,23 +45,22 @@ export function swapSell(
 ): ErgoTree {
   const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(exFeePerToken.amount)
 
-  return SwapSellContract
-    .build({
-      exFeePerTokenDenom: Long(dexFeePerTokenDenom),
-      delta:              Long(dexFeePerTokenDenom - dexFeePerTokenNum),
-      baseAmount:         Long(baseAmount),
-      feeNum:             Int(poolFeeNum),
-      refundProp:         ProveDlog(pk),
-      spectrumIsQuote:    Bool(specIsQuote),
-      maxExFee:           Long(maxExFee),
-      poolNFT:            Bytes(poolId),
-      redeemerPropBytes:  RedeemerBytes(pk),
-      quoteId:            Bytes(quoteId),
-      minQuoteAmount:     Long(minQuoteAmount),
-      spectrumId:         Bytes(exFeePerToken.tokenId),
-      feeDenom:           Int(1000),
-      maxMinerFee:        Long(maxMinerFee)
-    })
+  return SwapSellContract.build({
+    exFeePerTokenDenom: Long(dexFeePerTokenDenom),
+    delta: Long(dexFeePerTokenDenom - dexFeePerTokenNum),
+    baseAmount: Long(baseAmount),
+    feeNum: Int(poolFeeNum),
+    refundProp: ProveDlog(pk),
+    spectrumIsQuote: Bool(specIsQuote),
+    maxExFee: Long(maxExFee),
+    poolNFT: Bytes(poolId),
+    redeemerPropBytes: RedeemerBytes(pk),
+    quoteId: Bytes(quoteId),
+    minQuoteAmount: Long(minQuoteAmount),
+    spectrumId: Bytes(exFeePerToken.tokenId),
+    feeDenom: Int(1000),
+    maxMinerFee: Long(maxMinerFee)
+  })
 }
 
 export function swapBuy(
@@ -78,19 +75,18 @@ export function swapBuy(
 ): ErgoTree {
   const [dexFeePerTokenNum, dexFeePerTokenDenom] = decimalToFractional(exFeePerToken.amount)
 
-  return SwapBuyContract
-    .build({
-      baseAmount:         Long(baseAmount),
-      feeNum:             Int(poolFeeNum),
-      refundProp:         ProveDlog(pk),
-      maxExFee:           Long(maxExFee),
-      exFeePerTokenDenom: Long(dexFeePerTokenDenom),
-      exFeePerTokenNum:   Long(dexFeePerTokenNum),
-      poolNFT:            Bytes(poolId),
-      redeemerPropBytes:  RedeemerBytes(pk),
-      minQuoteAmount:     Long(minQuoteAmount),
-      spectrumId:         Bytes(exFeePerToken.tokenId),
-      feeDenom:           Int(1000),
-      maxMinerFee:        Long(maxMinerFee)
-    })
+  return SwapBuyContract.build({
+    baseAmount: Long(baseAmount),
+    feeNum: Int(poolFeeNum),
+    refundProp: ProveDlog(pk),
+    maxExFee: Long(maxExFee),
+    exFeePerTokenDenom: Long(dexFeePerTokenDenom),
+    exFeePerTokenNum: Long(dexFeePerTokenNum),
+    poolNFT: Bytes(poolId),
+    redeemerPropBytes: RedeemerBytes(pk),
+    minQuoteAmount: Long(minQuoteAmount),
+    spectrumId: Bytes(exFeePerToken.tokenId),
+    feeDenom: Int(1000),
+    maxMinerFee: Long(maxMinerFee)
+  })
 }

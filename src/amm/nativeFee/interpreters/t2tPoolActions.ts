@@ -22,7 +22,7 @@ export class T2tPoolActions implements PoolActions<TxRequest, NativeExFeeType> {
   constructor(public readonly uiRewardAddress: Address, private readonly setupImpl: PoolSetupAction) {}
 
   async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<TxRequest[]> {
-    return this.setupImpl.setup(params, ctx, this.mkUiReward(ctx.network.height, params.uiFee));
+    return this.setupImpl.setup(params, ctx, this.mkUiReward(ctx.network.height, params.uiFee))
   }
 
   deposit(params: DepositParams<NativeExFeeType>, ctx: TransactionContext): Promise<TxRequest> {

@@ -1,9 +1,15 @@
 import {
   BoxSelection,
-  ByteaConstant, EmptyRegisters,
+  ByteaConstant,
+  EmptyRegisters,
   ErgoBoxCandidate,
-  ergoTreeFromAddress, extractOutputsFromTxRequest,
-  InsufficientInputs, Int32Constant, MinBoxValue, RegisterId, registers,
+  ergoTreeFromAddress,
+  extractOutputsFromTxRequest,
+  InsufficientInputs,
+  Int32Constant,
+  MinBoxValue,
+  RegisterId,
+  registers,
   TransactionContext,
   TxRequest
 } from "@ergolabs/ergo-sdk"
@@ -16,7 +22,11 @@ import {PoolSetupParams} from "../models/poolSetupParams"
 import {PoolSetupAction} from "./poolSetupAction"
 
 export class T2tPoolSetupAction implements PoolSetupAction {
-  async setup(params: PoolSetupParams, ctx: TransactionContext, uiRewardOut: ErgoBoxCandidate[]): Promise<TxRequest[]> {
+  async setup(
+    params: PoolSetupParams,
+    ctx: TransactionContext,
+    uiRewardOut: ErgoBoxCandidate[]
+  ): Promise<TxRequest[]> {
     const [x, y] = [params.x.asset, params.y.asset]
     const height = ctx.network.height
     const inputs = ctx.inputs

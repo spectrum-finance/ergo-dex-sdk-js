@@ -24,23 +24,16 @@ export class N2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
   constructor(public readonly uiRewardAddress: Address, private readonly setupImpl: PoolSetupAction) {}
 
   setup(params: PoolSetupParams, ctx: TransactionContext): Promise<TxRequest[]> {
-    return this.setupImpl.setup(params, ctx, this.mkUiReward(ctx.network.height, params.uiFee));
+    return this.setupImpl.setup(params, ctx, this.mkUiReward(ctx.network.height, params.uiFee))
   }
 
   deposit(params: DepositParams<SpecExFeeType>, ctx: TransactionContext): Promise<TxRequest> {
     const [x, y] = [params.x, params.y]
-    const proxyScript = N2T.deposit(
-      params.poolId,
-      params.pk,
-      x.amount,
-      y.amount,
-      ctx.feeNErgs,
-    );
+    const proxyScript = N2T.deposit(params.poolId, params.pk, x.amount, y.amount, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange
     const inY = outputGranted.assets.filter(t => t.tokenId === y.asset.id)[0]
-    const inSpf =  inY.tokenId !== SpecAssetId ?
-      outputGranted.assets.filter(t => t.tokenId === SpecAssetId)[0] :
-      undefined;
+    const inSpf =
+      inY.tokenId !== SpecAssetId ? outputGranted.assets.filter(t => t.tokenId === SpecAssetId)[0] : undefined
 
     const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, 0n)
     if (outputGranted.nErgs < minNErgs)
@@ -131,7 +124,7 @@ export class N2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
       params.pk
     )
     const outputGranted = ctx.inputs.totalOutputWithoutChange
-    const exFeeIn = outputGranted.assets.filter(t => t.tokenId === SpecAssetId)[0];
+    const exFeeIn = outputGranted.assets.filter(t => t.tokenId === SpecAssetId)[0]
 
     const minNErgs = minValueForOrder(ctx.feeNErgs, params.uiFee, 0n)
     if (outputGranted.nErgs < minNErgs)

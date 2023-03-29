@@ -27,20 +27,20 @@ interface ParserIn {
 }
 
 abstract class T2TParserIn {
-  abstract getSwapPoolIdC (tree: any): Uint8Array
+  abstract getSwapPoolIdC(tree: any): Uint8Array
 
-  abstract getSwapOutIdC (tree: any): Uint8Array;
+  abstract getSwapOutIdC(tree: any): Uint8Array
 
-  abstract getDepositPoolIdC (tree: any): Uint8Array;
+  abstract getDepositPoolIdC(tree: any): Uint8Array
 
-  abstract getRedeemPoolIdC (tree: any): Uint8Array;
+  abstract getRedeemPoolIdC(tree: any): Uint8Array
 
   parseSwap(bx: ErgoBox): AmmOrderInfo | undefined {
     try {
       const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
-      const poolIdC = this.getSwapPoolIdC(tree);
+      const poolIdC = this.getSwapPoolIdC(tree)
       const poolId = poolIdC ? toHex(poolIdC) : undefined
-      const outIdC = this.getSwapOutIdC(tree);
+      const outIdC = this.getSwapOutIdC(tree)
       const outId = outIdC ? toHex(outIdC) : undefined
       const input = bx.assets[0]
       return poolId && outId
@@ -69,7 +69,7 @@ abstract class T2TParserIn {
   parseRedeem(bx: ErgoBox): AmmOrderInfo | undefined {
     try {
       const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
-      const poolIdC = this.getRedeemPoolIdC(tree);
+      const poolIdC = this.getRedeemPoolIdC(tree)
       const poolId = poolIdC ? toHex(poolIdC) : undefined
       const inputLP = bx.assets[0]
       return poolId && inputLP ? {inLP: AssetAmount.fromToken(inputLP), poolId, type: "redeem"} : undefined
@@ -81,50 +81,50 @@ abstract class T2TParserIn {
 
 class NativeFeeT2tParserIn extends T2TParserIn {
   getSwapPoolIdC(tree: any): Uint8Array {
-    return tree.get_constant(14)?.to_byte_array();
+    return tree.get_constant(14)?.to_byte_array()
   }
 
   getSwapOutIdC(tree: any): Uint8Array {
-    return tree.get_constant(2)?.to_byte_array();
+    return tree.get_constant(2)?.to_byte_array()
   }
 
   getDepositPoolIdC(tree: any): Uint8Array {
-    return tree.get_constant(13)?.to_byte_array();
+    return tree.get_constant(13)?.to_byte_array()
   }
 
   getRedeemPoolIdC(tree: any): Uint8Array {
-    return tree.get_constant(13)?.to_byte_array();
+    return tree.get_constant(13)?.to_byte_array()
   }
 }
 
 class SpfFeeT2tParserIn extends T2TParserIn {
   getSwapPoolIdC(tree: any): Uint8Array {
-    return tree.get_constant(18)?.to_byte_array();
+    return tree.get_constant(18)?.to_byte_array()
   }
 
   getSwapOutIdC(tree: any): Uint8Array {
-    return tree.get_constant(1)?.to_byte_array();
+    return tree.get_constant(1)?.to_byte_array()
   }
 
   getDepositPoolIdC(tree: any): Uint8Array {
-    return tree.get_constant(13)?.to_byte_array();
+    return tree.get_constant(13)?.to_byte_array()
   }
 
   getRedeemPoolIdC(tree: any): Uint8Array {
-    return tree.get_constant(13)?.to_byte_array();
+    return tree.get_constant(13)?.to_byte_array()
   }
 }
 
 abstract class N2TParserIn {
-  abstract getSellSwapPoolIdC (tree: any): Uint8Array;
+  abstract getSellSwapPoolIdC(tree: any): Uint8Array
 
-  abstract getSellSwapOutIdC (tree: any): Uint8Array;
+  abstract getSellSwapOutIdC(tree: any): Uint8Array
 
-  abstract getBuySwapPoolIdC (tree: any): Uint8Array;
+  abstract getBuySwapPoolIdC(tree: any): Uint8Array
 
-  abstract getDepositPoolIdC (tree: any): Uint8Array;
+  abstract getDepositPoolIdC(tree: any): Uint8Array
 
-  abstract getRedeemPoolIdC (tree: any): Uint8Array;
+  abstract getRedeemPoolIdC(tree: any): Uint8Array
 
   parseSwap(bx: ErgoBox): AmmOrderInfo | undefined {
     try {
@@ -136,9 +136,9 @@ abstract class N2TParserIn {
 
   private parseSellSwap(bx: ErgoBox): AmmOrderInfo | undefined {
     const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
-    const poolIdC = this.getSellSwapPoolIdC(tree);
+    const poolIdC = this.getSellSwapPoolIdC(tree)
     const poolId = poolIdC ? toHex(poolIdC) : undefined
-    const outIdC = this.getSellSwapOutIdC(tree);
+    const outIdC = this.getSellSwapOutIdC(tree)
     const outId = outIdC ? toHex(outIdC) : undefined
     return poolId && outId
       ? {from: AssetAmount.native(bx.value), to: {id: outId}, poolId, type: "swap"}
@@ -147,7 +147,7 @@ abstract class N2TParserIn {
 
   private parseBuySwap(bx: ErgoBox): AmmOrderInfo | undefined {
     const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
-    const poolIdC =  this.getBuySwapPoolIdC(tree);
+    const poolIdC = this.getBuySwapPoolIdC(tree)
     const poolId = poolIdC ? toHex(poolIdC) : undefined
     const input = bx.assets[0]
     return poolId
@@ -158,7 +158,7 @@ abstract class N2TParserIn {
   parseDeposit(bx: ErgoBox): AmmOrderInfo | undefined {
     try {
       const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
-      const poolIdC = this.getDepositPoolIdC(tree);
+      const poolIdC = this.getDepositPoolIdC(tree)
       const poolId = poolIdC ? toHex(poolIdC) : undefined
       const inputY = bx.assets[0]
       return poolId && inputY
@@ -172,7 +172,7 @@ abstract class N2TParserIn {
   parseRedeem(bx: ErgoBox): AmmOrderInfo | undefined {
     try {
       const tree = RustModule.SigmaRust.ErgoTree.from_base16_bytes(bx.ergoTree)
-      const poolIdC = this.getRedeemPoolIdC(tree);
+      const poolIdC = this.getRedeemPoolIdC(tree)
       const poolId = poolIdC ? toHex(poolIdC) : undefined
       const inputLP = bx.assets[0]
       return poolId && inputLP ? {inLP: AssetAmount.fromToken(inputLP), poolId, type: "redeem"} : undefined
@@ -184,11 +184,11 @@ abstract class N2TParserIn {
 
 class NativeFeeN2TParserIn extends N2TParserIn {
   getSellSwapPoolIdC(tree: any): Uint8Array {
-    return tree.get_constant(8)?.to_byte_array();
+    return tree.get_constant(8)?.to_byte_array()
   }
 
   getSellSwapOutIdC(tree: any): Uint8Array {
-    return tree.get_constant(9)?.to_byte_array();
+    return tree.get_constant(9)?.to_byte_array()
   }
 
   getBuySwapPoolIdC(tree: any): Uint8Array {
@@ -196,21 +196,21 @@ class NativeFeeN2TParserIn extends N2TParserIn {
   }
 
   getDepositPoolIdC(tree: any): Uint8Array {
-    return tree.get_constant(12)?.to_byte_array();
+    return tree.get_constant(12)?.to_byte_array()
   }
 
   getRedeemPoolIdC(tree: any): Uint8Array {
-    return tree.get_constant(11)?.to_byte_array();
+    return tree.get_constant(11)?.to_byte_array()
   }
 }
 
 class SpfFeeN2TParserIn extends N2TParserIn {
   getSellSwapPoolIdC(tree: any): Uint8Array {
-    return tree.get_constant(13)?.to_byte_array();
+    return tree.get_constant(13)?.to_byte_array()
   }
 
   getSellSwapOutIdC(tree: any): Uint8Array {
-    return tree.get_constant(15)?.to_byte_array();
+    return tree.get_constant(15)?.to_byte_array()
   }
 
   getBuySwapPoolIdC(tree: any): Uint8Array {
@@ -218,18 +218,18 @@ class SpfFeeN2TParserIn extends N2TParserIn {
   }
 
   getDepositPoolIdC(tree: any): Uint8Array {
-    return tree.get_constant(12)?.to_byte_array();
+    return tree.get_constant(12)?.to_byte_array()
   }
 
   getRedeemPoolIdC(tree: any): Uint8Array {
-    return tree.get_constant(11)?.to_byte_array();
+    return tree.get_constant(11)?.to_byte_array()
   }
 }
 
-const nativeFeeT2tParser = new NativeFeeT2tParserIn();
-const spfFeeT2tParser = new SpfFeeT2tParserIn();
+const nativeFeeT2tParser = new NativeFeeT2tParserIn()
+const spfFeeT2tParser = new SpfFeeT2tParserIn()
 const nativeFeeN2tParser = new NativeFeeN2TParserIn()
-const spfFeeN2TParserIn = new SpfFeeN2TParserIn();
+const spfFeeN2TParserIn = new SpfFeeN2TParserIn()
 
 const AmmTemplates: [ErgoTreeTemplate, AmmOrderType, ParserIn][] = [
   [NativeFeeT2T.SwapTemplate, "swap", nativeFeeT2tParser],

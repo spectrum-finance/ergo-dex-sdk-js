@@ -8,12 +8,12 @@ export class StakeFromBox implements FromBox<Stake> {
     const r7 = box.additionalRegisters[RegisterId.R7]
 
     if (!r7) {
-      return undefined;
+      return undefined
     }
 
-    const poolId = deserializeConstant(r7);
+    const poolId = deserializeConstant(r7)
     if (!(poolId instanceof ByteaConstant)) {
-      return undefined;
+      return undefined
     }
 
     if (box.assets.length === 3) {

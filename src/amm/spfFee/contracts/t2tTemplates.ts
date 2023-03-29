@@ -8,20 +8,20 @@ export const SwapTemplate =
   "d805d601b2a4730000d6027301d6037302d6049c73037e730405d6057305eb027306d195ed92b1a4730793b1db630872017308d80ad606db63087201d607b2a5730900d608db63087207d609b27208730a00d60a8c720902d60b95730b9d9c7e99720a730c067e7203067e730d067e720a06d60cb27206730e00d60d7e8c720c0206d60e7e8cb27206730f000206d60f9a720b7310ededededededed938cb2720673110001731293c272077313938c720901720292720a731492c17207c1a79573157316d801d610997e7317069d9c720b7e7318067e72030695ed917210731992b17208731ad801d611b27208731b00ed938c721101731c927e8c721102067210731d95938c720c017202909c720d7e7204069c720f9a9c720e7e7205067e720406909c720e7e7204069c720f9a9c720d7e7205067e72040690b0ada5d90110639593c27210731ec17210731f7320d90110599a8c7210018c72100273217322"
 
 export const SwapContract = Contract(SwapSample, {
-  quoteId:            [1, Bytes],
+  quoteId: [1, Bytes],
   exFeePerTokenDenom: [2, Long],
-  baseAmount:         [3, Long],
-  feeNum:             [4, Int],
-  feeDenom:           [5, Int],
-  refundProp:         [6, ProveDlog],
-  spectrumIsQuote:    [11, Bool],
-  maxExFee:           [12, Long],
-  delta:              [13, Long],
-  poolNFT:            [18, Bytes],
-  redeemerPropBytes:  [19, RedeemerBytes],
-  minQuoteAmount:     [20, Long],
-  spectrumId:         [28, Bytes],
-  maxMinerFee:        [33, Long]
+  baseAmount: [3, Long],
+  feeNum: [4, Int],
+  feeDenom: [5, Int],
+  refundProp: [6, ProveDlog],
+  spectrumIsQuote: [11, Bool],
+  maxExFee: [12, Long],
+  delta: [13, Long],
+  poolNFT: [18, Bytes],
+  redeemerPropBytes: [19, RedeemerBytes],
+  minQuoteAmount: [20, Long],
+  spectrumId: [28, Bytes],
+  maxMinerFee: [33, Long]
 })
 
 // DEPOSIT
@@ -33,12 +33,12 @@ export const DepositTemplate =
   "d801d601b2a4730000eb027301d195ed92b1a4730293b1db630872017303d80cd602db63087201d603b2a5730400d604b27202730500d6057e9973068c72040206d606b27202730700d6077e8c72060206d6089d9c7e73080672057207d609b27202730900d60a7e8c72090206d60b9d9c7e730a067205720ad60cdb63087203d60db2720c730b00edededededed938cb27202730c0001730d93c27203730e92c17203c1a795ed8f7208720b93b1720c730fd801d60eb2720c731000ed938c720e018c720901927e8c720e02069d9c99720b7208720a720595ed917208720b93b1720c7311d801d60eb2720c731200ed938c720e018c720601927e8c720e02069d9c997208720b7207720595937208720b73137314938c720d018c720401927e8c720d0206a17208720b90b0ada5d9010e639593c2720e7315c1720e73167317d9010e599a8c720e018c720e0273187319"
 
 export const DepositContract = Contract(DepositSample, {
-  refundProp:        [1, ProveDlog],
-  selfXAmount:       [8, Long],
-  selfYAmount:       [10, Long],
-  poolNFT:           [13, Bytes],
+  refundProp: [1, ProveDlog],
+  selfXAmount: [8, Long],
+  selfYAmount: [10, Long],
+  poolNFT: [13, Bytes],
   redeemerPropBytes: [14, RedeemerBytes],
-  maxMinerFee:       [24, Long]
+  maxMinerFee: [24, Long]
 })
 
 // REDEEM
@@ -50,8 +50,8 @@ export const RedeemTemplate =
   "d801d601b2a4730000eb027301d195ed92b1a4730293b1db630872017303d809d602db63087201d603b2a5730400d604db63087203d605b27204730500d606b27202730600d607b27204730700d608b27202730800d6097e8cb2db6308a77309000206d60a7e99730a8cb27202730b000206edededededed938cb27202730c0001730d93c27203730e938c7205018c720601938c7207018c720801927e8c720502069d9c72097e8c72060206720a927e8c720702069d9c72097e8c72080206720a90b0ada5d9010b639593c2720b730fc1720b73107311d9010b599a8c720b018c720b0273127313"
 
 export const RedeemContract = Contract(RedeemSample, {
-  refundProp:        [1, ProveDlog],
-  poolNFT:           [13, Bytes],
+  refundProp: [1, ProveDlog],
+  poolNFT: [13, Bytes],
   redeemerPropBytes: [14, RedeemerBytes],
-  maxMinerFee:       [18, Long]
+  maxMinerFee: [18, Long]
 })

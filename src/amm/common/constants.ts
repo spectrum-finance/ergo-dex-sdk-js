@@ -7,8 +7,8 @@ export const BurnLP = 1000n
 
 export const SigmaPropConstPrefixHex = "08cd"
 
-export const SigmaFalseHex = '0100';
-export const SigmaTrueHex = '0101';
+export const SigmaFalseHex = "0100"
+export const SigmaTrueHex = "0101"
 
 export const ErgoTreePrefixHex = "00"
 

@@ -20,11 +20,10 @@ import {PoolActions} from "../../common/interpreters/poolActions"
 import * as N2T from "../contracts/n2tPoolContracts"
 
 export class N2tPoolActions implements PoolActions<TxRequest, NativeExFeeType> {
-  constructor(public readonly uiRewardAddress: Address,
-              private readonly setupImpl: PoolSetupAction) {}
+  constructor(public readonly uiRewardAddress: Address, private readonly setupImpl: PoolSetupAction) {}
 
   async setup(params: PoolSetupParams, ctx: TransactionContext): Promise<TxRequest[]> {
-    return this.setupImpl.setup(params, ctx, this.mkUiReward(ctx.network.height, params.uiFee));
+    return this.setupImpl.setup(params, ctx, this.mkUiReward(ctx.network.height, params.uiFee))
   }
 
   deposit(params: DepositParams<NativeExFeeType>, ctx: TransactionContext): Promise<TxRequest> {

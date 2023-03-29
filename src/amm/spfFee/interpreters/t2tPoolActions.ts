@@ -23,7 +23,7 @@ export class T2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
   constructor(public readonly uiRewardAddress: Address, private readonly setupImpl: PoolSetupAction) {}
 
   setup(params: PoolSetupParams, ctx: TransactionContext): Promise<TxRequest[]> {
-    return this.setupImpl.setup(params, ctx, this.mkUiReward(ctx.network.height, params.uiFee));
+    return this.setupImpl.setup(params, ctx, this.mkUiReward(ctx.network.height, params.uiFee))
   }
 
   deposit(params: DepositParams<SpecExFeeType>, ctx: TransactionContext): Promise<TxRequest> {
@@ -51,13 +51,7 @@ export class T2tPoolActions implements PoolActions<TxRequest, SpecExFeeType> {
         )
       )
 
-    const proxyScript = T2T.deposit(
-      params.poolId,
-      params.pk,
-      ctx.feeNErgs,
-      x.amount,
-      y.amount
-    )
+    const proxyScript = T2T.deposit(params.poolId, params.pk, ctx.feeNErgs, x.amount, y.amount)
 
     const orderOut: ErgoBoxCandidate = {
       value: outputGranted.nErgs - ctx.feeNErgs - params.uiFee,
