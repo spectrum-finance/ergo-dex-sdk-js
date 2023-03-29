@@ -1,16 +1,17 @@
-export {T2tPoolActions} from "./amm/interpreters/t2tPoolActions"
-export {N2tPoolActions} from "./amm/interpreters/n2tPoolActions"
+export {PoolActions, PoolActionsSelector} from "./amm/common/interpreters/poolActions"
 export {
-  PoolActions,
-  PoolActionsSelector,
-  makePoolActionsSelector,
-  makeWrappedPoolActionsSelector
-} from "./amm/interpreters/poolActions"
-export {Refunds, AmmOrderRefundsWrapper, AmmOrderRefunds} from "./amm/interpreters/refunds"
-export {makeTokenPools, makeNativePools} from "./amm/services/pools"
-export {History, NetworkHistory, makeHistory} from "./amm/services/history"
-export {AmmOrderInfo} from "./amm/models/ammOrderInfo"
-export {AmmPoolInfo} from "./amm/models/ammPoolInfo"
+  makeSpfPoolActionsSelector,
+  makeWrappedSpfPoolActionsSelector
+} from "./amm/spfFee/interpreters/poolActions"
+export {
+  makeNativePoolActionsSelector,
+  makeWrappedNativePoolActionsSelector
+} from "./amm/nativeFee/interpreters/poolActions"
+export {Refunds, AmmOrderRefundsWrapper, AmmOrderRefunds} from "./amm/common/interpreters/refunds"
+export {makeTokenPools, makeNativePools} from "./amm/common/services/pools"
+export {History, NetworkHistory, makeHistory} from "./amm/common/services/history"
+export {AmmOrderInfo} from "./amm/common/models/ammOrderInfo"
+export {AmmPoolInfo} from "./amm/common/models/ammPoolInfo"
 export {
   AmmDexOperation,
   AmmOrderType,
@@ -19,20 +20,20 @@ export {
   AmmOrderStatus,
   RefundOperation,
   TxStatus
-} from "./amm/models/operations"
-export {AmmOrdersParser, DefaultAmmOrdersParser} from "./amm/parsers/ammOrdersParser"
-export {T2TAmmPoolsParser, N2TAmmPoolsParser} from "./amm/parsers/ammPoolsParser"
-export {AmmPoolsInfoParser, DefaultAmmPoolsInfoParser} from "./amm/parsers/ammPoolsInfoParser"
-export {DefaultAmmPoolValidation} from "./amm/validation/ammPoolValidation"
+} from "./amm/common/models/operations"
+export {AmmOrdersParser, DefaultAmmOrdersParser} from "./amm/common/parsers/ammOrdersParser"
+export {T2TAmmPoolsParser, N2TAmmPoolsParser} from "./amm/common/parsers/ammPoolsParser"
+export {AmmPoolsInfoParser, DefaultAmmPoolsInfoParser} from "./amm/common/parsers/ammPoolsInfoParser"
+export {DefaultAmmPoolValidation} from "./amm/common/validation/ammPoolValidation"
 export {PoolValidation, ValidationResult, ValidationErrors, OK} from "./validation/poolValidation"
-export {AmmPool} from "./amm/entities/ammPool"
-export {Swap} from "./amm/entities/swap"
-export {PoolSetupParams, makePoolSetupParams} from "./amm/models/poolSetupParams"
-export {DepositParams} from "./amm/models/depositParams"
-export {RedeemParams} from "./amm/models/redeemParams"
-export {SwapParams} from "./amm/models/swapParams"
-export {PoolId} from "./amm/types"
-export {SwapExtremums, swapVars} from "./amm/math/swap"
+export {AmmPool} from "./amm/common/entities/ammPool"
+export {Swap} from "./amm/common/entities/swap"
+export {PoolSetupParams, makePoolSetupParams} from "./amm/common/models/poolSetupParams"
+export {DepositParams} from "./amm/common/models/depositParams"
+export {RedeemParams} from "./amm/common/models/redeemParams"
+export {SwapParams} from "./amm/common/models/swapParams"
+export {PoolId} from "./amm/common/types"
+export {SwapExtremums, swapVars} from "./amm/common/math/swap"
 export {Price} from "./entities/price"
 export {RefundParams} from "./models/refundParams"
 export {decimalToFractional, evaluate} from "./utils/math"
@@ -47,7 +48,7 @@ export {
   timestampToBlocks,
   blocksToDaysCount
 } from "./utils/blocks"
-export {minValueForOrder, minValueForSetup} from "./amm/interpreters/mins"
+export {minValueForOrder, minValueForSetup} from "./amm/common/interpreters/mins"
 
 export {mkLockActions, LockActions} from "./security/interpreters/lockActions"
 export {LockParams, WithdrawalParams, RelockParams} from "./security/models"
