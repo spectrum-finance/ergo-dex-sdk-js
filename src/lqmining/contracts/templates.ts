@@ -1,7 +1,7 @@
 import {HexString} from "@ergolabs/ergo-sdk"
 
 export const StakingBundleTreeBlake2b256: HexString =
-  "37687656669e6173e60c5671238d0518002768f7371d0b01a44c6dd560257061"
+  "0508f3623d4b2be3bdb9737b3e65644f011167eefb830d9965205f022ceda40d"
 
 export const StakingBundleTemplateHash: HexString =
-  "991ccf44f9e1a284c1eb970c0dc62e9abb683c4f6ce3510efe95dcd11028ad60"
+  "88c122183349cde8c85f70287a098db39f1b3138e5650659f3c1746d02e435cb"
