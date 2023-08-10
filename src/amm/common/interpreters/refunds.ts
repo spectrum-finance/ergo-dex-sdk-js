@@ -43,7 +43,16 @@ const RefundableTemplates = [
   N2T_SPF.SwapBuyTemplate,
 
   LQ_MINING_CONTRACTS.depositTemplate,
-  LQ_MINING_CONTRACTS.redeemTemplate
+  LQ_MINING_CONTRACTS.redeemTemplate,
+
+  N2T_NATIVE.OldDepositTemplate,
+  N2T_NATIVE.OldRedeemTemplate,
+  N2T_NATIVE.OldSwapSellTemplate,
+  N2T_NATIVE.OldSwapBuyTemplate,
+
+  T2T_NATIVE.OldDepositTemplate,
+  T2T_NATIVE.OldRedeemTemplate,
+  T2T_NATIVE.OldSwapTemplate,
 ]
 
 export class AmmOrderRefunds implements Refunds<TxRequest> {
