@@ -11,7 +11,7 @@ const formatOptions: FormatOptions = {
   notation: "fixed"
 }
 
-const math = create(all, mathConf) as Partial<MathJsStatic>
+export const math = create(all, mathConf) as Partial<MathJsStatic>
 
 export function evaluate(expr: string): string {
   return math.format!(math.evaluate!(expr), formatOptions)
