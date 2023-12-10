@@ -1,5 +1,5 @@
 import {AssetAmount, ErgoBox, treeTemplateFromErgoTree} from "@ergolabs/ergo-sdk"
-import * as N2DEXY from "../contracts/n2dexyUSDTemplates"
+import * as N2DEXY from "../contracts/n2dexyGOLDtemplates"
 import * as N2T from "../contracts/n2tTemplates"
 import * as T2T from "../contracts/t2tTemplates"
 import {AmmPoolInfo} from "../models/ammPoolInfo"

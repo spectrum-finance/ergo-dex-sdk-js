@@ -8,6 +8,7 @@ import {
 } from "@ergolabs/ergo-sdk"
 import {toHex} from "../../../utils/hex"
 import * as NativeFeeN2T from "../../nativeFee/contracts/n2tTemplates"
+import * as NativeFeeN2Dexy from "../../nativeFee/contracts/n2dexyTemplates"
 import * as NativeFeeT2T from "../../nativeFee/contracts/t2tTemplates"
 import * as SpfFeeN2T from "../../spfFee/contracts/n2tTemplates"
 import * as SpfFeeT2T from "../../spfFee/contracts/t2tTemplates"
@@ -239,6 +240,10 @@ const AmmTemplates: [ErgoTreeTemplate, AmmOrderType, ParserIn][] = [
   [NativeFeeN2T.SwapBuyTemplate, "swap", nativeFeeN2tParser],
   [NativeFeeN2T.DepositTemplate, "deposit", nativeFeeN2tParser],
   [NativeFeeN2T.RedeemTemplate, "redeem", nativeFeeN2tParser],
+  [NativeFeeN2Dexy.SwapSellTemplate, "swap", nativeFeeN2tParser],
+  [NativeFeeN2Dexy.SwapBuyTemplate, "swap", nativeFeeN2tParser],
+  [NativeFeeN2Dexy.DepositTemplate, "deposit", nativeFeeN2tParser],
+  [NativeFeeN2Dexy.RedeemTemplate, "redeem", nativeFeeN2tParser],
 
   [SpfFeeT2T.SwapTemplate, "swap", spfFeeT2tParser],
   [SpfFeeT2T.DepositTemplate, "deposit", spfFeeT2tParser],
