@@ -1,6 +1,6 @@
 import {ErgoNetwork} from "@ergolabs/ergo-sdk"
 import {makePools, Pools} from "../../../services/pools"
-import * as N2Dexy from "../contracts/n2dexyUSDPoolContracts"
+import * as N2Dexy from "../contracts/n2dexyGOLDPoolContracts"
 import * as N2T from "../contracts/n2tPoolContracts"
 import * as T2T from "../contracts/t2tPoolContracts"
 import {AmmPool} from "../entities/ammPool"

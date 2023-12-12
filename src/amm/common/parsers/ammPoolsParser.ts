@@ -1,5 +1,6 @@
 import {AssetAmount, deserializeConstant, ErgoBox, Int32Constant, RegisterId} from "@ergolabs/ergo-sdk"
 import {FromBox} from "../../../fromBox"
+import {DexyGOLDFeeNum} from "../constants"
 import {AmmPool} from "../entities/ammPool"
 
 export class T2TAmmPoolsParser implements FromBox<AmmPool> {
@@ -57,8 +58,7 @@ export class N2DexyAmmPoolsParser implements FromBox<AmmPool> {
       const lp = AssetAmount.fromToken(box.assets[1])
       const assetX = AssetAmount.native(box.value)
       const assetY = AssetAmount.fromToken(box.assets[2])
-      const feeNum = 3
-      return new AmmPool(nft, lp, assetX, assetY, feeNum)
+      return new AmmPool(nft, lp, assetX, assetY, DexyGOLDFeeNum)
     }
     return undefined
   }

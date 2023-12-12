@@ -3,7 +3,7 @@ import * as crypto from "crypto-js"
 import {PoolContracts} from "../../../contracts/poolContracts"
 import {toHex} from "../../../utils/hex"
 import {AmmPool} from "../entities/ammPool"
-import * as N2DEXY from "./n2dexyUSDTemplates"
+import * as N2DEXY from "./n2dexyGOLDtemplates"
 
 export function pool(): ErgoTree {
   return N2DEXY.PoolSample
