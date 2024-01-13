@@ -27,7 +27,6 @@ export class N2DexyPoolActions implements PoolActions<TxRequest, NativeExFeeType
   }
 
   deposit(params: DepositParams<NativeExFeeType>, ctx: TransactionContext): Promise<TxRequest> {
-    // TODO: complete dex actions for dexy
     const [x, y] = [params.x, params.y]
     const proxyScript = N2Dexy.deposit(params.poolId, params.pk, x.amount, params.exFee, ctx.feeNErgs)
     const outputGranted = ctx.inputs.totalOutputWithoutChange

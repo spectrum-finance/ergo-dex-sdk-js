@@ -6,7 +6,6 @@ import {DexyGOLDAssetId, SigmaPropConstPrefixHex} from "../../common/constants"
 import {PoolId} from "../../common/types"
 import * as N2Dexy from "./n2dexyTemplates"
 
-// TODO: complete dex actions for dexy
 export function deposit(
   poolId: PoolId,
   pk: PublicKey,
@@ -40,6 +39,7 @@ export function deposit(
     .to_base16_bytes()
 }
 
+// TODO: complete dex actions for dexy
 export function redeem(poolId: PoolId, pk: PublicKey, exFee: NativeExFee, maxMinerFee: bigint): ErgoTree {
   return RustModule.SigmaRust.ErgoTree.from_base16_bytes(N2Dexy.RedeemSample)
     .with_constant(0, RustModule.SigmaRust.Constant.decode_from_base16(SigmaPropConstPrefixHex + pk))
