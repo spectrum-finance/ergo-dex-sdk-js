@@ -15,6 +15,7 @@ import {
 import * as LQ_MINING_CONTRACTS from "../../../lqmining/contracts/proxyValidators"
 import {RefundParams} from "../../../models/refundParams"
 import * as N2T_NATIVE from "../../nativeFee/contracts/n2tTemplates"
+import * as N2Dexy_NATIVE from "../../nativeFee/contracts/n2dexyTemplates"
 import * as T2T_NATIVE from "../../nativeFee/contracts/t2tTemplates"
 import * as N2T_SPF from "../../spfFee/contracts/n2tTemplates"
 import * as T2T_SPF from "../../spfFee/contracts/t2tTemplates"
@@ -33,6 +34,10 @@ const RefundableTemplates = [
   N2T_NATIVE.RedeemTemplate,
   N2T_NATIVE.SwapSellTemplate,
   N2T_NATIVE.SwapBuyTemplate,
+  N2Dexy_NATIVE.DepositTemplate,
+  N2Dexy_NATIVE.RedeemTemplate,
+  N2Dexy_NATIVE.SwapSellTemplate,
+  N2Dexy_NATIVE.SwapBuyTemplate,
 
   T2T_SPF.DepositTemplate,
   T2T_SPF.RedeemTemplate,

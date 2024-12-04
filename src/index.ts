@@ -8,7 +8,7 @@ export {
   makeWrappedNativePoolActionsSelector
 } from "./amm/nativeFee/interpreters/poolActions"
 export {Refunds, AmmOrderRefundsWrapper, AmmOrderRefunds} from "./amm/common/interpreters/refunds"
-export {makeTokenPools, makeNativePools} from "./amm/common/services/pools"
+export {makeTokenPools, makeNativePools, makeDexyPools} from "./amm/common/services/pools"
 export {History, NetworkHistory, makeHistory} from "./amm/common/services/history"
 export {AmmOrderInfo} from "./amm/common/models/ammOrderInfo"
 export {AmmPoolInfo} from "./amm/common/models/ammPoolInfo"

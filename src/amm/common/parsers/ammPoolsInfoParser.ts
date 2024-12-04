@@ -1,7 +1,8 @@
 import {AssetAmount, ErgoBox, treeTemplateFromErgoTree} from "@ergolabs/ergo-sdk"
-import {AmmPoolInfo} from "../models/ammPoolInfo"
-import * as T2T from "../contracts/t2tTemplates"
+import * as N2DEXY from "../contracts/n2dexyGOLDtemplates"
 import * as N2T from "../contracts/n2tTemplates"
+import * as T2T from "../contracts/t2tTemplates"
+import {AmmPoolInfo} from "../models/ammPoolInfo"
 
 export interface AmmPoolsInfoParser {
   /** Parse AMM pool info from a given box.
@@ -14,6 +15,7 @@ export class DefaultAmmPoolsInfoParser implements AmmPoolsInfoParser {
     const template = treeTemplateFromErgoTree(bx.ergoTree)
     if (template === T2T.PoolTemplate) return this.parseT2T(bx)
     else if (template === N2T.PoolTemplate) return this.parseN2T(bx)
+    else if (template === N2DEXY.PoolTemplate) return this.parseN2D(bx)
     else return undefined
   }
 
@@ -43,6 +45,20 @@ export class DefaultAmmPoolsInfoParser implements AmmPoolsInfoParser {
           reservesY: AssetAmount.fromToken(reservesY),
           lp: AssetAmount.fromToken(lp)
         }
+      : undefined
+  }
+
+  private parseN2D(bx: ErgoBox): AmmPoolInfo | undefined {
+    const poolId = bx.assets[0]?.tokenId
+    const lp = bx.assets[1]
+    const reservesY = bx.assets[2]
+    return poolId && reservesY
+      ? {
+        id: poolId,
+        reservesX: AssetAmount.native(bx.value),
+        reservesY: AssetAmount.fromToken(reservesY),
+        lp: AssetAmount.fromToken(lp)
+      }
       : undefined
   }
 }
